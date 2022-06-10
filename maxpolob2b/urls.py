@@ -22,8 +22,7 @@ from .settings import DEBUG
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.user.urls')),
-    # path('catalogue/', include('apps.catalogue.urls')),
-
+    path('catalogue/', include('apps.catalogue.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
 
 ]

@@ -18,12 +18,13 @@ class Command(BaseCommand):
         }
 
         for root in roots:
-            # root.items()
-            # roots[root]
-            # import pdb;
-            # pdb.set_trace()
-            rt = Category.objects.add_root(root)
-            rt.add_child()
+            for i in roots[root]:
+                print(i)
+                rt = Category.add_root(name=root)
+                child = rt.add_child(name=i)
+                for j in roots[root][i]:
+                    import pdb;pdb.set_trace()
+                    child.add_child(name=j)
 
     def handle(self, *args, **options):
         self.create_category()

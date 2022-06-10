@@ -53,7 +53,7 @@ class Dealer(User):
         proxy = True
 
     def __str__(self):
-        return self.user.user.username
+        return self.username
 
 
 class Executive(User):
@@ -63,7 +63,7 @@ class Executive(User):
         proxy = True
 
     def __str__(self):
-        return self.user.username
+        return self.username
 
 
 

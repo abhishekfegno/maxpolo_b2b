@@ -3,17 +3,14 @@ from django.db import models
 # Create your models here.
 
 
-class PurchaseOrder(models.Model):
-    order_id = models.CharField(max_length=10)
-    dealer = models.ForeignKey('user.User', on_delete=models.SET_NULL, null=True, blank=True)
-
-    def __str__(self):
-        return self.order_id
-
-
 class SalesOrder(models.Model):
     order_id = models.CharField(max_length=10)
-    purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.SET_NULL, null=True, blank=True)
+    invoice_id = models.CharField(max_length=10, null=True, blank=True)
+    dealer = models.ForeignKey('user.User', on_delete=models.SET_NULL, null=True, blank=True)
+    is_confirmed = models.BooleanField(default=False)
+    is_invoice = models.BooleanField(default=False)
+
+
 
     def __str__(self):
         return self.order_id

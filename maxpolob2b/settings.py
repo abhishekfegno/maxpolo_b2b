@@ -48,9 +48,9 @@ INSTALLED_APPS = [
     'apps.catalogue',
     'apps.order',
 
+    'dg',
     'django_extensions',
- #     'rest_framework', 
- #     'rest_framework.authtoken',
+     'rest_framework',
     'crispy_forms',
     'debug_toolbar'
 ]
@@ -172,10 +172,10 @@ STATIC_URL = '/assets/'
 MEDIA_URL = '/src/'
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'public/staticfiles/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'public/src/')
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'public/static')]
 
 print(STATIC_URL, STATIC_ROOT)
 
