@@ -1,0 +1,65 @@
+{% extends 'paper/layout.html'  %}
+{% load static crispy_forms_tags humanize %}
+
+{% block title %} Dashboard | FIMS {% endblock %}
+{% block content %}
+<div class="container-fluid" >
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                {% if new_joinies %}
+                <div class="col-md-12">
+                    <!--  🎉 New Joinies  -->
+                    <div class="card">
+                        <div class="card-header with-border">
+                            <h4> 👶 New Joinies </h4>
+                        </div>
+                        <div class="card-body with-border">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for user in new_joinies %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>
+                                        <span class="d-block text-muted ">Welcome {{ user.get_full_name }} 🎉! </span>
+                                    </td>
+                                    <td>
+                                        <span class="d-block text-muted text-sm">{{ user.doj|date }} </span>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="100%"> No information available </td></tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="card-footer with-border">
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                                <div class="col-md-12">
+                    <!--  🎉 New Joinies  -->
+                    <div class="card">
+                        <div class="card-header with-border">
+                            <h4> 👶 No Informations Available </h4>
+                        </div>
+                    </div>
+                </div>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

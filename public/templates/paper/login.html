@@ -1,0 +1,114 @@
+{% extends 'paper/login_base.html' %}
+{% load crispy_forms_tags %}
+
+
+{%  block login_form %}
+<style>.errorlist {font-size: 0.8rem;}</style>
+
+<div class="login100-pic js-tilt" id="qr-code" data-tilt>
+    <!--<img src="{{ settings.STATIC_URL }}Login_v1/images/img-01.png" alt="IMG">-->
+</div>
+<form class="login100-form validate-form" method="POST">{% csrf_token %}
+    <span class="login100-form-title">
+        Member Login
+        </span>
+
+    <div class="wrap-input100 validate-input" data-validate="Valid username is required: ft0000">
+        <input class="input100" name="username" type="text"  placeholder="Username">
+        <div class="text-danger">{{ form.username.errors }}</div>
+
+        <span class="focus-input100"></span>
+        <span class="symbol-input100">
+        <i class="fa fa-envelope" aria-hidden="true"></i>
+        </span>
+    </div>
+    <div class="wrap-input100 validate-input" data-validate="Password is required">
+        <input class="input100" name="password" type="password" placeholder="Password">
+        <div class="text-danger">{{ form.password.errors }}</div>
+
+        <span class="focus-input100"></span>
+        <span class="symbol-input100">
+        <i class="fa fa-lock" aria-hidden="true"></i>
+        </span>
+    </div>
+    <div class="text-danger">{{ form.non_field_errors }}</div>
+
+    <div class="container-login100-form-btn">
+        <button class="login100-form-btn">
+            Login
+        </button>
+    </div>
+    <!--    <div class="text-center p-t-12">
+        <span class="txt1">
+        Forgot
+        </span>
+        <a class="txt2" href="#">
+        Username / Password?
+        </a>
+        </div>-->
+    <div class="text-center p-t-136">
+        <span>2021 ©</span> <span class="">
+         Fegno Technologies LLP
+        <!--    <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>-->
+        </span>
+    </div>
+</form>
+<footer>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script src="https://js.pusher.com/7.0.3/pusher.min.js"></script>
+    <script type="text/javascript">
+    (function(){
+    	 new QRCode(document.getElementById("qr-code"), "{{ uuid }}");
+     })()
+    </script>
+    <script type="text/javascript">
+        var login_with_form = function(data) {
+          console.log("Data Reached!", data.token)
+          document.getElementById('token_node').value = data.token ;
+          document.getElementById('username_node').value = data.username ;
+          document.getElementById('qr_token_validator').submit() ;
+        }
+
+       var login_with_fetch = function(data) {
+          fetch("{% url 'user:scanned_login' %}", {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify(data)
+          }).then(function(r) {
+             return new Promise(function(resolve, reject) {
+                r.json().then(function(json_data) {
+                   resolve(r.status, json_data)
+                });
+             });
+          }).then(function(status_code, json_data){
+               if (status_code == 200) {
+                   window.location.href = "{% url settings.LOGIN_REDIRECT_URL %}";
+               }  else { alert("something went wrong!!! "); }
+          }).catch(function(e){ console.error(e) }) ;
+       }
+
+    var __init__ = function(){
+           var pusher = new Pusher("{{ settings.PUSHER_APP_KEY }}", {cluster: "{{ settings.PUSHER_CLUSTER }}"});
+           var presenceChannel = pusher.subscribe("{{ settings.PUSHER_LOGIN_CHANNEL_NAME }}");
+           presenceChannel.bind("{{ event_name }}", function (data) {
+               console.log(data) ;
+               login_with_fetch(data) ;
+           });
+       }
+       __init__();
+    </script>
+
+    <div id="pushauthform" style="position:absolute; height:0;width:0;left=0;bottom:0;">
+        <form action="" method="post" id="qr_token_validator">
+            {% csrf_token %}
+            <input type="hidden" hidden name="username" value="" id="username_node">
+            <input type="hidden" hidden name="token" value="" id="token_node">
+        </form>
+    </div>
+</footer>
+{% endblock %}

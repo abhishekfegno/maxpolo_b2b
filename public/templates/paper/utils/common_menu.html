@@ -1,0 +1,92 @@
+<ul class="nav">
+<!--    {% if settings.DEBUG %}-->
+<!--        {% include 'paper/utils/example_menu.html' %}-->
+<!--    {% endif %}-->
+
+{% block nav_links_ul %}
+<ul class="sidebar-menu" >
+    {% block nav_links_outer %}
+    <li class="header">{% block nav_heading %}MAIN NAVIGATION{% endblock %}</li>
+
+    {% block nav_links %}
+    <li>
+        <a href="">
+            <i class="nc-icon nc-scissors"></i>
+                <span>Orders</span>
+        </a>
+    </li>
+    <li>
+        <a href="">
+            <i class="fa fa-sign-out" aria-hidden="true"></i><span>Sales Orders</span>
+        </a>
+    </li>
+    <li>
+        <a href="">
+        <i class="nc-icon nc-credit-card"></i>
+            <span>Invoice</span>
+        </a>
+    </li>
+    <li>
+        <a href="">
+            <i class="nc-icon nc-badge"></i>
+            <span>Employee List</span>
+        </a>
+    </li><li>
+        <a href="">
+            <i class="nc-icon nc-badge"></i>
+            <span>Category</span>
+        </a>
+    </li>
+    <li>
+        <a href="">
+            <i class="nc-icon nc-badge"></i>
+            <span>Brand</span>
+        </a>
+    </li>
+    <li>
+        <a href="">
+            <i class="nc-icon nc-badge"></i>
+            <span>Dealer Complaints</span>
+        </a>
+    </li>
+<!--    {% if not request.user.is_manager %}-->
+    <li>
+        <a href="">
+            <i class="fa fa-book" aria-hidden="true"></i><span>Branch</span>
+        </a>
+    </li>
+<!--    {% endif %}-->
+    <li>
+        <a href="">
+            <i class="fa fa-book" aria-hidden="true"></i><span>Dealers</span>
+        </a>
+    </li>
+    <li>
+        <a href="">
+            <i class="fa fa-book" aria-hidden="true"></i><span>Exceutive</span>
+        </a>
+    </li>
+    <li>
+        <a href="">
+            <i class="fa fa-book" aria-hidden="true"></i><span>Payment</span>
+        </a>
+    </li>
+    <li>
+        <a href="">
+            <i class="fa fa-book" aria-hidden="true"></i><span>Advertisements</span>
+        </a>
+    </li>
+<!--    {% if request.user %}-->
+<!--    {% include 'paper/utils/_user_permission_menus.html' %}-->
+<!--    {% if user.is_superuser %}-->
+<!--    {% include 'paper/utils/admin_menu.html' %}-->
+<!--    {% endif %}-->
+<!--    {% endif %}-->
+<!--    {% endblock nav_links %}-->
+<!--    {% endblock nav_links_outer %}-->
+</ul>
+{% endblock nav_links_ul %}
+
+
+
+</ul>

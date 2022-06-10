@@ -1,0 +1,26 @@
+{% extends 'paper/base.html' %}
+
+{% block page_title %}
+{{ request.tenant }}
+{% endblock %}
+
+{% block user_sidebar %}
+{% include 'paper/utils/user_menu.html' %}
+{% endblock %}
+
+{% block sidebar_wrapper %}
+        {% include 'paper/utils/common_menu.html' %}
+{% endblock %}
+
+{% block notifications %}
+<!--<a class="dropdown-item" href="#">Action</a>-->
+<!--<a class="dropdown-item" href="#">Another action</a>-->
+<!--<a class="dropdown-item" href="#">Something else here</a>-->
+{% endblock %}
+
+{% block title %}Dashboard | Salon {% endblock %}
+
+{% block content_body %}
+<h3 class="description">Your content here</h3>
+{% endblock %}
+

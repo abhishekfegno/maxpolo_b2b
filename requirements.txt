@@ -1,2 +1,4 @@
 django-extensions==3.1.5
 django-phonenumber-field==5.0.0
+django-debug-toolbar
+django-crispy-forms
