@@ -42,7 +42,7 @@ class Command(BaseCommand):
     def create_view_files(self, file, model):
         print("Inside cretae view file")
         createview = f'{model}CreateView(CreateView)'
-        detailview = f'{model}DetailView(DetailView)'
+        detailview = f'{model}DetailView(UpdateView)'
         listview = f'{model}ListView(ListView)'
         deleteview = f'{model}DeleteView(DeleteView)'
         try:
@@ -81,7 +81,7 @@ class Command(BaseCommand):
                 fp.write(
                     "# New file created \n"
                      "from django import forms\n"
-                     f"class {model}Form(forms.ModelForm):\n\tclass Meta:\n\t\tmodel = {model}\n\t\tfields = ()"
+                     f"class {model}Form(forms.ModelForm):\n\tclass Meta:\n\t\tmodel = {model}\n\t\tfields = '__all__' "
                      )
             print(f"{file.split('/')[-1]} created")
         except Exception as e:
@@ -94,7 +94,8 @@ class Command(BaseCommand):
         create_file = path + f'{model}_create.html'
         detail_file = path + f'{model}_detail.html'
         form_file = path + f'{model}_form.html'
-        list_content = "{% extends 'paper/layout.html' %}\n"\
+        list_content = "{% extends 'paper/index.html' %}\n"\
+                    "{% load crispy_forms_tags %}\n"\
                     "{% block content%}\n" \
                      "<div class=''>\n"\
                         "<div class='row'>\n"\
@@ -118,7 +119,8 @@ class Command(BaseCommand):
                     "</div>\n"\
                     "{% endblock %}"
 
-        form_content ="{% extends 'paper/layout.html' %}\n"\
+        form_content ="{% extends 'paper/index.html' %}\n" \
+                      "{% load crispy_forms_tags %}\n" \
                     "{% block content%}\n"\
                     "<div class='row'>\n"\
                         "<div class='col-md-6 '>\n"\

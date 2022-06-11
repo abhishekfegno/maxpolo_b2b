@@ -1,14 +1,18 @@
-# New file created 
+# New file created
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
 
 from apps.catalogue.forms.brand_form import BrandForm
 from apps.catalogue.models import Brand
 
 
-class BrandDetailView(DetailView):
+class BrandDetailView(UpdateView):
 	queryset = Brand.objects.all()
-	template_name = 'paper/catalogue/brand_detail.html'
+	template_name = 'paper/catalogue/brand_form.html'
 	model = Brand
+	form_class = BrandForm
+	success_url = '/catalogue/brand/list/'
 
 
 class BrandListView(CreateView, ListView):
@@ -16,11 +20,27 @@ class BrandListView(CreateView, ListView):
 	template_name = 'paper/catalogue/brand_list.html'
 	model = Brand
 	form_class = BrandForm
+	success_url = '/catalogue/brand/list/'
 
 
 class BrandDeleteView(DeleteView):
 	queryset = Brand.objects.all()
-	template_name = 'paper/catalogue/brand_delete.html'
+	template_name = 'paper/catalogue/brand_list.html'
 	model = Brand
+	success_url = reverse_lazy('brand-list')
+
+	# success_url = '/catalogue/brand/list/'
+
+	def post(self, request, *args, **kwargs):
+		"""
+		Call the delete() method on the fetched object and then redirect to the
+		success URL.
+		"""
+		self.object = self.get_object()
+		success_url = self.get_success_url()
+		# import pdb;pdb.set_trace()
+		self.object.delete()
+		return HttpResponseRedirect(success_url)
+
 
 

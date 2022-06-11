@@ -10,8 +10,6 @@ class SalesOrder(models.Model):
     is_confirmed = models.BooleanField(default=False)
     is_invoice = models.BooleanField(default=False)
 
-
-
     def __str__(self):
         return self.order_id
 

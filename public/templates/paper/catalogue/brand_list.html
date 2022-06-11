@@ -40,14 +40,20 @@
                         <!--                </tr>-->
                         </thead>
                         <tbody>
-                        {% for brand in object_list %}
+                        {% for object in object_list %}
                         <tr>
                             <!--                    <td scope="row"> </td>-->
                             <td>
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class="">{{ brand.name }}</div>
+                                <div class="">{{ object.name }}</div>
+                            </td>
+                            <td>
+                                <div class=""><a href="{% url 'brand-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
+                            </td>
+                            <td>
+                                <div class=""><a href="" onclick="swalFunction(this, {{ object.pk }})" class="delBrand btn btn-danger">Delete</a></div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -64,5 +70,34 @@
 
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
+<script>
+    function swalFunction(element, id){
+        console.log(element, id)
+    Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+<!--            $.ajax({-->
+<!--                type:"POST",-->
+<!--                url:""-->
+<!--                -->
+<!--            })-->
+            Swal.fire(
+              'Deleted!',
+              'Your file has been deleted.',
+              'success'
+            )
+            }
+        });
+    } // end of swalFunction()
+
+</script>
 
 {% endblock %}

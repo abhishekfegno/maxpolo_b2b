@@ -5,17 +5,12 @@ from apps.catalogue.forms.category_form import CategoryForm
 from apps.catalogue.models import Category
 
 
-class CategoryCreateView(CreateView):
+class CategoryDetailView(UpdateView):
 	queryset = Category.objects.all()
-	template_name = 'paper/catalogue/category_create.html'
+	template_name = 'paper/catalogue/category_form.html'
 	model = Category
 	form_class = CategoryForm
-
-
-class CategoryDetailView(DetailView):
-	queryset = Category.objects.all()
-	template_name = 'paper/catalogue/category_detail.html'
-	model = Category
+	success_url = '/catalogue/category/list/'
 
 
 class CategoryListView(CreateView, ListView):
@@ -23,11 +18,13 @@ class CategoryListView(CreateView, ListView):
 	template_name = 'paper/catalogue/category_list.html'
 	model = Category
 	form_class = CategoryForm
+	success_url = '/catalogue/category/list/'
 
 
 class CategoryDeleteView(DeleteView):
 	queryset = Category.objects.all()
 	template_name = 'paper/catalogue/category_delete.html'
 	model = Category
+	success_url = '/catalogue/category/list/'
 
 

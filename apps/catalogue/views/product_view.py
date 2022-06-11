@@ -5,10 +5,12 @@ from apps.catalogue.forms.product_form import ProductForm
 from apps.catalogue.models import Product
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(UpdateView):
 	queryset = Product.objects.all()
-	template_name = 'templates/product_detail.html'
+	template_name = 'paper/catalogue/product_form.html'
 	model = Product
+	form_class = ProductForm
+	success_url = '/catalogue/product/list/'
 
 
 class ProductListView(CreateView, ListView):
@@ -16,11 +18,13 @@ class ProductListView(CreateView, ListView):
 	template_name = 'paper/catalogue/product_list.html'
 	model = Product
 	form_class = ProductForm
+	success_url = '/catalogue/product/list/'
 
 
 class ProductDeleteView(DeleteView):
 	queryset = Product.objects.all()
-	template_name = 'templates/product_delete.html'
+	template_name = 'paper/catalogue/product_delete.html'
 	model = Product
+	success_url = '/catalogue/product/list/'
 
 

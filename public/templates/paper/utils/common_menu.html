@@ -10,18 +10,18 @@
 
     {% block nav_links %}
     <li>
-        <a href="">
+        <a href="{% url 'salesorder-list' %}">
             <i class="nc-icon nc-scissors"></i>
                 <span>Orders</span>
         </a>
     </li>
     <li>
-        <a href="">
+        <a href="{% url 'salesorder-list' %}">
             <i class="fa fa-sign-out" aria-hidden="true"></i><span>Sales Orders</span>
         </a>
     </li>
     <li>
-        <a href="">
+        <a href="{% url 'salesorder-list' %}">
         <i class="nc-icon nc-credit-card"></i>
             <span>Invoice</span>
         </a>
@@ -45,14 +45,14 @@
         </a>
     </li>
     <li>
-        <a href="">
+        <a href="{% url 'complaint-list' %}">
             <i class="nc-icon nc-badge"></i>
             <span>Dealer Complaints</span>
         </a>
     </li>
 <!--    {% if not request.user.is_manager %}-->
     <li>
-        <a href="">
+        <a href="{% url 'branch-list' %}">
             <i class="fa fa-book" aria-hidden="true"></i><span>Branch</span>
         </a>
     </li>
@@ -73,7 +73,7 @@
         </a>
     </li>
     <li>
-        <a href="">
+        <a href="{% url 'banners-list' %}">
             <i class="fa fa-book" aria-hidden="true"></i><span>Advertisements</span>
         </a>
     </li>

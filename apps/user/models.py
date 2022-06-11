@@ -66,7 +66,6 @@ class Executive(User):
         return self.username
 
 
-
 class Complaint(models.Model):
     STATUS = (
         ('new', 'New'),
@@ -76,7 +75,25 @@ class Complaint(models.Model):
     )
     description = models.CharField(max_length=200)
     status = models.CharField(max_length=20, choices=STATUS)
-
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    photo = models.ImageField(null=True, blank=True)
 
     def __str__(self):
         return self.description
+
+
+class Banners(models.Model):
+    title = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=50)
+    photo = models.ImageField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = str(self.title).lower().replace(' ', '-')
+        return super().save(*args, **kwargs)
+
+    @property
+    def photo_url(self):
+        return self.photo.url or None
+
+    def __str__(self):
+        return self.title
