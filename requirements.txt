@@ -2,8 +2,12 @@ django-extensions==3.1.5
 django-phonenumber-field==5.0.0
 django-debug-toolbar
 django-crispy-forms
-python-dotnev
+python-dotenv
 django-rest-framework
 psycopg2-binary
 django-treebeard
 pillow
+django-cors-headers
+django-redis
+django-filter
+drf-url-filters

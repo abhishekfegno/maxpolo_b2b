@@ -17,6 +17,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+
+import lib.root
 from .settings import DEBUG
 
 urlpatterns = [
@@ -25,6 +27,10 @@ urlpatterns = [
     path('catalogue/', include('apps.catalogue.urls')),
     path('order/', include('apps.order.urls')),
     path('infrastructure/', include('apps.infrastructure.urls')),
+    path('api/v1/', include([
+        path('', lib.root.api_root),
+        path('catalogue/', include('apps.catalogue.api.urls'))
+    ])),
     path('__debug__/', include('debug_toolbar.urls')),
 
 ]

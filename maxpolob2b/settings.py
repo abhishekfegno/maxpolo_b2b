@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'dg',
     'django_extensions',
      'rest_framework',
+    'django_filters',
     'crispy_forms',
     'debug_toolbar'
 ]
@@ -107,6 +108,35 @@ TEMPLATES = [
     },
 ]
 
+
+REST_FRAMEWORK = {
+
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     # 'rest_framework.authentication.BasicAuthentication',
+    #     # 'rest_framework.authentication.SessionAuthentication',
+    #     'rest_framework.authentication.TokenAuthentication',
+    #
+    # ],
+
+    # "DEFAULT_PERMISSION_CLASSES": [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'django_filters.rest_framework.OrderingFilter',
+    ],
+
+
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    # 'DEFAULT_PAGINATION_CLASS': 'lib.utils.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+
+
+
+}
 WSGI_APPLICATION = 'maxpolob2b.wsgi.application'
 
 
