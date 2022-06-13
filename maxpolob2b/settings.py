@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-b0u)v=*cyp-+kpl-=04+uf@=z@k!^d$mo9f&gvf7$%xf$bqa04
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['maxpolo.dev.fegno.com', 'www.maxpolo.dev.fegno.com', 'localhost']
 
 
 # Application definition
