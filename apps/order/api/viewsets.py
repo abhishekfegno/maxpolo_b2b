@@ -7,16 +7,18 @@ from rest_framework.response import Response
 
 from apps.catalogue.api.serializers import ProductSerializer
 from apps.catalogue.models import Product
+from apps.order.api.serializers import OrderSerializer
+from apps.order.models import SalesOrder
 from lib.utils import list_api_formatter
 
 
-class ProductAPIView(ListAPIView):
-    queryset = Product.objects.select_related('category', 'brand')
-    serializer_class = ProductSerializer
+class OrderSerializerAPIView(ListAPIView):
+    queryset = SalesOrder.objects.all()
+    serializer_class = OrderSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
-    filterset_fields = ('product_code', 'name')
-    search_fields = ('product_code', 'name')
-    ordering_fields = ('product_code', 'name')
+    filterset_fields = ()
+    search_fields = ()
+    ordering_fields = ()
     pagination_class = PageNumberPagination
 
     def list(self, request, *args, **kwargs):

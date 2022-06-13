@@ -31,6 +31,7 @@ urlpatterns = [
         path('', lib.root.api_root),
         path('catalogue/', include('apps.catalogue.api.urls')),
         path('user/', include('apps.user.api.urls')),
+        path('order/', include('apps.order.api.urls')),
     ])),
     path('__debug__/', include('debug_toolbar.urls')),
 
