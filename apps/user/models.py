@@ -40,6 +40,7 @@ class User(AbstractUser):
     mobile = models.CharField(max_length=20)
     user_role = models.CharField(max_length=20, default=Role.EXECUTIVE)
     branch = models.ForeignKey('infrastructure.Branch', on_delete=models.SET_NULL, null=True, blank=True)
+    dealers = models.ManyToManyField('self', null=True, blank=True)
 
 
     def __str__(self):
