@@ -25,6 +25,15 @@ class Category(MP_Node):
         return 'Category: {}'.format(self.name)
 
 
+class PDF(models.Model):
+    file = models.FileField(upload_to='pdf/product/', blank=True, null=True)
+    is_public = models.BooleanField(default=True)
+    category = models.ForeignKey(Category,on_delete=models.SET_NULL,blank=True, null=True)
+
+    def __str__(self):
+        return self.category.name
+
+
 class Product(models.Model):
     name = models.CharField(max_length=50)
     product_code = models.CharField(max_length=50)

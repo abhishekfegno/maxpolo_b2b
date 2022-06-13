@@ -16,6 +16,7 @@ def PUBLIC_APIS(r, f) -> list:
 
         #
         ("Dealer APIs", OrderedDict([
+            ("User Login", reverse('user:user-login', request=r, format=f)),
             ("Product List", reverse('catalogue:api-product-list', request=r, format=f)),
         #     ("Enter OTP", reverse('enter_otp', request=r, format=f)),
         #     ("Community List", reverse('operator:communitycarwashextension-list', request=r, format=f)),

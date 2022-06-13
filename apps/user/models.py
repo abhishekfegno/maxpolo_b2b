@@ -86,6 +86,7 @@ class Banners(models.Model):
     title = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50)
     photo = models.ImageField(null=True, blank=True)
+    is_public = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         self.slug = str(self.title).lower().replace(' ', '-')
