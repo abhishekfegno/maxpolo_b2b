@@ -24,6 +24,7 @@ from .settings import DEBUG
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.user.urls')),
+    path('auth/', include('django.contrib.auth.urls')),
     path('catalogue/', include('apps.catalogue.urls')),
     path('order/', include('apps.order.urls')),
     path('infrastructure/', include('apps.infrastructure.urls')),

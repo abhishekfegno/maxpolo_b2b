@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.urls import path, include
 from django.views.generic import TemplateView
 
@@ -6,7 +7,11 @@ from .views.banners_view import *
 from .views.complaint_view import *
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='paper/index.html'), name='index'),
+    path('', login_required(TemplateView.as_view(template_name='paper/index.html')), name='index'),
+
+    path('setpassword/<slug:token>/', password_reset, name='password_reset'),
+
+
     path('complaint/list/', ComplaintListView.as_view(), name='complaint-list'),
     path('complaint/<int:pk>/update/', ComplaintDetailView.as_view(), name='complaint-update'),
     path('complaint/<int:pk>/delete/', ComplaintDeleteView.as_view(), name='complaint-delete'),

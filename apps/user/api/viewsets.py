@@ -1,13 +1,16 @@
 from django.contrib.auth import authenticate, login
 from django.core.paginator import Paginator, EmptyPage
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.authtoken.models import Token
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView, GenericAPIView, RetrieveAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 
-from apps.user.api.serializers import LoginSerializer, ProfileAPISerializer, ComplaintSerialzer
+from apps.user.api.serializers import LoginSerializer, ProfileAPISerializer, ComplaintSerialzer, PasswordResetSerializer
 from apps.user.models import User, Complaint
+from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter
 
 
@@ -40,6 +43,33 @@ class ProfileAPIView(GenericAPIView):
     def get(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset().get(id=request.user.id))
         return Response(serializer.data)
+
+
+class PasswordResetView(GenericAPIView):
+    serializer_class = PasswordResetSerializer
+
+    def post(self, request, *args, **kwargs):
+        result = {}
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            email = EmailHandler()
+            recipient = {"email": serializer.data['email'], "name": serializer.data["username"]}
+            subject = {
+                "subject": "Password Reset",
+                "subheadline": "You have requested for a Password Reset"
+            }
+            try:
+                user = User.objects.get(username=serializer.data["username"])
+                token, _ = Token.objects.get_or_create(user=user)
+
+                url = f"{reverse('password_reset', request=request, format=None)}{token.key}"
+                message = f'You can reset you password by visiting this link {url}'
+                # email.sent_email_now(recipient, message, subject)
+                print(token)
+            except Exception as e:
+                result["message"] = str(e)
+            result["message"] = "Email sent"
+        return Response(result)
 
 
 class ComplaintListView(ListAPIView):

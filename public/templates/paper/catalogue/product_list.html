@@ -65,7 +65,7 @@
                                 <div class=""><a href="{% url 'product-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
                             </td>
                             <td>
-                                <div class=""><a href="{% url 'product-delete' pk=object.pk %}" class="btn btn-danger">Delete</a></div>
+                                <div class=""><a href="javascript:void(0)" class="btn btn-danger" onclick="swalFunction(this, '{% url 'category-delete' pk=object.pk %}')">Delete</a></div>
                             </td>
 
                         </tr>
@@ -79,6 +79,6 @@
         </div>
     </div>
 </div>
-
+{% include 'paper/swal.html' %}
 
 {% endblock %}

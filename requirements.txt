@@ -11,3 +11,4 @@ django-cors-headers
 django-redis
 django-filter
 drf-url-filters
+django-rest-auth

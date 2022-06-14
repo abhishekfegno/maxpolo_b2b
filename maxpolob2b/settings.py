@@ -50,7 +50,9 @@ INSTALLED_APPS = [
 
     'dg',
     'django_extensions',
-     'rest_framework',
+    'rest_framework',
+    'rest_auth',
+    'rest_framework.authtoken',
     'django_filters',
     'crispy_forms',
     'debug_toolbar'
@@ -197,6 +199,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
+
+TOKEN_EXPIRED_AFTER_SECONDS = 300
+
+
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 
 STATIC_URL = '/assets/'
 MEDIA_URL = '/src/'
