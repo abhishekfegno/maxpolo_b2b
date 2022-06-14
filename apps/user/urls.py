@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 from django.views.generic import TemplateView
 
@@ -9,6 +10,8 @@ from .views.complaint_view import *
 urlpatterns = [
     path('', login_required(TemplateView.as_view(template_name='paper/index.html')), name='index'),
 
+    path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('logout/', LogoutView.as_view(template_name='registration/login.html'), name='logout'),
     path('setpassword/<slug:token>/', password_reset, name='password_reset'),
 
 

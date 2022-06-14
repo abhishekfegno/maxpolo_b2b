@@ -202,6 +202,10 @@ USE_TZ = True
 
 TOKEN_EXPIRED_AFTER_SECONDS = 300
 
+LOGIN_REDIRECT_URL = 'index'
+LOGIN_URL = 'login'
+LOGOUT_REDIECT_URL = 'logout'
+LOGOUT_URL = 'logout'
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = BASE_DIR / "sent_emails"

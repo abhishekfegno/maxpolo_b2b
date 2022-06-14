@@ -23,11 +23,14 @@ from .settings import DEBUG
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('apps.user.urls')),
-    path('auth/', include('django.contrib.auth.urls')),
-    path('catalogue/', include('apps.catalogue.urls')),
-    path('order/', include('apps.order.urls')),
-    path('infrastructure/', include('apps.infrastructure.urls')),
+    path('', include([
+        path('', include('apps.user.urls')),
+        path('auth/', include('django.contrib.auth.urls')),
+        path('catalogue/', include('apps.catalogue.urls')),
+        path('order/', include('apps.order.urls')),
+        path('infrastructure/', include('apps.infrastructure.urls')),
+    ])),
+
     path('api/v1/', include([
         path('', lib.root.api_root),
         path('catalogue/', include('apps.catalogue.api.urls')),
