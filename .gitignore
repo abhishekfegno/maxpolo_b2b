@@ -6,6 +6,8 @@
 *.log
 *.pot
 *.pyc
+.env
+public/*
 __pycache__/
 local_settings.py
 application/db.sqlite3
