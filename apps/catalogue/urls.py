@@ -10,6 +10,9 @@ urlpatterns = [
     path('category/<int:pk>/update/', CategoryDetailView.as_view(), name='category-update'),
     path('catagory/<int:pk>/delete/', CategoryDeleteView.as_view(), name='category-delete'),
 
+    path('pdf/list/', PDFListView.as_view(), name='pdf-list'),
+    path('pdf/<int:pk>/update/', PDFDetailView.as_view(), name='pdf-update'),
+
     path('brand/list/', BrandListView.as_view(), name='brand-list'),
     path('brand/<int:pk>/update/', BrandDetailView.as_view(), name='brand-update'),
     path('brand/<int:pk>/delete/', BrandDeleteView.as_view(), name='brand-delete'),

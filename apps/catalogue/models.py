@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 from treebeard.mp_tree import MP_Node
 
@@ -26,12 +28,20 @@ class Category(MP_Node):
 
 
 class PDF(models.Model):
+    title = models.CharField(max_length=50, null=True, blank=True)
+    slug = models.SlugField(max_length=50, null=True, blank=True)
     file = models.FileField(upload_to='pdf/product/', blank=True, null=True)
     is_public = models.BooleanField(default=True)
-    category = models.ForeignKey(Category,on_delete=models.SET_NULL,blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.category.name
+
+    def filename(self): return os.path.basename(self.file.name)
+
+    def save(self, *args, **kwargs):
+        self.slug = str(self.title).lower().replace(' ', '-')
+        return super().save(*args, **kwargs)
 
 
 class Product(models.Model):

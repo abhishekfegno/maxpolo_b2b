@@ -17,6 +17,7 @@ def PUBLIC_APIS(r, f) -> list:
         #
         ("Dealer APIs", OrderedDict([
             ("User Login", reverse('user:user-login', request=r, format=f)),
+            ("User Logout", reverse('user:user-logout', request=r, format=f)),
             ("User Profile", reverse('user:user-profile', request=r, format=f)),
             ("Password Reset", reverse('user:password-reset', request=r, format=f)),
             ("Dealer Complaint", reverse('user:dealer-complaints', request=r, format=f)),
@@ -28,6 +29,10 @@ def PUBLIC_APIS(r, f) -> list:
             #
             # ("Task List", reverse('operator:task-list', request=r, format=f)),
             # ("Task Detail", reverse('operator:task-detail', request=r, format=f, kwargs={'pk': 2})),
+
+        ])),
+        ('Excecutive API', OrderedDict([
+            ("Dealers List", reverse('user:dealers-list', request=r, format=f)),
 
         ])),
         ('Settings & Configurations', OrderedDict([

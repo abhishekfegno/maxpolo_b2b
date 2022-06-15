@@ -10,7 +10,7 @@ class ComplaintDetailView(UpdateView):
 	template_name = 'paper/user/complaint_form.html'
 	model = Complaint
 	form_class = ComplaintForm
-	success_url = '/user/complaint/list'
+	success_url = '/complaint/list'
 
 
 class ComplaintListView(CreateView, ListView):
@@ -18,13 +18,13 @@ class ComplaintListView(CreateView, ListView):
 	template_name = 'paper/user/complaint_list.html'
 	model = Complaint
 	form_class = ComplaintForm
-	success_url = '/user/complaint/list'
+	success_url = '/complaint/list'
 
 
 class ComplaintDeleteView(DeleteView):
 	queryset = Complaint.objects.all()
 	template_name = 'paper/user/complaint_delete.html'
 	model = Complaint
-	success_url = '/user/complaint/list'
+	success_url = '/complaint/list'
 
 

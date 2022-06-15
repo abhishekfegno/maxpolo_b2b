@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from apps.catalogue.models import Product
-from apps.user.models import User, Complaint, Banners
+from apps.user.models import User, Complaint, Banners, Dealer
 
 
 class LoginSerializer(serializers.Serializer):
@@ -36,3 +36,9 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Banners
         fields = '__all__'
+
+
+class DealerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Dealer
+        fields = ('id', 'username', 'user_role', 'branch')

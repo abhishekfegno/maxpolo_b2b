@@ -8,7 +8,7 @@ from apps.user.models import Banners
 class BannersForm(forms.ModelForm):
 	class Meta:
 		model = Banners
-		fields = ('title', 'photo')
+		fields = ('title', 'photo', 'is_public')
 
 
 class ResetPasswordForm(forms.Form):

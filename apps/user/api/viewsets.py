@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.core.paginator import Paginator, EmptyPage
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView, GenericAPIView, RetrieveAPIView
@@ -9,11 +10,14 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
+from apps.catalogue.api.serializers import ProductPDFSerializer
+from apps.catalogue.models import PDF
 from apps.user.api.serializers import LoginSerializer, ProfileAPISerializer, ComplaintSerialzer, \
-    PasswordResetSerializer, AdvertisementSerializer
-from apps.user.models import User, Complaint, Banners
+    PasswordResetSerializer, AdvertisementSerializer, DealerSerializer
+from apps.user.models import User, Complaint, Banners, Dealer
 from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter
+from django.contrib.auth import logout
 
 
 
@@ -36,6 +40,21 @@ class LoginAPIView(GenericAPIView):
         return Response(serializer.data)
 
 
+class LogoutAPIView(GenericAPIView):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
+
+
+class DealerListView(ListAPIView):
+    queryset = Dealer.objects.all()
+    serializer_class = DealerSerializer
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filterset_fields = ['username']
+    ordering_fields = ['username']
+
+
+
 
 
 class ProfileAPIView(GenericAPIView):
@@ -43,8 +62,12 @@ class ProfileAPIView(GenericAPIView):
     serializer_class = ProfileAPISerializer
 
     def get(self, request, *args, **kwargs):
-        serializer = self.get_serializer(self.get_queryset().get(id=request.user.id))
-        return Response(serializer.data)
+        try:
+            serializer = self.get_serializer(self.get_queryset().get(id=request.user.id)).data
+            result = serializer
+        except Exception as e:
+            result = {str(e)}
+        return Response(result)
 
 
 class PasswordResetView(GenericAPIView):
@@ -101,8 +124,10 @@ class HomePageAPI(APIView):
 
     def get(self, request, *args, **kwargs):
         advertisements = AdvertisementSerializer(Banners.objects.all(), many=True, context={'request': request}).data
+        pdf = ProductPDFSerializer(PDF.objects.all(), many=True, context={'request': request}).data
         result = {
             "banners": advertisements,
+            "new arrival": pdf,
             "payment": "Payment"
         }
         return Response(result)
