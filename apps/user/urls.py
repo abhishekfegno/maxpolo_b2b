@@ -4,6 +4,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 
 from .views import *
+from .views.user_view import *
 from .views.banners_view import *
 from .views.complaint_view import *
 
@@ -21,4 +22,7 @@ urlpatterns = [
     path('banners/list/', BannersListView.as_view(), name='banners-list'),
     path('banners/<int:pk>/update/', BannersDetailView.as_view(), name='banners-update'),
     path('banners/<int:pk>/delete/', BannersDeleteView.as_view(), name='banners-delete'),
+    path('user/list/<int:role>/', UserListView.as_view(), name='user-list'),
+    path('user/<int:pk>/update/', UserDetailView.as_view(), name='user-update'),
+    path('user/<int:pk>/delete/', UserDeleteView.as_view(), name='user-delete'),
 ]

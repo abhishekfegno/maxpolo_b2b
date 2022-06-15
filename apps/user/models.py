@@ -38,15 +38,14 @@ class Role:
 
 class User(AbstractUser):
     mobile = models.CharField(max_length=20)
-    user_role = models.CharField(max_length=20, default=Role.EXECUTIVE)
+    user_role = models.CharField(max_length=20, choices=Role.USER_ROLE_CHOICE, default=Role.EXECUTIVE)
     branch = models.ForeignKey('infrastructure.Branch', on_delete=models.SET_NULL, null=True, blank=True)
     dealers = models.ManyToManyField('self', null=True, blank=True)
 
     @property
     def user_role_name(self):
-        if self.user_role == 16: return Role.EXECUTIVE
-        if self.user_role == 32: return Role.DEALER
-        if self.user_role == 1: return Role.ADMIN
+        if self.user_role == 16: return "Executive"
+        if self.user_role == 32: return "Dealer"
 
     def __str__(self):
         return self.username

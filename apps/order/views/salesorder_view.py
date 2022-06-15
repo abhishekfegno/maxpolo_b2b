@@ -1,4 +1,6 @@
-# New file created 
+# New file created
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
 
 from apps.order.forms.salesorder_form import QuotationForm
@@ -21,6 +23,7 @@ class SalesOrderListView(CreateView, ListView):
 	success_url = '/order/order/list/'
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class SalesOrderDeleteView(DeleteView):
 	queryset = SalesOrder.objects.all()
 	template_name = 'templates/salesorder_list.html'

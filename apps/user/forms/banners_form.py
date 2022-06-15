@@ -2,7 +2,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from apps.user.models import Banners
+from apps.user.models import Banners, Dealer, Executive
 
 
 class BannersForm(forms.ModelForm):
@@ -21,6 +21,17 @@ class ResetPasswordForm(forms.Form):
 	# 	else:
 	# 		raise ValidationError("The given passwords dont match !!")
 
-
 	class Meta:
 		fields = ('new_password', 'confirm_password')
+
+
+class DealerForm(forms.ModelForm):
+	class Meta:
+		model = Dealer
+		fields = ('username', 'first_name', 'last_name', 'user_role', 'branch', 'mobile', 'email', 'password')
+
+
+class ExecutiveForm(forms.ModelForm):
+	class Meta:
+		model = Executive
+		fields = ('username', 'first_name', 'last_name', 'user_role', 'branch', 'mobile', 'email', 'password', 'dealers')

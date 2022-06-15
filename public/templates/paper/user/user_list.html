@@ -1,0 +1,84 @@
+{% extends 'paper/layout.html' %}
+{% load crispy_forms_tags %}
+{% block content%}
+<div class='row'>
+    <div class='col-6'>
+        <div class='card'>
+            <div class='card-body'>
+                <h3>Create {{ role }}</h3>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class='col-12'>
+        <div class='card'>
+            <div class='card-body'>
+                <h3>{{ role }} List</h3>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead class="">
+                        <tr class="">
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Mobile</th>
+                            <th scope="col">Role</th>
+                            <!--                    <th scope="col">Contact</th>-->
+                            <!--                    <th scope="col">Subscription</th>-->
+                            <!--                    <th scope="col">Last View</th>-->
+                            <!--                    <th scope="col">Action</th>-->
+                        </tr>
+                        <!--                <tr>-->
+                        <!--                    <td class="text-dark text-sm"><small>#</small></td>-->
+                        <!--                    <td class="text-dark text-sm"><small>Name of the {{ title }}</small></td>-->
+                        <!--                    <td class="text-dark text-sm"><small>Contact</small></td>-->
+                        <!--                    <td class="text-dark text-sm"><small>Subscription</small></td>-->
+                        <!--                    <td class="text-dark text-sm"><small>Last View</small></td>-->
+                        <!--                    <td class="text-dark text-sm"><small>Hot links for quick actions.</small></td>-->
+                        <!--                </tr>-->
+                        </thead>
+                        <tbody>
+                        {% for object in object_list %}
+                        <tr>
+                            <!--                    <td scope="row"> </td>-->
+                            <td>
+                                <div class="">{{ forloop.counter }}</div>
+                            </td>
+                            <td>
+                                <div class="">{{ object.get_fullname }}</div>
+                            </td>
+                            <td>
+                                <div class="">{{ object.mobile }}</div>
+                            </td>
+                            <td>
+                                <div class="">{{ object.user_role_name }}</div>
+                            </td>
+
+                            <td>
+                                <div class=""><a href="{% url 'user-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
+                            </td>
+                            <td>
+                                <div class=""><a href="javascript:void(0)" onclick="swalFunction(this, '{% url 'user-delete' pk=object.pk %}')" class="delBrand btn btn-danger">Delete</a></div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+</div>
+{% include 'paper/swal.html' %}
+
+{% endblock %}
