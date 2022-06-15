@@ -1,0 +1,48 @@
+{% extends 'paper/login_base.html' %}
+{% load crispy_forms_tags %}
+
+
+{%  block login_form %}
+<style>.errorlist {font-size: 0.8rem;} .footer{margin-top: 60px;}</style>
+
+<div class="login100-pic js-tilt" id="qr-code" data-tilt>
+    <img src="{{ STATIC_URL }}Login_v1/images/img-01.png" alt="IMG">
+</div>
+<form class="login100-form validate-form" method="POST">{% csrf_token %}
+    <span class="login100-form-title">
+        Administration Login
+        </span>
+
+    <div class="wrap-input100 validate-input" data-validate="Valid username is required: ft0000">
+        <input class="input100" name="username" type="text"  placeholder="Username">
+        <div class="text-danger">{{ form.username.errors }}</div>
+
+        <span class="focus-input100"></span>
+        <span class="symbol-input100">
+        <i class="fa fa-envelope" aria-hidden="true"></i>
+        </span>
+    </div>
+    <div class="wrap-input100 validate-input" data-validate="Password is required">
+        <input class="input100" name="password" type="password" placeholder="Password">
+        <div class="text-danger">{{ form.password.errors }}</div>
+
+        <span class="focus-input100"></span>
+        <span class="symbol-input100">
+        <i class="fa fa-lock" aria-hidden="true"></i>
+        </span>
+    </div>
+    <div class="text-danger">{{ form.non_field_errors }}</div>
+
+    <div class="container-login100-form-btn">
+        <button class="login100-form-btn">
+            Login
+        </button>
+    </div>
+    <div class="text-center p-t-136">
+        <span>2022 ©</span> <span class="">
+         Soulmate
+        </span>
+    </div>
+</form>
+
+{% endblock %}

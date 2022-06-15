@@ -1,0 +1,25 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Password reset on localhost:8000
+From: webmaster@localhost
+To: raviabhishek445@gmail.com
+Date: Tue, 14 Jun 2022 08:44:58 -0000
+Message-ID: <165519629831.164222.7602892583240411337@fegnotech>
+
+
+You're receiving this email because you requested a password reset for your user account at localhost:8000.
+
+Please go to the following page and choose a new password:
+
+http://localhost:8000/auth/reset/MQ/b702yy-5de8a5888364c7f275a3cbcda3a04c12/
+
+Your username, in case you’ve forgotten: 8078194053
+
+Thanks for using our site!
+
+The localhost:8000 team
+
+
+
+-------------------------------------------------------------------------------
