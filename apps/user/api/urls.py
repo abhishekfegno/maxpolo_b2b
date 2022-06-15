@@ -9,4 +9,5 @@ urlpatterns = [
     path('profile/', ProfileAPIView.as_view(), name='user-profile'),
     path('password/reset/', PasswordResetView.as_view(), name='password-reset'),
     path('complaints/', ComplaintListView.as_view(), name='dealer-complaints'),
+    path('homepage/', HomePageAPI.as_view(), name='home-page'),
 ]

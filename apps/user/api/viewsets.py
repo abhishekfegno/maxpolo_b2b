@@ -7,9 +7,11 @@ from rest_framework.generics import ListAPIView, GenericAPIView, RetrieveAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.views import APIView
 
-from apps.user.api.serializers import LoginSerializer, ProfileAPISerializer, ComplaintSerialzer, PasswordResetSerializer
-from apps.user.models import User, Complaint
+from apps.user.api.serializers import LoginSerializer, ProfileAPISerializer, ComplaintSerialzer, \
+    PasswordResetSerializer, AdvertisementSerializer
+from apps.user.models import User, Complaint, Banners
 from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter
 
@@ -95,3 +97,12 @@ class ComplaintListView(ListAPIView):
         return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=serializer.data))
 
 
+class HomePageAPI(APIView):
+
+    def get(self, request, *args, **kwargs):
+        advertisements = AdvertisementSerializer(Banners.objects.all(), many=True, context={'request': request}).data
+        result = {
+            "banners": advertisements,
+            "payment": "Payment"
+        }
+        return Response(result)
