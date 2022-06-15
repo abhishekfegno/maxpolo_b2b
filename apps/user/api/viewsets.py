@@ -32,12 +32,15 @@ class LoginAPIView(GenericAPIView):
             user = authenticate(request, username=data['username'], password=data['password'])
             try:
                 login(request, user)
+                print(user, request.user)
+                out['user'] = user.username
+                out['role'] = user.user_role_name
             except Exception as e:
                 out['errors'] = str(e)
-            print(user, request.user)
+
         else:
             out['errors'] = serializer.errors
-        return Response(serializer.data)
+        return Response(out)
 
 
 class LogoutAPIView(GenericAPIView):
