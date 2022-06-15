@@ -1,4 +1,6 @@
-# New file created 
+# New file created
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
 
 from apps.infrastructure.forms.branch_form import BranchForm
@@ -21,6 +23,7 @@ class BranchListView(CreateView, ListView):
 	success_url = '/infrastructure/branch/list/'
 
 
+@method_decorator(decorator=csrf_exempt, name='dispatch')
 class BranchDeleteView(DeleteView):
 	queryset = Branch.objects.all()
 	template_name = 'templates/branch_delete.html'
