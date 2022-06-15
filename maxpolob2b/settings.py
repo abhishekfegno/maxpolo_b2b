@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'apps.infrastructure',
     'apps.catalogue',
     'apps.order',
+    'apps.executivetracking',
 
     'dg',
     'django_extensions',
@@ -55,19 +56,19 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_filters',
     'crispy_forms',
-    'debug_toolbar'
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
 
 ]
 INTERNAL_IPS = [
@@ -106,6 +107,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'templatetags': 'apps.templatetags',
+            }
         },
     },
 ]
@@ -190,7 +194,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -218,8 +222,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'public/staticfiles/')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'public/src/')
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'public/static')]
-
-print(STATIC_URL, STATIC_ROOT)
 
 
 # Default primary key field type

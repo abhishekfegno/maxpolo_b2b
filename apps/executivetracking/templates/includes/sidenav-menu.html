@@ -1,0 +1,79 @@
+{% load menu_tags %}
+<ul class="navbar-nav">
+  {% menu_format request as MENU_DATA %}
+  {% for menu in MENU_DATA %}
+
+  <!--  USER ROLES -->
+
+  <li class="nav-item text-muted">
+    {% if not menu.submenu %}
+    <a class="nav-link {{ menu.url|link_class:request }}" href="{{ menu.url }}">
+      <i class="{{ menu.icon }} text-muted"></i>
+      <span class="nav-link-text text-muted">{{ menu.name }}</span>
+    </a>
+    {% else %}
+    <a class="nav-link {{ menu.url|link_class:request }}" href="#navbar-{{ menu.name|slugify }}" data-toggle="collapse"
+       role="button" aria-expanded="{{ menu.submenu|menu_aria_expand:request }}" aria-controls="navbar-{{ menu.name|slugify }}">
+      <i class="{{ menu.icon }}  text-muted"></i>
+      <span class="nav-link-text text-muted">{{ menu.name }}</span>
+    </a>
+    <div class="collapse {{ menu.submenu|collapse_class:request }}" id="navbar-{{ menu.name|slugify }}">
+      <ul class="nav nav-sm flex-column">
+        {% for submenu in menu.submenu %}
+        <li class="nav-item {{ submenu.url|link_class:request }}">
+          <a href="{{ submenu.url }}" class="nav-link {% if submenu.url == request.path %}active{% endif %}">
+            <span class="sidenav-normal"> {{ submenu.name }} </span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    </li>
+  <!--  END USER ROLES-->
+  {% endfor %}
+
+<!--  <li class="nav-item">
+    <a class="nav-link" href="../../pages/charts.html">
+      <i class="ni ni-chart-pie-35 text-info"></i>
+      <span class="nav-link-text">Charts</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/calendar.html">
+      <i class="ni ni-calendar-grid-58 text-red"></i>
+      <span class="nav-link-text">Calendar</span>
+    </a>
+  </li>-->
+</ul>
+<!-- Divider -->
+<hr class="my-3">
+<!-- Heading -->
+<!--
+&lt;!&ndash; Navigation &ndash;&gt;
+<ul class="navbar-nav mb-md-3">
+  <li class="nav-item">
+    <a class="nav-link" href="../../docs/getting-started/overview.html" target="_blank">
+      <i class="ni ni-spaceship"></i>
+      <span class="nav-link-text">Getting started</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../docs/foundation/colors.html" target="_blank">
+      <i class="ni ni-palette"></i>
+      <span class="nav-link-text">Foundation</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../docs/components/alerts.html" target="_blank">
+      <i class="ni ni-ui-04"></i>
+      <span class="nav-link-text">Components</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../docs/plugins/charts.html" target="_blank">
+      <i class="ni ni-chart-pie-35"></i>
+      <span class="nav-link-text">Plugins</span>
+    </a>
+  </li>
+</ul>-->

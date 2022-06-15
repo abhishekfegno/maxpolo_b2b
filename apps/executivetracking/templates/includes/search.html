@@ -1,0 +1,14 @@
+<form action="" class="float-right ">
+    <div class="form-group mb-0 ">
+        <div class="input-group   input-group-alternative input-group-merge border-white">
+            <input class="form-control ml-3" name="q" placeholder="Search... " type="text" value="{{ request.GET.q }}">
+            <div class="input-group-prepend">
+                <button type="submit" value="Search Name" class="input-group-text text-primary" style="cursor:pointer"><i
+                        class="fa fa-search"></i></button>
+            </div>
+        </div>
+        {% if request.GET.q %}
+        <small> <a href="{{ request.path_info }}">View All </a> </small>
+        {% endif %}
+    </div>
+</form>

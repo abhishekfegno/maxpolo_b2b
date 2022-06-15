@@ -1,0 +1,16 @@
+<div class="form-group">
+    <div class="input-group input-group-alternative">
+        <div class="input-group-prepend">
+            <span class="input-group-text">{{ icon|safe }}</span>
+        </div>
+        {{ field }}
+    </div>
+    <small class="text-muted nobullets mt-3 d-block">{{ field.help_text|safe }}</small>
+    {% if field.errors %}
+    <div class='form-errors '>
+        {% for error in field.errors %}
+        <small class="text-danger"> {{ error }} </small>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

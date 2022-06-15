@@ -1,0 +1,312 @@
+{% extends 'paper/index.html' %}
+{% load static  %}
+{% block title %} Field Force Tracking {% endblock title %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+<link rel="stylesheet" href="{% static 'js/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.min.css' %}" />
+{% endblock %}
+{% block content %}
+<style type="text/css">.field-tracking{display:-webkit-box;display:-ms-flexbox;display:flex;width:100%;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;min-height:80vh;border-top:solid 1px #eee}
+.field-tracking .contacts-list{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-ms-flex:auto;flex:auto;width:300px;background-color:#fbfbfb;max-width:300px;min-width:300px;border-bottom-left-radius:8px;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}
+.field-tracking .contacts-list__search{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-ms-flex:auto;flex:auto;max-height:50px;height:50px}.field-tracking .contacts-list__list{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-ms-flex:auto;flex:auto;position:relative}
+.field-tracking .contacts-list__wrapper{padding:0;margin:0;list-style:none}.field-tracking .contacts-list__wrapper li{display:block;width:100%}.field-tracking .contacts-list__search-icon{position:absolute;right:10px;top:0;bottom:0;margin:auto 0;height:23px}
+.field-tracking .contacts-list__input-wrapper{width:100%;border-bottom:solid 1px #f1f1f1;position:relative}.field-tracking .contacts-list__input-wrapper input{width:100%;height:50px;border:none;background-color:transparent;padding:0 30px 0 15px;position:relative;z-index:2}
+.field-tracking .contacts-list__contents{position:absolute;left:0;right:0;bottom:0;top:0;overflow-y:scroll}.field-tracking .contacts-list__contents::-webkit-scrollbar{width:6px}.field-tracking .contacts-list__contents::-webkit-scrollbar-track{background-color:#ececec}
+.field-tracking .contacts-list__contents::-webkit-scrollbar-thumb{border-radius:0;background:0 0}.field-tracking .contacts-list__contents::-webkit-scrollbar-thumb:window-inactive{background:0 0;opacity:0}
+.field-tracking .contacts-list__contents:hover::-webkit-scrollbar-thumb{border-radius:0;background:rgba(187,187,187,.8)}.field-tracking .contacts-list__contents:hover::-webkit-scrollbar-thumb:window-inactive{background:rgba(187,187,187,.8);opacity:0}
+.field-tracking .contact{display:block;width:100%;position:relative;margin-bottom:10px;cursor:pointer;padding:8px 0;min-height:50px}.field-tracking .contact:active:not(.large),.field-tracking .contact:focus:not(.large),.field-tracking .contact:hover:not(.large){background:#f1f1f1}
+.field-tracking .contact__avatar{display:block;width:50px;height:50px;border-radius:50%;position:absolute;left:10px}.field-tracking .contact__avatar img{width:100%;height:100%;border-radius:inherit}.field-tracking .contact__info{padding-left:70px}.field-tracking .contact__name{color:#000;font-weight:500;font-size:16px}
+.field-tracking .contact__location{color:#999}.field-tracking .contact__location.active{color:#6772e5}.field-tracking .contact.large .contact__avatar{width:60px;height:60px}.field-tracking .contact.large .contact__info{padding-left:80px}.field-tracking .contact.large .contact__name{font-size:23px;font-weight:500}
+.field-tracking .no-results__title{font-weight:400;color:#141414}.field-tracking .no-results__content{font-size:13px}.field-tracking .tracking-content-main{width:100%;overflow:hidden}.field-tracking .tracking-content-main .header-wrapper{border-bottom:solid 1px #efefef}
+.field-tracking .t-activity__contents{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-ms-flex:auto;flex:auto}.field-tracking .t-activity__card{padding:8px;width:100%;border-radius:3px;margin-right:20px;border-bottom:1px solid #c0c0c055}.field-tracking .t-activity__icon{font-size:50px;color:#6772e5; margin-right:21px;}
+.field-tracking .t-activity__list{list-style:none;margin:0;width:100%;padding:0;position:relative}.field-tracking .t-activity__list:after{content:"";display:block;top:25px;bottom:25px;left:0;width:2px;background-color:#cfcfcf;position:absolute}
+.field-tracking .t-activity__list li{width:100%;position:relative;padding-left:30px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row}
+.field-tracking .t-activity__list li:after{content:"";display:block;top:25px;left:-5px;width:10px;height:10px;border-radius:50%;background-color:#cfcfcf;position:absolute}
+.contact.active{ background-color:#eee;}.hidden{display:none} #modal-body-for-global-map{height:600px;}
+.read-more[data-load-mode="min"][data-load-status="on"]:after {content: "Read More";color: #5e72e4;width: 100%;display:block;position:absolute;right:0;left: 0;bottom:0;background-image: linear-gradient(to top, #fff , #fffc , #fff0);text-align: center;padding-top: 48px;padding-bottom: 24px;}
+.read-more[data-load-mode="min"] p.text-content {position: relative;height: 120px;overflow: hidden;}.read-more{transition: height 250ms ease-out;}.read-more .max-text, .read-more .min-text {cursor: pointer; }.read-more[data-load-mode="min"] .text-content .max-text{ display: none; }
+</style>
+<!-- Header -->
+{% include 'includes/layout-header.html' %}
+
+<!-- Page content -->
+<div class="container-fluid mt--9" xmlns="http://www.w3.org/1999/html">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class=" ml-1">Field Force Tracking </h3>
+                        </div>
+                        <div class="col-4 text-right" style="display:none" hidden>
+                            <form>
+                                <div class="form-group">
+                                    <div class="input-group input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                        </div>
+                                        <input class="form-control datepicker" placeholder="Select date" type="text"
+                                               name="date" value="{{ selected_date }}"
+                                               onchange="this.form.submit()" data-date-format="dd-mm-yyyy">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="field-tracking">
+                    <div class="contacts-list">
+                        <div class="contacts-list__search">
+                            <div class="contacts-list__input-wrapper" >
+                                <input type="text" oninput="filter_executives(this)" placeholder="Search">
+                                <span class="contacts-list__search-icon">
+                              <i class="fa fa-search"></i>
+                            </span>
+                            </div>
+                        </div>
+                        <div class="contacts-list__list">
+                            <div class="contacts-list__contents">
+                                <div class="no-results hidden" >
+                                    <div class="row m-0 text-center py-5">
+                                        <div class="col-12">
+                                            <h3 class="no-results__title">No Results found</h3>
+                                        </div>
+                                        <div class="col-12">
+                                            <p class="no-results__content">
+                                                Oops! Nothing match with the following page.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <ul class="contacts-list__wrapper">
+                                    {% for executive in object_list %}
+                                    <li>
+                                        <a href="{% url 'leads-exec-list' pk=executive.pk %}">
+                                            <div class="contact  {% if executive.id == object.id %}active{% endif %}">
+                                                <div class="contact__avatar">
+                                                    <img src="{{ MEDIA_URL }}{{ executive.profile_url }}" alt="{{ executive.name }}">
+                                                </div>
+                                                <div class="contact__info">
+                                                    <div class="contact__name text-truncate  {% if executive.id == object.id %}font-weight-500 text-primary{% endif %}">
+                                                        {{ executive.name }}
+                                                    </div>
+                                                    <div class="contact__location text-truncate text-sm {% if executive.id == object.id %}active{% endif %}">
+                                                        {{ executive.branch.name }} <span class="text-muted">| ID:</span> {{ executive.system_id|default:"-" }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% if page_obj %}
+                    <div class="tracking-content-main">
+                        <div class="container-fluid py-4 ">
+                            <div class="row header-wrapper">
+                                <div class="col-8">
+                                    <div class="contact large ">
+                                        <div class="contact__avatar">
+                                            <img src="{{ MEDIA_URL }}{{ object.profile_url }}" alt="{{ object.name }} Profile Picture">
+                                        </div>
+                                        <div class="contact__info">
+                                            <div class="contact__name text-truncate">
+                                                {{ object.name }}
+                                            </div>
+                                            <div class="contact__location text-truncate">
+                                                {{ executive.branch.name }} <span class="text-muted">| ID:</span> {{ executive.system_id|default:"-" }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="t-activity">
+                                                <div class="t-activity__contents">
+                                                    <ul class="t-activity__list">
+                                                        <div class="t-activity">
+                                                            <div class="t-activity__contents">
+                                                                <ul class="t-activity__list">
+                                                                    {% for lead in page_obj %}
+                                                                        <li>
+<!--                                                                        <div class="t-activity__icon">-->
+<!--                                                                            <img src="/assets/img/icons/dealer.svg" class="img position-relative img-responsive" style="top:-10px" width="32px" height="32px" alt="Check in ">-->
+<!--                                                                        </div>-->
+                                                                        <div class="t-activity__card">
+                                                                            <div class="row mb-2">
+                                                                                <div class="col-md-6">
+                                                                                    <div class="row  pr-3">
+                                                                                        <div class="col-12 mt-2">
+                                                                                            <h2 class="">{{ lead.name }} <span class="text-danger"></span>
+                                                                                            </h2>
+                                                                                            <div><i class="mr-3 fa fa-address-card text-muted" aria-hidden="true"></i>{{ lead.address }}</div>
+                                                                                            <div><i class="mr-3 fa fa-mobile text-muted" aria-hidden="true"></i> {{ lead.mobile }}</div>
+                                                                                            <div><i class="mr-3 fa fa-map-marker text-muted" aria-hidden="true"></i>{{ lead.place }}</div>
+                                                                                            {% if lead_type %}
+                                                                                            <div>{{ lead.lead_type }}</div>
+                                                                                            {% endif %}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </ul>
+                                                    {% include 'includes/pagination.html' %}
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="tracking-content-main">
+                        <div class="container-fluid py-4 ">
+                            <div class="row header-wrapper">
+                                <div class="col-12">
+                                    <div class="contact large ">
+                                        <div class="contact__avatar">
+                                        </div>
+                                        <div class="contact__info">
+                                            <div class="contact__name text-truncate">
+                                                Select an Executive to proceed!
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% include 'includes/scroll-to-top.html' %}
+
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">View Location in Map</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modal-body-for-map">
+                    Loading.........
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="exampleModalGlobal" tabindex="-1" role="dialog" aria-labelledby="exampleModalGlobal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalGlobalLabel">GodsView</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-body-for-global-map"></div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}
+
+
+{% block javascripts %}
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+<script type="text/javascript">
+    function loadInMap(LONG, LAT) {
+        document.querySelector('#modal-body-for-map').innerHTML = `<iframe
+              width="100%" height="640" frameborder="0"
+              scrolling="no" marginheight="0" marginwidth="0"
+              src="https://maps.google.com/maps?q=${LAT},${LONG}&hl=en&z=14&output=embed"></iframe>`
+    }
+    function loadGlobalMap() {
+        return ;
+        var cities = L.layerGroup();
+        {% if check_in_day %}
+            L.marker([{{ check_in_day.location.y }}, {{ check_in_day.location.x }}]).bindPopup(`{{ check_in_day.location_text }} | {{ check_in_day.check_in_at|date:"h:i A" }}| {{ check_in_day.device_name }}`).addTo(cities){% if check_in %},{% endif %}
+        {% endif %}
+        {% for point in check_in %}
+            L.marker([{{ point.location.x }}, {{ point.location.y }}]).bindPopup(`{{ point.location_text }} | {{ point.check_in_at|date:"h:i A" }}| {{ point.device_name }}`).addTo(cities){% if forloop.last %};{%else%},{% endif %}
+        {% endfor %}
+        var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+                'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+        var grayscale   = L.tileLayer(mbUrl, {id: 'mapbox/light-v9', tileSize: 512, zoomOffset: -1, attribution: mbAttr}),
+            streets  = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
+        var map = L.map('modal-body-for-global-map', {
+            center: [{{check_in_day.location.y}}+0.05, {{check_in_day.location.x}}-0.05],
+            zoom: 13,
+            layers: [grayscale, cities]
+        });
+        var baseLayers = {"Grayscale": grayscale,"Streets": streets};
+        var overlays = {"Cities": cities};
+        L.control.layers(baseLayers, overlays).addTo(map);
+    }
+    loadGlobalMap()
+</script>
+
+<script type="text/javascript">
+function filter_executives(input) {
+  // Declare variables
+  var input, filter, ul, li, a, i, txtValue;
+
+  filter = input.value.toUpperCase();
+  ul = document.querySelector(".contacts-list__wrapper");
+  li = ul.getElementsByTagName('li');
+
+  // Loop through all list items, and hide those who don't match the search query
+  for (i = 0; i < li.length; i++) {
+    a = li[i].getElementsByTagName("a")[0];
+    txtValue = a.textContent || a.innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      li[i].style.display = "";
+    } else {
+      li[i].style.display = "none";
+    }
+  }
+}
+</script>
+
+<script>
+   function read_more_loader(node){console.log(node); node.innerText.split(' ').length < 80 && node.setAttribute('data-load-status', 'off')}
+   document.querySelectorAll('.read-more').forEach(read_more_loader);
+</script>
+{% endblock javascripts %}

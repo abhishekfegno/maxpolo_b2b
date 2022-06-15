@@ -1,0 +1,229 @@
+{% extends 'paper/index.html' %}
+{% load static %}
+
+{% block title %} {{object.name}} {% endblock title %}
+
+{% block content %}
+
+<div class="container-fluid mt--7">
+    <div class="row">
+        <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
+            <div class="card card-profile shadow">
+                <div class="row justify-content-center">
+                    <div class="col-lg-3 order-lg-2">
+                        <div class="card-profile-image">
+                            <a href="#">
+                                <img src="{{ object.profile_url }}" class="rounded-circle shadow">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4 ">
+                    <div class="d-flex justify-content-between">
+                        <!--                <a href="#" class="btn btn-sm btn-info mr-4">Connect</a>-->
+                        <!--                <a href="#" class="btn btn-sm btn-default float-right">Message</a>-->
+                    </div>
+                </div>
+                <div class="card-body pt-0 pt-md-4">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card-profile-stats d-flex justify-content-center mt-md-5">
+                                <!--<div>
+                                    <span class="heading">22</span>
+                                    <span class="description">Friends</span>
+                                </div>
+                                <div>
+                                    <span class="heading">10</span>
+                                    <span class="description">Photos</span>
+                                </div>
+                                <div>
+                                    <span class="heading">89</span>
+                                    <span class="description">Comments</span>
+                                </div>-->
+                            </div>
+                        </div>
+                    </div>
+<!--                    <div class="text-center">
+                        {% if object.user %}
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#username-modal-notification">{{ object.user.username }}</button>
+                        <div class="h6 font-weight-300">(Login Username)</div>
+
+                        {% else %}
+                        &lt;!&ndash; <span title="No login credentials are created for this user. Contact Deveploper!">
+                            <a href="#">Create login for {{ object.name }}</a>
+                        </span>&ndash;&gt;
+                        {% endif %}
+                        <div class="h5 mt-4">
+                            <h3>
+                                {{ object.name }}
+                                <span class="font-weight-light">{%  if obj.age %}, 27{% endif %}</span>
+                            </h3>
+                            <span class="text-muted font-weight-400"><i class="ni ni-business_briefcase-24 mr-2"></i>{{ object.user.role  }} at {{ object.branch.name }}</span>
+                            <div class="h6 font-weight-300"><i class="ni location_pin mr-2"></i> {{ settings.SITE_NAME }} </div>
+                        </div>
+                        <hr class="my-4"/>
+                        <p>Space reserved for filling any additional informations.</p>
+                        &lt;!&ndash;<a href="#">Show more</a>&ndash;&gt;
+                    </div>-->
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8 order-xl-1">
+            <div class="card bg-secondary shadow">
+                <div class="card-header bg-white border-0">
+                    <div class="row align-items-center">
+                        <div class="col-md-10">
+                            <h3 class="mb-0">
+                                {% if object.pk %}Update{% else %}Create{% endif %}
+                                {{ object.name|upper|default:title }}'s account
+                            </h3>
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <a href="{{ list_url }}" type="submit" class="btn btn-sm btn-primary ">Close</a>
+                        </div>
+                    </div>
+                    <hr class="my-4"/>
+                    <div class="card-body" >
+                       {% include 'includes/messages.html' %}
+                        <form class="form" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row align-items-center">
+                            </div>
+                            <div class="pl-lg-4">
+                                {% include 'form-utils/render-form.html' with form=form %}
+                            </div>
+                            <div class="col-12 text-right">
+                                <input type="submit" name="submit" value="Save" class="btn btn-success">
+                                <input type="submit" name="submit" value="Save and Add another" class="btn btn-success">
+                                <input type="submit" name="submit" value="Save And Continue" class="btn btn-success">
+                            </div>
+                        </form>
+                        {% if object and object.user and request.user.user_role <= request.user.WAREHOUSE_MANAGER %}
+                        <div class="row align-items-center" id="password-reset-container">
+                            <hr class="my-4">
+                            <div class="col-8">
+                                <h6 class="heading-small text-muted mb-4">Password Reset</h6>
+                            </div>
+                            <div class="col-4">&nbsp;</div>
+                            <div class="col-12">
+                                <p class="text-muted"> If you want to reset the password for this user ("{{ object.name }}") into default password <a href="#" id="password-reset-request"> Click Here</a></p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="username-modal-notification" tabindex="-1" role="dialog" aria-labelledby="username-modal-notification" aria-hidden="true">
+            <div class="modal-dialog modal-danger modal-dialog-centered modal-10" role="document">
+                <div class="modal-content bg-gradient-danger">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="modal-title-notification">Login Instructions</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="py-3 text-center">
+                            <i class="ni ni-bell-55 ni-3x"></i>
+                            <h4 class="heading mt-4">How this user can login to the system?</h4>
+                            <p class="font-weight-400">
+                                The user "{{ object.name }}" can use the following username to login
+                                to the system as
+                                <span class="badge badge-white text-danger">{{ object.user.role }}</span> at
+                                {{ object.branch.name }} of
+                                {{ settings.SITE_NAME }}
+                            </p>
+                            <p class="btn btn-white">{{ object.user.username }}</p>
+                            <p class="font-weight-400">
+                                The default password for any user is "<b>{{ settings.NEW_USER_PASSWORD }}</b>" <br/>
+                                This is a common password and hence you are recommended to
+                                change the password after first login.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link text-white " data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-white ml-auto" data-dismiss="modal">Ok, Got it</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+<script src="{% static '' %}js/promise-polyfill.min.js"></script>
+<script src="{% static '' %}js/sweetalert2.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+    $("textarea").attr({"rows": "4"});
+    {% if object and object.user and request.user.user_role <= request.user.WAREHOUSE_MANAGER %}
+    $('#password-reset-request').click(function(e){
+        Swal.fire({
+          title: 'Reset password for this user?',
+          html: `
+                <small>Do you want to reset password for user <br /></small>
+                <b><code>"{{ object.name }}" ({{ object.user.role }}) </code></b><br />
+                <small>to default passsword?
+                <br />
+                <br />
+                His new password will become "<b>{{ settings.NEW_USER_PASSWORD }}</b>"!</small>`,
+          icon: 'question',
+          showDenyButton: true,
+          confirmButtonText: 'Reset Password',
+        }).then((result) => {
+              /* Read more about isConfirmed, isDenied below */
+              if (result.isConfirmed) {
+                fetch('{% url 'user-api:reset-password-for-user' %}', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({user_id: {{ object.user.id }} })
+                }).then(function(response){
+                    return response.json()
+                }).then(function(data){
+                    if(data.status == 'success'){
+                        Swal.fire({
+                            title: 'Updated!',
+                            html: `Password has been set back to "<b>{{ settings.NEW_USER_PASSWORD }}</b>" `,
+                            icon: 'success'
+                        });
+                        $('#password-reset-container').hide()
+                        return null;
+                    }
+                    throw data.status;
+                }).catch(function(e) {
+                    debugger;
+                    var title = "Something Went Wrong!";
+                    if (e == "unauthorized"){
+                        title = "Forbidden"
+                        html = `<small>You are not authorized to reset password.</small>`;
+                        $('#password-reset-container').hide()
+                    } else if (e == "no_user_found") {
+                        title = "Invalid Data"
+                        html = `<small>We dont know what happened, somehow data got manipulated.</small>`;
+                    }
+                    Swal.fire({title:title, html: html, icon: 'warning'})
+                })
+              } else if (result.isDenied) {/* pass */}
+        });
+    });
+    {% endif %}
+});
+</script>
+{% endblock javascripts %}

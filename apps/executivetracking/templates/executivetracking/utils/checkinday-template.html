@@ -1,0 +1,57 @@
+{% load static %}
+<li>
+    <div class="t-activity__icon">
+        <img src="{% static 'img/icons/check-in.svg' %}" class="img position-relative img-responsive" style="top:-10px"
+             width="32px" height="32px" alt="Check in ">
+    </div>
+    <div class="t-activity__card">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <div class="row  pr-3">
+                    <div class="col-12 mt-2">
+                        <h2 class="">Check In <span class="text-danger">{% if not point %}( Not marked ) {% endif  %}</span>
+                        </h2>
+                    </div>
+                    <div class="col-9 py-2">
+                        {% if point %}
+                        <span><i class="far fa-clock"></i> {{ point.check_in_at|date:"h:i A" }}</span> |
+
+                        {% if first_device_id and point.device_id != first_device_id %}
+                        <button class="btn btn-danger btn-sm " data-container="body" data-toggle="popover"
+                                data-color="danger" data-placement="top"
+                                data-content="Suspicious Login Detected! This Check in is found from some new Device!">
+                            <i class="fa fa-mobile-alt"></i> {{ point.device_name|truncatechars:"12" }}
+                        </button>
+                        {% else %}
+                        <span title="{{ point.device_name }}"><i class="fa fa-mobile-alt"></i> {{ point.device_name|truncatechars:"12" }}</span>
+                        {% endif %}
+
+                        {% endif %}
+                    </div>
+                    <div class="col-3 py-2">
+                        {% if point.location %}
+                        <button class="btn btn-primary btn-sm px-3  float-right text-white"
+                                onclick="loadInMap({{ point.location.x }}, {{ point.location.y }})"
+                                data-toggle="modal"
+                                data-target="#exampleModal"><i class="ni ni-world-2"></i> Map
+                        </button>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-12">
+                        <p class="font-weight-500"><i class="ni ni-square-pin"></i>
+                            {{ point.location_text|default:"Unknown Location"|capfirst }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+
+            </div>
+        </div>
+
+        <div class="row mb-2">
+        </div>
+        <div class="row">
+        </div>
+    </div>
+</li>

@@ -11,11 +11,10 @@ INVOICE_STATUS = (
 )
 
 
-
 class SalesOrder(models.Model):
     order_id = models.CharField(max_length=10)
     invoice_id = models.CharField(max_length=10, null=True, blank=True)
-    dealer = models.ForeignKey('user.User', on_delete=models.SET_NULL, null=True, blank=True)
+    dealer = models.ForeignKey('user.User', on_delete=models.SET_NULL, null=True, blank=False)
     is_cancelled = models.BooleanField(default=False)
     is_confirmed = models.BooleanField(default=False)
     is_invoice = models.BooleanField(default=False)
@@ -25,7 +24,6 @@ class SalesOrder(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     confirmed_date = models.DateTimeField(null=True, blank=True)
     invoice_date = models.DateTimeField(null=True, blank=True)
-
 
     def save(self, *args, **kwargs):
         if self.is_confirmed:

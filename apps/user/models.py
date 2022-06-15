@@ -44,9 +44,12 @@ class User(AbstractUser):
 
     @property
     def user_role_name(self):
-        if self.user_role == 16: return Role.EXECUTIVE
-        if self.user_role == 32: return Role.DEALER
-        if self.user_role == 1: return Role.ADMIN
+        if self.user_role == 16:
+            return Role.EXECUTIVE
+        if self.user_role == 32:
+            return Role.DEALER
+        if self.user_role == 1:
+            return Role.ADMIN
 
     def __str__(self):
         return self.username
