@@ -2,30 +2,56 @@
 import os
 
 from django.conf import settings
-from django.http import FileResponse
+from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
+from django.views.generic.detail import SingleObjectTemplateResponseMixin
+from django.views.generic.edit import ProcessFormView, ModelFormMixin
 
 from apps.catalogue.forms.category_form import CategoryForm, PDFForm
 from apps.catalogue.models import Category, PDF
 
 
-class CategoryDetailView(UpdateView):
-	queryset = Category.objects.all()
-	template_name = 'paper/catalogue/category_form.html'
-	model = Category
-	form_class = CategoryForm
-	success_url = '/catalogue/category/list/'
+# class CategoryDetailView(UpdateView):
+# 	queryset = Category.objects.all()
+# 	template_name = 'paper/catalogue/category_form.html'
+# 	model = Category
+# 	form_class = CategoryForm
+# 	success_url = '/catalogue/category/list/'
 
 
-class CategoryListView(CreateView, ListView):
-	queryset = Category.objects.all()
+class CategoryListView(ModelFormMixin, ListView, ProcessFormView):
+	queryset = Category.get_root_nodes()
 	template_name = 'paper/catalogue/category_list.html'
 	model = Category
 	form_class = CategoryForm
 	success_url = '/catalogue/category/list/'
+	allow_empty = True
+
+	def get_object(self, queryset=None):
+		if 'pk' in self.kwargs:
+			return super(CategoryListView, self).get_object(queryset=Category.objects.all())
+		return None
+
+	def get(self, request, *args, **kwargs):
+		self.object_list = self.get_queryset()
+		self.object = self.get_object(self.object_list)
+		allow_empty = self.get_allow_empty()
+		context = self.get_context_data()
+		return self.render_to_response(context)
+
+	def post(self, request, *args, **kwargs):
+		"""
+		Handle POST requests: instantiate a form instance with the passed
+		POST variables and then check if it's valid.
+		"""
+		form = self.get_form()
+		if form.is_valid():
+			return self.form_valid(form)
+		else:
+			return self.form_invalid(form)
 
 
 @method_decorator(csrf_exempt, name='dispatch')

@@ -35,6 +35,10 @@ class SalesOrder(models.Model):
     def __str__(self):
         return self.order_id
 
+    @property
+    def id_as_text(self):
+        return 'ORD' + f'{self.pk}'.zfill(6)
+
 
 class SalesOrderLine(models.Model):
     order = models.ForeignKey('order.SalesOrder', on_delete=models.SET_NULL, null=True, blank=True)

@@ -7,7 +7,8 @@ from apps.catalogue.views.product_view import *
 
 urlpatterns = [
     path('category/list/', CategoryListView.as_view(), name='category-list'),
-    path('category/<int:pk>/update/', CategoryDetailView.as_view(), name='category-update'),
+    path('category/<int:pk>/update/', CategoryListView.as_view(), name='category-update'),
+    # path('category/<int:pk>/update/', CategoryDetailView.as_view(), name='category-update'),
     path('catagory/<int:pk>/delete/', CategoryDeleteView.as_view(), name='category-delete'),
 
     path('pdf/list/', PDFListView.as_view(), name='pdf-list'),

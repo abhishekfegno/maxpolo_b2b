@@ -1,13 +1,15 @@
 # New file created 
 from django import forms
+from treebeard.forms import MoveNodeForm
 
 from apps.catalogue.models import Category, PDF
 
 
-class CategoryForm(forms.ModelForm):
+class CategoryForm(MoveNodeForm):
+
 	class Meta:
 		model = Category
-		fields = '__all__'
+		exclude = ('sib_order', 'parent', 'path', 'depth', 'numchild')
 
 
 class PDFForm(forms.ModelForm):

@@ -2,19 +2,7 @@
 {% load crispy_forms_tags %}
 {% block content%}
 <div class='row'>
-    <div class='col-6'>
-        <div class='card'>
-            <div class='card-body'>
-                <h3>Create Order</h3>
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ form | crispy }}
-                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class='col-12'>
+    <div class='col-8'>
         <div class='card'>
             <div class='card-body'>
                 <h3>Order List</h3>
@@ -47,7 +35,7 @@
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object.name }}</div>
+                                <div class="">{{ object.id_as_text }}</div>
                             </td>
                             <td>
                                 <div class=""><a href="{% url 'salesorder-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
@@ -66,8 +54,18 @@
         </div>
 
     </div>
-
-
+    <div class='col-4'>
+        <div class='card'>
+            <div class='card-body'>
+                <h3>Create Order</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
 </div>
 {% include 'paper/swal.html' %}
