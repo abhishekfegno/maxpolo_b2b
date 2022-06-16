@@ -7,6 +7,6 @@ def settings(request):
     logo = SiteConfiguration.objects.first()
     data['settings'] = settings
     if logo:
-        data[logo] = logo.sites_logo.url
+        data[logo] = logo.site_logo.url
 
     return data
