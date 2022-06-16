@@ -12,10 +12,11 @@ class ProductSerializer(serializers.ModelSerializer):
 class ProductPDFSerializer(serializers.ModelSerializer):
     class Meta:
         model = PDF
-        fields = '__all__'
+        exclude = ('category',)
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    pdf = ProductPDFSerializer(many=True)
     children = serializers.SerializerMethodField()
 
     def get_children(self, instance):
@@ -27,4 +28,4 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('name', 'children')
+        fields = ('name', 'pdf', 'children')
