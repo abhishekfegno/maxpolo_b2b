@@ -3,6 +3,9 @@ from datetime import datetime
 from django.db import models
 
 # Create your models here.
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 INVOICE_STATUS = (
     ('new', 'NEW'),
     ('credit', 'CREDIT'),
@@ -26,10 +29,7 @@ class SalesOrder(models.Model):
     invoice_date = models.DateTimeField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if self.is_confirmed:
-            self.confirmed_date = datetime.now()
-        if self.is_invoice:
-            self.invoice_date = datetime.now()
+
         return super().save(*args, **kwargs)
 
     def __str__(self):
@@ -37,14 +37,27 @@ class SalesOrder(models.Model):
 
     @property
     def id_as_text(self):
-        return 'ORD' + f'{self.pk}'.zfill(6)
+        return self.order_id
 
 
 class SalesOrderLine(models.Model):
-    order = models.ForeignKey('order.SalesOrder', on_delete=models.SET_NULL, null=True, blank=True)
+    order = models.ForeignKey('order.SalesOrder', on_delete=models.SET_NULL, related_name='line', null=True, blank=True)
     product = models.ForeignKey('catalogue.Product', on_delete=models.SET_NULL, null=True, blank=True)
     quantity = models.IntegerField(default=1)
 
     def __str__(self):
         return self.product.name
 
+
+@receiver(post_save, sender=SalesOrder)
+def create_order_ids(sender, instance, created, **kwargs):
+    if created:
+        instance.order_id = 'QN' + f'{instance.pk}'.zfill(6)
+    if instance.is_confirmed:
+        print("changing order_id")
+        instance.confirmed_date = datetime.now()
+        instance.order_id = 'SO' + f'{instance.pk}'.zfill(6)
+    if instance.is_invoice:
+        print("changing invoice_id")
+        instance.invoice_date = datetime.now()
+        instance.invoice_id = 'INV' + f'{instance.pk}'.zfill(6)

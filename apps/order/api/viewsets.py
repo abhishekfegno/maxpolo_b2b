@@ -13,11 +13,20 @@ from lib.utils import list_api_formatter
 
 
 class OrderSerializerAPIView(ListAPIView):
-    queryset = SalesOrder.objects.all()
+    """
+    POST data
+    {
+        "product":[1,2,3],
+        "quantity":[1,2,3],
+        "dealer":1,
+    }
+
+    """
+    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
     serializer_class = OrderSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
-    filterset_fields = ()
-    search_fields = ()
+    filterset_fields = ('is_cancelled', 'is_confirmed', 'is_invoice')
+    search_fields = ('order_id', 'invoice_id')
     ordering_fields = ()
     pagination_class = PageNumberPagination
 
@@ -34,3 +43,5 @@ class OrderSerializerAPIView(ListAPIView):
         page_obj = paginator.get_page(page_number)
         return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=serializer.data))
 
+    def post(self, request, *args, **kwargs):
+        pass
