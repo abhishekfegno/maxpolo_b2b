@@ -2,7 +2,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from apps.user.models import Banners, Dealer, Executive
+from apps.user.models import Banners, Dealer, Executive, Role
 
 
 class BannersForm(forms.ModelForm):
@@ -26,12 +26,17 @@ class ResetPasswordForm(forms.Form):
 
 
 class DealerForm(forms.ModelForm):
+
 	class Meta:
 		model = Dealer
-		fields = ('username', 'first_name', 'last_name', 'user_role', 'branch', 'mobile', 'email', 'password')
+		fields = ('username', 'first_name', 'last_name', 'user_role', 'branch', 'mobile', 'email')
 
 
 class ExecutiveForm(forms.ModelForm):
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.fields['user_role'].queryset = Dealer.objects.all()
+
 	class Meta:
 		model = Executive
-		fields = ('username', 'first_name', 'last_name', 'user_role', 'branch', 'mobile', 'email', 'password', 'dealers')
+		fields = ('username', 'first_name', 'last_name', 'user_role', 'branch', 'mobile', 'email', 'dealers')
