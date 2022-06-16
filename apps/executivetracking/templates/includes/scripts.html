@@ -1,0 +1,122 @@
+{% load static %}
+
+<!--   Core   -->
+<script src="{% static 'js/plugins/jquery/dist/jquery.min.js' %}"></script>
+<script src="{% static 'js/plugins/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}" ></script>
+<script src="{% static '' %}js/select2.min.js"></script>
+<script src="{% static '' %}js/stockexplanation.js"></script>
+
+<!--   Optional JS   -->
+  <script src="/assets/js/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+<!--  <script src="{% static 'js/plugins/chart.js/dist/Chart.min.js' %}"></script>-->
+<!--  <script src="{% static 'js/plugins/chart.js/dist/Chart.extension.js' %}"></script>-->
+<!--   G.Maps   -->
+<!--  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>-->
+<!--   Argon JS   -->
+<script src="{% static 'js/argon-dashboard.min.js' %}?v=1.1.0"></script>
+{% if DEBUG %}
+<script>
+(function(){document.addEventListener('DOMContentLoaded', function(){(window.djdt && djdt.init())});})()
+</script>
+{% endif %}
+
+<!-- Specific JS goes HERE -->
+<style>
+.loader {
+  display:block;
+  border: 2px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 2px solid #3498db;
+  width: 12px;
+  height: 12px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 500ms linear infinite;
+}
+
+@keyframes spin {0% { transform: rotate(0deg); }100% { transform: rotate(360deg); }}
+</style>
+<script>
+  function hasDuplicates(array) {
+      var valuesSoFar = Object.create(null);
+      for (var i = 0; i < array.length; ++i) {
+          var value = array[i];
+          if (value in valuesSoFar) {
+              return true;
+          }
+          valuesSoFar[value] = true;
+      }
+      return false;
+  }
+
+  function mark_as_complete(event){
+      var first_stock = document.querySelector('[name="entries-0-stock"')
+      var first_qty = document.querySelector('[name="entries-0-quantity"')
+      if (!first_stock.value || !first_qty){
+        event.preventDefault()
+        alert("The first row must not be empty!");
+        return;
+      }
+      var stock_ids = [];
+      [...document.querySelectorAll('[name^="entries-"][name$="-stock"]')].forEach(function(node){node.value && stock_ids.push(node.value)});
+      if (hasDuplicates(stock_ids)){
+        event.preventDefault()
+        alert("Some Products are Repeating. Please Remove Duplicate Stock Entries!");
+        return;
+      }
+      if(!stock_ids.length){
+        alert("Please select some items before submitting.")
+        return;
+      }
+      /** for (var i=0; i<stock_ids.length; i++){
+        if (stock_ids[id] in window.__stock__data__ ) {
+          alert("Some Products you selected do not have stock.")
+        }
+      } */
+      document.querySelector('#id_is_submitted').value = 'True';
+      document.querySelectorAll('input[type="number"][data-is-negative=true]').forEach(function(item) {item.value = item.value * -1 ;})
+  }
+  $.fn.select2.defaults.set( "theme", "bootstrap" );
+  $('select:not(.exclude-select2)').select2();
+  window.__stock__data__ = {{ STOCK_SET|default:"null"|safe}}
+  window.change_detector = function(event){
+       var _id_tail = '-placeholder--js';
+       if(window.__stock__data__){
+            if (window.__stock__data__[event.target.value]){
+               document.querySelector('#' + event.target.id + _id_tail).innerHTML = window.__stock__data__[event.target.value] || 'out of stock'
+            }else {
+                document.querySelector('#' + event.target.id + _id_tail).innerHTML = '<span class="loader"></span>'
+                setTimeout(function(){document.querySelector('#' + event.target.id + _id_tail).innerHTML = 'out of stock';}, 500)
+            }
+       }
+  }
+  document.querySelectorAll("select[name^='entries-']").forEach(function(node){ change_detector({target:node}); $(node).on('select2:select', change_detector )});
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.fn.select2.defaults.set( "theme", "bootstrap" );
+        $('.select2.select2-container').removeAttr('style').addClass('w-100');
+        $('[data-cloak]').removeAttr('data-cloak');
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(window).scroll(function(){
+            if ($(this).scrollTop() > 100) {
+                $('#scroll').fadeIn();
+            } else {
+                $('#scroll').fadeOut();
+            }
+        });
+        $('#scroll').click(function(){
+            return false;
+            $("html, body").animate({ scrollTop: 0 }, 600);
+            return false;
+        });
+    });
+</script>
+
+

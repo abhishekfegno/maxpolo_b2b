@@ -57,7 +57,6 @@ class User(AbstractUser):
         if self.user_role == 16: return "Executive"
         if self.user_role == 32: return "Dealer"
 
-
     def __str__(self):
         return self.username
 

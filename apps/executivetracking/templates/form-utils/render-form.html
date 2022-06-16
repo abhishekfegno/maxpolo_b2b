@@ -1,0 +1,8 @@
+<div class="row">
+    {% include 'form-utils/nonfielderrors.html' %}
+    {% for field in form %}
+    <div class="{{ field_col_class|default:'col-lg-6' }}">
+        {% include 'form-utils/input.html' with field=field %}
+    </div>
+    {% endfor %}
+</div>

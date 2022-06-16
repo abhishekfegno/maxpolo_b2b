@@ -1,0 +1,18 @@
+{% if field %}
+<div class="form-group {% if field.errors%}has-danger{%endif%}">
+    <label class="form-control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {{ field }}
+    <small class="text-muted nobullets mt-3 d-block">{% if custom_help_text %}{{ custom_help_text }}{% else %}{{ field.help_text|safe }}{% endif %}</small>
+    {% if field.errors %}
+    <div class='form-errors'>
+        {% for error in field.errors %}
+        <small class="text-danger"> {{ error }} </small>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+
+
+

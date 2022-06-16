@@ -1,0 +1,11 @@
+<div class="form-group {% if field.errors%}has-danger{%endif%}">
+    {{ field }}
+    {% if field.errors %}
+    <div class='form-errors'>
+        {% for error in field.errors %}
+        <small class="text-danger"> {{ error }} </small>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
