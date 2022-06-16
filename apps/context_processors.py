@@ -4,9 +4,9 @@ from apps.user.models import SiteConfiguration
 def settings(request):
     data = {}
     from django.conf import settings
-    logo = SiteConfiguration.objects.first().site_logo
+    logo = SiteConfiguration.objects.first()
     data['settings'] = settings
     if logo:
-        data[logo] = logo.url
+        data[logo] = logo.sites_logo.url
 
     return data
