@@ -38,7 +38,6 @@ class SalesOrderListView(FormMixin, ListView):
 	def post(self, request, *args, **kwargs):
 		form1 = QuotationForm(request.POST)
 		form2 = QuotationLineForm(request.POST)
-		import pdb;pdb.set_trace()
 		if form1.is_valid() and form2.is_valid():
 			form1.save()
 			form2.save()
