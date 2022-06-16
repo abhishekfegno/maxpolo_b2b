@@ -1,5 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.core.paginator import Paginator, EmptyPage
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -20,7 +22,7 @@ from lib.utils import list_api_formatter
 from django.contrib.auth import logout
 
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
 
