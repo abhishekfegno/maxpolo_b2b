@@ -9,6 +9,7 @@ public/media/*
 public/assets/*
 public/staticfiles/*
 
+*.swp
 
 # Created by https://www.toptal.com/developers/gitignore/api/django,pycharm+all,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=django,pycharm+all,python
