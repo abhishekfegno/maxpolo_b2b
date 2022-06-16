@@ -41,7 +41,7 @@ class SalesOrderListView(FormMixin, ListView):
 		if form1.is_valid() and form2.is_valid():
 			form1.save()
 			form2.save()
-		return redirect('salesorders-list')
+		return redirect('salesorder-list')
 
 
 @method_decorator(csrf_exempt, name='dispatch')
