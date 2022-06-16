@@ -16,6 +16,15 @@ class ProductPDFSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    children = serializers.SerializerMethodField()
+
+    def get_children(self, instance):
+        return self.__class__(
+            instance.get_children(),
+            many=True,
+            context={'request': self.context['request']}
+        ).data or None
+
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ('name', 'children')
