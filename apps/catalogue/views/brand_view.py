@@ -1,6 +1,8 @@
 # New file created
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
 
 from apps.catalogue.forms.brand_form import BrandForm
@@ -23,6 +25,7 @@ class BrandListView(CreateView, ListView):
 	success_url = '/catalogue/brand/list/'
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class BrandDeleteView(DeleteView):
 	queryset = Brand.objects.all()
 	template_name = 'paper/catalogue/brand_list.html'

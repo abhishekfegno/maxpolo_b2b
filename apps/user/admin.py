@@ -24,3 +24,4 @@ class UserCustomAdmin(UserAdmin):
 admin.site.register(Dealer)
 admin.site.register(Executive)
 admin.site.register(Complaint)
+admin.site.register(SiteConfiguration)

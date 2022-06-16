@@ -1,5 +1,7 @@
 # New file created
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
 from rest_framework.authtoken.models import Token
 
@@ -25,30 +27,10 @@ class BannersListView(CreateView, ListView):
 	success_url = '/banners/list/'
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class BannersDeleteView(DeleteView):
 	queryset = Banners.objects.all()
 	template_name = 'paper/user/banners_delete.html'
 	model = Banners
 
 
-def password_reset(request, token):
-	errors = ""
-	form = ResetPasswordForm(request.POST)
-
-	if request.method == 'POST':
-		try:
-			token = Token.objects.get(key=token)
-			if is_token_expired(token):
-				return render(request, 'registration/password_reset_confirm.html', context={'errors': errors})
-			token = token_expire_handler(token)
-
-			user = User.objects.get(id=token.user.id)
-			if form.is_valid():
-				user.set_password(form.data.get('confirm_password'))
-				user.save()
-				print(user.password)
-				return render(request, 'registration/password_reset_complete.html')
-		except Exception as e:
-			errors = str(e)
-
-	return render(request, 'registration/password_reset_confirm.html', context={'form': form, 'errors': errors})

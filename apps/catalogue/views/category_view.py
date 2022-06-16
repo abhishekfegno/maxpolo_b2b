@@ -4,6 +4,8 @@ import os
 from django.conf import settings
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
 
 from apps.catalogue.forms.category_form import CategoryForm, PDFForm
@@ -26,6 +28,7 @@ class CategoryListView(CreateView, ListView):
 	success_url = '/catalogue/category/list/'
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class CategoryDeleteView(DeleteView):
 	queryset = Category.objects.all()
 	template_name = 'paper/catalogue/category_delete.html'
