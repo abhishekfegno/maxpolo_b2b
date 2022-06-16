@@ -13,7 +13,7 @@ class QuotationForm(forms.ModelForm):
 class QuotationLineForm(forms.ModelForm):
 	class Meta:
 		model = SalesOrderLine
-		fields = '__all__'
+		fields = ('product', 'quantity')
 
 
 class QuotationUpdateForm(forms.ModelForm):
