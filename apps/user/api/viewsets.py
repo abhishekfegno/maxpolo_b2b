@@ -31,12 +31,16 @@ class LoginAPIView(GenericAPIView):
         data = request.data
         serializer = self.get_serializer(data=data)
         if serializer.is_valid():
-            user = authenticate(request, username=data['username'], password=data['password'])
             try:
+                u = User.objects.get(email=data['email']).username
+                user = authenticate(request, username=u, password=data['password'])
                 login(request, user)
                 print(user, request.user)
-                out['user'] = user.username
-                out['role'] = user.user_role_name
+                out['user'] = {
+                    "role": user.user_role,
+                    "company_name": user.username,
+                    "zone": user.zone
+                }
             except Exception as e:
                 out['errors'] = str(e)
 

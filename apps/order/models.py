@@ -32,8 +32,8 @@ class SalesOrder(models.Model):
 
         return super().save(*args, **kwargs)
 
-    def __str__(self):
-        return self.order_id
+    # def __str__(self):
+    #     return self.id
 
     @property
     def id_as_text(self):

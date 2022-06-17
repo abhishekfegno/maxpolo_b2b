@@ -52,11 +52,11 @@ class User(AbstractUser):
     branch = models.ForeignKey('infrastructure.Branch', on_delete=models.SET_NULL, null=True, blank=True)
     dealers = models.ManyToManyField('self', null=True, blank=True)
 
-    # company_cin = models.CharField(max_length=50, null=True, blank=False)
-    # address_ = models.CharField(max_length=50, null=True, blank=False)
-    # address_street = models.CharField(max_length=50, null=True, blank=False)
-    # address_city = models.CharField(max_length=50, null=True, blank=False)
-    # address_state = models.CharField(max_length=50, null=True, blank=False)
+    company_cin = models.CharField(max_length=50, null=True, blank=False)
+    address_street = models.CharField(max_length=50, null=True, blank=False)
+    address_city = models.CharField(max_length=50, null=True, blank=False)
+    address_state = models.CharField(max_length=50, null=True, blank=False)
+    zone = models.ForeignKey('executivetracking.Zone', on_delete=models.SET_NULL, null=True, blank=False)
 
 
     @property

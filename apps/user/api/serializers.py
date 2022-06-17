@@ -5,11 +5,11 @@ from apps.user.models import User, Complaint, Banners, Dealer
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=50)
+    email = serializers.CharField(max_length=50)
     password = serializers.CharField(max_length=50)
 
     class Meta:
-        fields = ('username', 'password')
+        fields = ('email', 'password')
 
 
 class ProfileAPISerializer(serializers.ModelSerializer):

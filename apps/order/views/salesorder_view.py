@@ -5,8 +5,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
 from django.views.generic.edit import FormMixin
 
+from apps.catalogue.models import Product
 from apps.order.forms.salesorder_form import QuotationForm, QuotationLineForm, QuotationUpdateForm
-from apps.order.models import SalesOrder
+from apps.order.models import SalesOrder, SalesOrderLine
 
 
 def get_orderline_form(request):
@@ -37,13 +38,14 @@ class SalesOrderListView(FormMixin, ListView):
 		return context
 
 	def post(self, request, *args, **kwargs):
-		form1 = QuotationForm(request.POST)
-		form2 = QuotationLineForm(request.POST)
-
-		# import pdb;pdb.set_trace()
-		if form1.is_valid() and form2.is_valid():
-			form1.save()
-			form2.save()
+		form = QuotationForm(request.POST)
+		if form.is_valid():
+			products = form.data.get('product')
+			quantity = form.data.get('quantity')
+			order = form.save()
+			for product, quantity in zip(products, quantity):
+				line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity, order=order)
+				print(f"line created {line} for order {order}")
 		return redirect('salesorder-list')
 
 
