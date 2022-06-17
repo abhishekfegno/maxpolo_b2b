@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from apps.catalogue.api.serializers import ProductSerializer
 from apps.catalogue.models import Product
 from apps.order.api.serializers import OrderSerializer
-from apps.order.models import SalesOrder
+from apps.order.models import SalesOrder, SalesOrderLine
 from lib.utils import list_api_formatter
 
 
@@ -16,8 +16,8 @@ class OrderSerializerAPIView(ListAPIView):
     """
     POST data
     {
-        "product":[1,2,3],
-        "quantity":[1,2,3],
+        "products":[1,2,3],
+        "quantites":[1,2,3],
         "dealer":1
     }
 
@@ -44,11 +44,15 @@ class OrderSerializerAPIView(ListAPIView):
         return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=serializer.data))
 
     def post(self, request, *args, **kwargs):
-        dealer_id = request.data.get('dealer')
-        quantity = request.data.get('dealer')
-        product = request.data.get('dealer')
-        for product, quantity in zip(products, quantities):
-            import pdb;
-            pdb.set_trace()
+        quantity = request.data.get('products')
+        products = request.data.get('quantites')
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            # import pdb;pdb.set_trace()
+            order = serializer.save()
+            for product, quantity in zip(products, quantity):
+                line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity,
+                                                     order=order)
+                print(f"line created {line} for order {order}")
 
-        pass
+        return Response()

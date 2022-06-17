@@ -15,13 +15,13 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('name', 'product_code', 'brand', 'category')
+        fields = ('id', 'name', 'product_code', 'brand', 'category')
 
 
 class ProductPDFSerializer(serializers.ModelSerializer):
     class Meta:
         model = PDF
-        exclude = ('category',)
+        fields = ('file',)
 
 
 class CategorySerializer(serializers.ModelSerializer):
