@@ -27,7 +27,7 @@ class OrderListAPIView(ListAPIView):
     queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
     serializer_class = OrderSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
-    filterset_fields = ('is_cancelled', 'is_confirmed', 'is_invoice')
+    filterset_fields = ['is_cancelled', 'is_confirmed', 'is_invoice']
     search_fields = ('order_id', 'invoice_id')
     ordering_fields = ()
     pagination_class = PageNumberPagination
@@ -35,8 +35,10 @@ class OrderListAPIView(ListAPIView):
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page_number', 1)
         page_size = request.GET.get('page_size', 20)
-        serializer = self.get_serializer(self.get_queryset(), many=True, context={'request': request})
+        # import pdb;pdb.set_trace()
         queryset = self.filter_queryset(self.get_queryset())
+
+        serializer = self.get_serializer(queryset, many=True, context={'request': request})
         paginator = Paginator(queryset, page_size)
         try:
             page_number = paginator.validate_number(page_number)

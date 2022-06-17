@@ -7,8 +7,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 INVOICE_STATUS = (
-    ('new', 'NEW'),
-    ('credit', 'CREDIT'),
+    ('new', 'New'),
+    ('credit', 'Credit'),
     ('payment partial', 'Payment Partial'),
     ('payment done', 'Payment Done')
 )

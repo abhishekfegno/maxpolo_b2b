@@ -20,7 +20,7 @@ class SalesOrderDetailView(UpdateView):
 	template_name = 'paper/order/salesorder_form.html'
 	model = SalesOrder
 	form_class = QuotationUpdateForm
-	success_url = '/order/order/list/'
+	success_url = '/order/order/list'
 
 
 class SalesOrderListView(FormMixin, ListView):
@@ -28,7 +28,7 @@ class SalesOrderListView(FormMixin, ListView):
 	template_name = 'paper/order/salesorder_list.html'
 	model = SalesOrder
 	form_class = QuotationForm
-	success_url = '/order/order/list/'
+	success_url = '/order/order/list'
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -54,7 +54,7 @@ class SalesOrderDeleteView(DeleteView):
 	queryset = SalesOrder.objects.all()
 	template_name = 'templates/salesorder_list.html'
 	model = SalesOrder
-	success_url = '/order/order/list/'
+	success_url = '/order/order/list'
 
 
 

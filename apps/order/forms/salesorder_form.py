@@ -18,7 +18,7 @@ class QuotationLineForm(forms.ModelForm):
 
 
 class QuotationUpdateForm(forms.ModelForm):
-	order_id = forms.CharField(
+	order_id = forms.CharField(required=False,
 		widget=forms.TextInput(attrs={'readonly': 'readonly'})
 	)
 
@@ -30,6 +30,7 @@ class QuotationUpdateForm(forms.ModelForm):
 			'is_cancelled': CheckboxInput(attrs={'class': 'required checkbox form-control'}),
 			'is_invoice': CheckboxInput(attrs={'class': 'required checkbox form-control'}),
 		}
+
 
 class SalesOrderUpdateForm(forms.ModelForm):
 	class Meta:
