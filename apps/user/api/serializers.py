@@ -15,8 +15,8 @@ class LoginSerializer(serializers.Serializer):
 class ProfileAPISerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'mobile', 'branch')
-
+        fields = ('first_name', 'last_name', 'email', 'mobile', 'branch', 'company_cin',
+                  'address_street', 'address_city', 'address_state', 'zone')
 
 
 class PasswordResetSerializer(serializers.Serializer):
