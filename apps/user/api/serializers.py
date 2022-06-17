@@ -18,6 +18,7 @@ class ProfileAPISerializer(serializers.ModelSerializer):
         fields = ('username', 'first_name', 'last_name', 'email', 'mobile', 'branch')
 
 
+
 class PasswordResetSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=10)
     email = serializers.EmailField(max_length=50)
