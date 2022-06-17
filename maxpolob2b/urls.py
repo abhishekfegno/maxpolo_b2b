@@ -23,6 +23,7 @@ import lib.root
 from .settings import DEBUG
 
 urlpatterns = [
+    path('pages/', include('django.contrib.flatpages.urls')),
     path('admin/', admin.site.urls),
     path('', include([
         path('', include('apps.user.urls')),

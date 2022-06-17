@@ -8,6 +8,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView, GenericAPIView, RetrieveAPIView
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -37,7 +38,7 @@ class LoginAPIView(GenericAPIView):
                 login(request, user)
                 print(user, request.user)
                 out['user'] = {
-                    "role": user.user_role,
+                    "role": user.user_role_name,
                     "company_name": user.username,
                     "zone": user.zone
                 }
@@ -72,6 +73,7 @@ class DealerListView(ListAPIView):
 class ProfileAPIView(GenericAPIView):
     queryset = User.objects.all().select_related('branch').prefetch_related('dealers')
     serializer_class = ProfileAPISerializer
+    permission_classes = [IsAuthenticated, ]
 
     def get(self, request, *args, **kwargs):
         try:
@@ -80,6 +82,15 @@ class ProfileAPIView(GenericAPIView):
         except Exception as e:
             result = {str(e)}
         return Response(result)
+
+    def put(self, request, *args, **kwargs):
+        result = {}
+        serializer = self.get_serializer(request.user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            result['errors'] = serializer.errors
+        return Response(result, status=status.HTTP_200_OK)
 
 
 class PasswordResetView(GenericAPIView):
