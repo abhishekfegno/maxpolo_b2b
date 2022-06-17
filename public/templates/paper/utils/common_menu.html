@@ -1,111 +1,178 @@
 <ul class="nav">
-<!--    {% if settings.DEBUG %}-->
-<!--        {% include 'paper/utils/example_menu.html' %}-->
-<!--    {% endif %}-->
+    <!--    {% if settings.DEBUG %}-->
+    <!--        {% include 'paper/utils/example_menu.html' %}-->
+    <!--    {% endif %}-->
 
-{% block nav_links_ul %}
-<ul class="sidebar-menu" >
-    {% block nav_links_outer %}
-    <li class="header">{% block nav_heading %}MAIN NAVIGATION{% endblock %}</li>
+    {% block nav_links_ul %}
+    <ul class="sidebar-menu">
+        {% block nav_links_outer %}
+        <li class="header">{% block nav_heading %}MAIN NAVIGATION{% endblock %}</li>
+        {% block nav_links %}
 
-    {% block nav_links %}
-    <li>
-        <a href="{% url 'salesorder-list' %}">
-            <i class="nc-icon nc-scissors"></i>
-                <span>Orders</span>
-        </a>
-    </li>
-    <li>
-        <a href="{% url 'salesorder-list' %}">
-            <i class="fa fa-sign-out" aria-hidden="true"></i><span>Sales Orders</span>
-        </a>
-    </li>
-    <li>
-        <a href="{% url 'salesorder-list' %}">
-        <i class="nc-icon nc-credit-card"></i>
-            <span>Invoice</span>
-        </a>
-    </li>
-    <li>
-        <a href="{% url 'category-list' %}">
-            <i class="nc-icon nc-badge"></i>
-            <span>Category</span>
-        </a>
-    </li>
-    <li>
-        <a href="{% url 'pdf-list' %}">
-            <i class="nc-icon nc-badge"></i>
-            <span>Product PDF </span>
-        </a>
-    </li>
-    <li>
-        <a href="{% url 'brand-list' %}">
-            <i class="nc-icon nc-badge"></i>
-            <span>Brand</span>
-        </a>
-    </li>
-    <li>
-        <a href="{% url 'product-list' %}">
-            <i class="nc-icon nc-badge"></i>
-            <span>Product</span>
-        </a>
-    </li>
-    <li>
-        <a href="{% url 'complaint-list' %}">
-            <i class="nc-icon nc-badge"></i>
-            <span>Dealer Complaints</span>
-        </a>
-    </li>
-<!--    {% if not request.user.is_manager %}-->
-    <li>
-        <a href="{% url 'branch-list' %}">
-            <i class="fa fa-book" aria-hidden="true"></i><span>Branch</span>
-        </a>
-    </li>
-<!--    {% endif %}-->
-    <li>
-        <a href="{% url 'user-list' role=32 %}">
-            <i class="fa fa-book" aria-hidden="true"></i><span>Dealers</span>
-        </a>
-    </li>
-    <li>
-        <a href="{% url 'user-list' role=16 %}">
-            <i class="fa fa-book" aria-hidden="true"></i><span>Executives</span>
-        </a>
-    </li>
-    <li>
-        <a href="">
-            <i class="fa fa-book" aria-hidden="true"></i><span>Payment</span>
-        </a>
-    </li>
-    <li>
-        <a href="{% url 'field-force-tracking' %}">
-            <i class="nc-icon nc-badge"></i>
-            <span>Field Force </span>
-        </a>
-    </li>
+        <li class="li ">
+            <a data-toggle="collapse" href="#navbar-quotations" class="collapsed" aria-expanded="false"
+               aria-controls="navbar-quotations">
+                <i class="ni ni-archive-2"></i>
+                <p>Quotations <b class="caret"></b></p>
+            </a>
+            <div class="collapse" id="navbar-quotations" style="">
+                <ul class="nav">
 
-    <li>
-        <a href="{% url 'banners-list' %}">
-            <i class="fa fa-book" aria-hidden="true"></i><span>Advertisements</span>
-        </a>
-    </li>
-    <li>
-        <a href="{% url 'district-list' %}">
-            <i class="fa fa-book" aria-hidden="true"></i><span>Zones</span>
-        </a>
-    </li>
-<!--    {% if request.user %}-->
-<!--    {% include 'paper/utils/_user_permission_menus.html' %}-->
-<!--    {% if user.is_superuser %}-->
-<!--    {% include 'paper/utils/admin_menu.html' %}-->
-<!--    {% endif %}-->
-<!--    {% endif %}-->
-<!--    {% endblock nav_links %}-->
-<!--    {% endblock nav_links_outer %}-->
-</ul>
-{% endblock nav_links_ul %}
+                    <li>
+                        <a href="{% url 'salesorder-list' %}">
+                            <i class="nc-icon nc-scissors"></i>
+                            <span>Orders</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'salesorder-list' %}">
+                            <i class="fa fa-sign-out" aria-hidden="true"></i><span>Sales Orders</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'salesorder-list' %}">
+                            <i class="nc-icon nc-credit-card"></i>
+                            <span>Invoice</span>
+                        </a>
+                    </li>
 
+                    <li>
+                        <a href="">
+                            <i class="fa fa-book" aria-hidden="true"></i><span>Payment</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </li>
+
+        <li class="li ">
+            <a data-toggle="collapse" href="#navbar-catalogue" class="collapsed" aria-expanded="false"
+               aria-controls="navbar-catalogue">
+                <i class="ni ni-archive-2"></i>
+                <p>Catalogue <b class="caret"></b></p>
+            </a>
+            <div class="collapse " id="navbar-catalogue" style="">
+                <ul class="nav">
+                    <li>
+                        <a href="{% url 'category-list' %}">
+                            <i class="nc-icon nc-badge"></i>
+                            <span class="sidebar-normal">Category</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'pdf-list' %}">
+                            <i class="nc-icon nc-badge"></i>
+                            <span class="sidebar-normal">Product PDF </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'brand-list' %}">
+                            <i class="nc-icon nc-badge"></i>
+                            <span class="sidebar-normal">Brand</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'product-list' %}">
+                            <i class="nc-icon nc-badge"></i>
+                            <span class="sidebar-normal">Product</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </li>
+
+        <li class="li ">
+            <a data-toggle="collapse" href="#navbar-tracking" class="collapsed" aria-expanded="false"
+               aria-controls="navbar-tracking">
+                <i class="ni ni-archive-2"></i>
+                <p>Tracking <b class="caret"></b></p>
+            </a>
+            <div class="collapse" id="navbar-tracking" style="">
+                <ul class="nav">
+                    <li>
+                        <a href="{% url 'field-force-tracking' %}">
+                            <i class="nc-icon nc-badge"></i>
+                            <span>Field Force </span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </li>
+        <li>
+            <a href="{% url 'complaint-list' %}">
+                <i class="nc-icon nc-badge"></i>
+                <span>Dealer Complaints</span>
+            </a>
+        </li>
+        <li class="li ">
+            <a data-toggle="collapse" href="#navbar-user-roles" class="collapsed" aria-expanded="false"
+               aria-controls="navbar-user-roles">
+                <i class="ni ni-archive-2"></i>
+                <p> User Roles <b class="caret"></b></p>
+            </a>
+            <div class="collapse " id="navbar-user-roles" style="">
+                <ul class="nav">
+                    <!--    {% if not request.user.is_manager %}-->
+                    <li>
+                        <a href="{% url 'branch-list' %}">
+                            <i class="fa fa-book" aria-hidden="true"></i><span class="sidebar-normal">Branch</span>
+                        </a>
+                    </li>
+                    <!--    {% endif %}-->
+                    <li>
+                        <a href="{% url 'user-list' role=16 %}">
+                            <i class="fa fa-book" aria-hidden="true"></i><span class="sidebar-normal">Executives</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'user-list' role=32 %}">
+                            <i class="fa fa-book" aria-hidden="true"></i><span class="sidebar-normal">Dealers</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </li>
+
+
+        <li class="li ">
+            <a data-toggle="collapse" href="#navbar-configuration" class="collapsed" aria-expanded="true"
+               aria-controls="navbar-configuration">
+                <i class="ni ni-archive-2"></i>
+                <p> Configurations <b class="caret"></b></p>
+            </a>
+            <div class="collapse " id="navbar-configuration" style="">
+                <ul class="nav">
+                    <li>
+                        <a href="{% url 'banners-list' %}">
+                            <i class="fa fa-book" aria-hidden="true"></i><span>Advertisements</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'district-list' %}">
+                            <i class="fa fa-book" aria-hidden="true"></i><span>Zones</span>
+                        </a>
+                    </li>
+
+
+                </ul>
+            </div>
+        </li>
+
+
+        <!--    {% if request.user %}-->
+        <!--    {% include 'paper/utils/_user_permission_menus.html' %}-->
+        <!--    {% if user.is_superuser %}-->
+        <!--    {% include 'paper/utils/admin_menu.html' %}-->
+        <!--    {% endif %}-->
+        <!--    {% endif %}-->
+        <!--    {% endblock nav_links %}-->
+        <!--    {% endblock nav_links_outer %}-->
+    </ul>
+    {% endblock nav_links_ul %}
 
 
 </ul>

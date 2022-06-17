@@ -2,19 +2,7 @@
 {% load crispy_forms_tags %}
 {% block content%}
 <div class='row'>
-    <div class='col-6'>
-        <div class='card'>
-            <div class='card-body'>
-                <h3>Add PDF</h3>
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form | crispy }}
-                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class='col-12'>
+    <div class='col-8'>
         <div class='card'>
             <div class='card-body'>
                 <h3>Product PDF List</h3>
@@ -73,6 +61,19 @@
             </div>
         </div>
     </div>
+    <div class='col-4'>
+        <div class='card'>
+            <div class='card-body'>
+                <h3>Add PDF</h3>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
 {% include 'paper/swal.html' %}
 
