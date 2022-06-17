@@ -18,7 +18,7 @@ class OrderSerializerAPIView(ListAPIView):
     {
         "product":[1,2,3],
         "quantity":[1,2,3],
-        "dealer":1,
+        "dealer":1
     }
 
     """
@@ -44,4 +44,11 @@ class OrderSerializerAPIView(ListAPIView):
         return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=serializer.data))
 
     def post(self, request, *args, **kwargs):
+        dealer_id = request.data.get('dealer')
+        quantity = request.data.get('dealer')
+        product = request.data.get('dealer')
+        for product, quantity in zip(products, quantities):
+            import pdb;
+            pdb.set_trace()
+
         pass
