@@ -12,7 +12,7 @@ from apps.order.models import SalesOrder, SalesOrderLine
 
 def get_orderline_form(request):
 	form = QuotationLineForm
-	return render(request, 'paper/line_form_htmx.html',context={'form':form})
+	return render(request, 'paper/line_form_htmx.html', context={'form': form})
 
 
 class SalesOrderDetailView(UpdateView):
