@@ -4,9 +4,18 @@ from apps.catalogue.models import Product, PDF, Category
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    brand = serializers.SerializerMethodField()
+    category = serializers.SerializerMethodField()
+
+    def get_category(self, instance):
+        return instance.category.name
+
+    def get_brand(self, instance):
+        return instance.brand.name
+
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = ('name', 'product_code', 'brand', 'category')
 
 
 class ProductPDFSerializer(serializers.ModelSerializer):
