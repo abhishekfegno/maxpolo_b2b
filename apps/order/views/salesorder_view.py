@@ -16,7 +16,7 @@ def get_orderline_form(request):
 
 
 class SalesOrderDetailView(UpdateView):
-	queryset = SalesOrder.objects.all()
+	queryset = SalesOrder.objects.all().filter(is_confirmed=True).select_related('dealer')
 	template_name = 'paper/order/salesorder_form.html'
 	model = SalesOrder
 	form_class = QuotationUpdateForm
@@ -24,8 +24,50 @@ class SalesOrderDetailView(UpdateView):
 
 
 class SalesOrderListView(FormMixin, ListView):
-	queryset = SalesOrder.objects.all()
+	queryset = SalesOrder.objects.all().filter(is_confirmed=True).select_related('dealer')
 	template_name = 'paper/order/salesorder_list.html'
+	model = SalesOrder
+	form_class = QuotationForm
+	success_url = '/order/order/list'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['orderform'] = QuotationForm
+		context['orderlineform'] = QuotationLineForm
+		context['order_type'] = 'SalesOrder'
+		return context
+
+	def post(self, request, *args, **kwargs):
+		form = QuotationForm(request.POST)
+		if form.is_valid():
+			products = form.data.get('product')
+			quantity = form.data.get('quantity')
+			order = form.save()
+			for product, quantity in zip(products, quantity):
+				line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity, order=order)
+				print(f"line created {line} for order {order}")
+		return redirect('salesorder-list')
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class SalesOrderDeleteView(DeleteView):
+	queryset = SalesOrder.objects.all().select_related('dealer')
+	template_name = 'templates/salesorder_list.html'
+	model = SalesOrder
+	success_url = '/order/order/list'
+
+
+class QuotationDetailView(UpdateView):
+	queryset = SalesOrder.objects.all().filter(is_confirmed=False).select_related('dealer')
+	template_name = 'paper/order/salesorder_form.html'
+	model = SalesOrder
+	form_class = QuotationUpdateForm
+	success_url = '/order/order/list'
+
+
+class QuotationListView(FormMixin, ListView):
+	queryset = SalesOrder.objects.all().filter(is_confirmed=False).select_related('dealer')
+	template_name = 'paper/order/quotation_list.html'
 	model = SalesOrder
 	form_class = QuotationForm
 	success_url = '/order/order/list'
@@ -50,9 +92,51 @@ class SalesOrderListView(FormMixin, ListView):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class SalesOrderDeleteView(DeleteView):
-	queryset = SalesOrder.objects.all()
-	template_name = 'templates/salesorder_list.html'
+class QuotationDeleteView(DeleteView):
+	queryset = SalesOrder.objects.all().select_related('dealer')
+	template_name = 'templates/quotation_list.html'
+	model = SalesOrder
+	success_url = '/order/order/list'
+
+
+class InvoiceDetailView(UpdateView):
+	queryset = SalesOrder.objects.all().filter(is_invoice=True).select_related('dealer')
+	template_name = 'paper/order/salesorder_form.html'
+	model = SalesOrder
+	form_class = QuotationUpdateForm
+	success_url = '/order/order/list'
+
+
+class InvoiceListView(FormMixin, ListView):
+	queryset = SalesOrder.objects.all().filter(is_invoice=True).select_related('dealer')
+	template_name = 'paper/order/quotation_list.html'
+	model = SalesOrder
+	form_class = QuotationForm
+	success_url = '/order/order/list'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['orderform'] = QuotationForm
+		context['orderlineform'] = QuotationLineForm
+		context['order_type'] = 'Invoice'
+		return context
+
+	def post(self, request, *args, **kwargs):
+		form = QuotationForm(request.POST)
+		if form.is_valid():
+			products = form.data.get('product')
+			quantity = form.data.get('quantity')
+			order = form.save()
+			for product, quantity in zip(products, quantity):
+				line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity, order=order)
+				print(f"line created {line} for order {order}")
+		return redirect('salesorder-list')
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class InvoiceDeleteView(DeleteView):
+	queryset = SalesOrder.objects.all().select_related('dealer')
+	template_name = 'templates/quotation_list.html'
 	model = SalesOrder
 	success_url = '/order/order/list'
 
