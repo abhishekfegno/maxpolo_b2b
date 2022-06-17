@@ -28,9 +28,6 @@ class SalesOrder(models.Model):
     confirmed_date = models.DateTimeField(null=True, blank=True)
     invoice_date = models.DateTimeField(null=True, blank=True)
 
-    def save(self, *args, **kwargs):
-
-        return super().save(*args, **kwargs)
 
     # def __str__(self):
     #     return self.id
@@ -52,12 +49,13 @@ class SalesOrderLine(models.Model):
 @receiver(post_save, sender=SalesOrder)
 def create_order_ids(sender, instance, created, **kwargs):
     if created:
-        instance.order_id = 'QN' + f'{instance.pk}'.zfill(6)
+        SalesOrder.objects.filter(pk=instance.pk).update(order_id='QN'+f'{instance.pk}'.zfill(6))
     if instance.is_confirmed:
         print("changing order_id")
-        instance.confirmed_date = datetime.now()
-        instance.order_id = 'SO' + f'{instance.pk}'.zfill(6)
+        SalesOrder.objects.filter(pk=instance.pk).update(confirmed_date=datetime.now(),
+                                                         order_id='SO' + f'{instance.pk}'.zfill(6))
     if instance.is_invoice:
         print("changing invoice_id")
-        instance.invoice_date = datetime.now()
-        instance.invoice_id = 'INV' + f'{instance.pk}'.zfill(6)
+        SalesOrder.objects.filter(pk=instance.pk).update(confirmed_date=datetime.now(),
+                                                         invoice_id='INV'+f'{instance.pk}'.zfill(6))
+    return instance
