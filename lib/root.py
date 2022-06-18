@@ -21,10 +21,14 @@ def PUBLIC_APIS(r, f) -> list:
             ("User Profile", reverse('user:user-profile', request=r, format=f)),
             ("Password Reset", reverse('user:password-reset', request=r, format=f)),
             ("Dealer Complaint", reverse('user:dealer-complaints', request=r, format=f)),
+            ("Home API", reverse('user:home-page', request=r, format=f)),
+
             ("Product List", reverse('catalogue:api-product-list', request=r, format=f)),
             ("Category List", reverse('catalogue:api-category-list', request=r, format=f)),
+
             ("Order List", reverse('order:api-order-list', request=r, format=f)),
-            ("Home API", reverse('user:home-page', request=r, format=f)),
+
+            ("Transactions API", reverse('payment:api-transaction-list', request=r, format=f)),
             # ("Enter OTP", reverse('enter_otp', request=r, format=f)),
             # ("Community List", reverse('operator:communitycarwashextension-list', request=r, format=f)),
             #

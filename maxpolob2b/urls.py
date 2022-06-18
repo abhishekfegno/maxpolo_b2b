@@ -31,6 +31,7 @@ urlpatterns = [
         path('catalogue/', include('apps.catalogue.urls')),
         path('order/', include('apps.order.urls')),
         path('infrastructure/', include('apps.infrastructure.urls')),
+        path('payment/', include('apps.payment.urls')),
         path('punch-report/', include('apps.executivetracking.urls')),
     ])),
 
@@ -39,6 +40,7 @@ urlpatterns = [
         path('catalogue/', include('apps.catalogue.api.urls')),
         path('user/', include('apps.user.api.urls')),
         path('order/', include('apps.order.api.urls')),
+        path('payment/', include('apps.payment.api.urls')),
     ])),
     path('__debug__/', include(debug_toolbar.urls)),
 
