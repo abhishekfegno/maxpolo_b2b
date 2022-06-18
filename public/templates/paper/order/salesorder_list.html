@@ -38,7 +38,7 @@
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object.order_id }}</div>
+                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.order_id }}</a></div>
                             </td>
                             <td>
                                 <div class="">{{ object.created_at }}</div>
@@ -63,21 +63,21 @@
         </div>
 
     </div>
-    <div class='col-6'>
-            <div class='card'>
-                <div class='card-body'>
-                    <h3>Create {{ order_type }}</h3>
-                    <form method="POST">
-                        {% csrf_token %}
-                        {{ orderform | crispy }}
-                        <button type="button" class="btn btn-primary" hx-get="{% url 'get_orderline_form' %}" hx-target="#lineform" hx-swap="beforeend">Add product</button>
-                        <div id="lineform"></div>
-                        <input type="hidden" hx-post="{% url 'salesorder-list' %}">
-                        <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
-                    </form>
-                </div>
-            </div>
-    </div>
+<!--    <div class='col-6'>-->
+<!--            <div class='card'>-->
+<!--                <div class='card-body'>-->
+<!--                    <h3>Create {{ order_type }}</h3>-->
+<!--                    <form method="POST">-->
+<!--                        {% csrf_token %}-->
+<!--                        {{ orderform | crispy }}-->
+<!--                        <button type="button" class="btn btn-primary" hx-get="{% url 'get_orderline_form' %}" hx-target="#lineform" hx-swap="beforeend">Add product</button>-->
+<!--                        <div id="lineform"></div>-->
+<!--                        <input type="hidden" hx-post="{% url 'salesorder-list' %}">-->
+<!--                        <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--    </div>-->
 
 </div>
 {% include 'paper/swal.html' %}

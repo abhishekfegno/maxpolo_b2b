@@ -16,6 +16,7 @@ urlpatterns = [
     path('invoice/<int:pk>/delete/', InvoiceDeleteView.as_view(), name='invoice-delete'),
 
     path('order/line/form/', get_orderline_form, name='get_orderline_form'),
+    path('order/line/detail/<int:order_id>', get_orderline, name='get_orderline'),
 
 ]
 

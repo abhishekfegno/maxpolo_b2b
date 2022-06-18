@@ -39,6 +39,8 @@ class SalesOrderUpdateForm(forms.ModelForm):
 
 
 class InvoiceUpdateForm(forms.ModelForm):
+	invoice_id = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+
 	class Meta:
 		model = SalesOrder
-		fields = ('is_confirmed', 'is_cancelled', 'is_invoice')
+		fields = ('invoice_id', 'is_cancelled', 'is_invoice', 'invoice_status', 'invoice_amount', 'invoice_remaining_amount')
