@@ -31,6 +31,9 @@ class DealerForm(forms.ModelForm):
 		model = Dealer
 		fields = ('username', 'first_name', 'last_name', 'user_role', 'branch', 'mobile', 'email')
 
+	def clean(self):
+		import pdb;pdb.set_trace()
+		return super().clean()
 
 class ExecutiveForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
@@ -40,3 +43,11 @@ class ExecutiveForm(forms.ModelForm):
 	class Meta:
 		model = Executive
 		fields = ('username', 'first_name', 'last_name', 'user_role', 'branch', 'mobile', 'email', 'dealers')
+
+	def clean(self):
+		if self.cleaned_data.get('user_role') == '16':
+			self.cleaned_data['user_role'] = 'Executive'
+		if self.cleaned_data.get('user_role') == '32':
+			self.cleaned_data['user_role'] = 'Dealer'
+		# import pdb;pdb.set_trace()
+		return super().clean()

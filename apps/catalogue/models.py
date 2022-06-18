@@ -47,6 +47,7 @@ class PDF(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=50)
+    image = models.ImageField(upload_to='product/', null=True, blank=True)
     product_code = models.CharField(max_length=50)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)

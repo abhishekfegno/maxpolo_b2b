@@ -9,8 +9,8 @@ from django.dispatch import receiver
 INVOICE_STATUS = (
     ('new', 'New'),
     ('credit', 'Credit'),
-    ('payment partial', 'Payment Partial'),
-    ('payment done', 'Payment Done')
+    ('payment_partial', 'Payment Partial'),
+    ('payment_done', 'Payment Done')
 )
 
 
@@ -28,9 +28,10 @@ class SalesOrder(models.Model):
     confirmed_date = models.DateTimeField(null=True, blank=True)
     invoice_date = models.DateTimeField(null=True, blank=True)
 
-
-    # def __str__(self):
-    #     return self.id
+    def __str__(self):
+        if self.invoice_id:
+            return self.invoice_id
+        return self.order_id
 
     @property
     def id_as_text(self):
