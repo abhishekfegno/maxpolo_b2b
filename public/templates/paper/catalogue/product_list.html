@@ -2,19 +2,8 @@
 {% load crispy_forms_tags %}
 {% block content%}
 <div class='row'>
+
     <div class='col-6'>
-        <div class='card'>
-            <div class='card-body'>
-                <h3>Add Product</h3>
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ form | crispy }}
-                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class='col-12'>
         <div class='card'>
             <div class='card-body'>
                 <h3>Product List</h3>
@@ -75,6 +64,18 @@
                     </table>
                 </div>
 
+            </div>
+        </div>
+    </div>
+    <div class='col-6'>
+        <div class='card'>
+            <div class='card-body'>
+                <h3>Add Product</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
+                </form>
             </div>
         </div>
     </div>

@@ -1,10 +1,6 @@
 .idea
 .idea/*
 src/*
-__pycache__/
-*.pyc
-.env
-db.sqlite3
 public/media/*
 public/assets/*
 public/staticfiles/*
@@ -267,7 +263,6 @@ fabric.properties
 # Ignore everything but code style settings and run configurations
 # that are supposed to be shared within teams.
 
-.idea/*
 
 !.idea/codeStyles
 !.idea/runConfigurations
