@@ -6,13 +6,18 @@ from django.views.generic import CreateView, UpdateView, DetailView, DeleteView,
 from django.views.generic.edit import FormMixin
 
 from apps.catalogue.models import Product
-from apps.order.forms.salesorder_form import QuotationForm, QuotationLineForm, QuotationUpdateForm
+from apps.order.forms.salesorder_form import QuotationForm, QuotationLineForm, QuotationUpdateForm, InvoiceUpdateForm
 from apps.order.models import SalesOrder, SalesOrderLine
 
 
 def get_orderline_form(request):
 	form = QuotationLineForm
 	return render(request, 'paper/line_form_htmx.html', context={'form': form})
+
+
+def get_orderline(request, order_id):
+	data = SalesOrderLine.objects.filter(order_id=order_id)
+	return render(request, 'paper/order/order_line_list.html', context={'object_list': data})
 
 
 class SalesOrderDetailView(UpdateView):
@@ -62,7 +67,7 @@ class QuotationDetailView(UpdateView):
 	template_name = 'paper/order/salesorder_form.html'
 	model = SalesOrder
 	form_class = QuotationUpdateForm
-	success_url = '/order/order/list'
+	success_url = '/order/quotation/list'
 
 
 class QuotationListView(FormMixin, ListView):
@@ -70,7 +75,7 @@ class QuotationListView(FormMixin, ListView):
 	template_name = 'paper/order/quotation_list.html'
 	model = SalesOrder
 	form_class = QuotationForm
-	success_url = '/order/order/list'
+	success_url = '/order/quotation/list'
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -88,7 +93,7 @@ class QuotationListView(FormMixin, ListView):
 			for product, quantity in zip(products, quantity):
 				line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity, order=order)
 				print(f"line created {line} for order {order}")
-		return redirect('salesorder-list')
+		return redirect('quotation-list')
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -96,23 +101,23 @@ class QuotationDeleteView(DeleteView):
 	queryset = SalesOrder.objects.all().select_related('dealer')
 	template_name = 'templates/quotation_list.html'
 	model = SalesOrder
-	success_url = '/order/order/list'
+	success_url = '/order/quotation/list'
 
 
 class InvoiceDetailView(UpdateView):
 	queryset = SalesOrder.objects.all().filter(is_invoice=True).select_related('dealer')
 	template_name = 'paper/order/salesorder_form.html'
 	model = SalesOrder
-	form_class = QuotationUpdateForm
-	success_url = '/order/order/list'
+	form_class = InvoiceUpdateForm
+	success_url = '/order/invoice/list'
 
 
 class InvoiceListView(FormMixin, ListView):
 	queryset = SalesOrder.objects.all().filter(is_invoice=True).select_related('dealer')
-	template_name = 'paper/order/quotation_list.html'
+	template_name = 'paper/order/invoice_list.html'
 	model = SalesOrder
-	form_class = QuotationForm
-	success_url = '/order/order/list'
+	form_class = InvoiceUpdateForm
+	success_url = '/order/invoice/list'
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -122,7 +127,7 @@ class InvoiceListView(FormMixin, ListView):
 		return context
 
 	def post(self, request, *args, **kwargs):
-		form = QuotationForm(request.POST)
+		form = InvoiceUpdateForm(request.POST)
 		if form.is_valid():
 			products = form.data.get('product')
 			quantity = form.data.get('quantity')
@@ -130,15 +135,15 @@ class InvoiceListView(FormMixin, ListView):
 			for product, quantity in zip(products, quantity):
 				line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity, order=order)
 				print(f"line created {line} for order {order}")
-		return redirect('salesorder-list')
+		return redirect('invoice-list')
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class InvoiceDeleteView(DeleteView):
 	queryset = SalesOrder.objects.all().select_related('dealer')
-	template_name = 'templates/quotation_list.html'
+	template_name = 'templates/invoice_list.html'
 	model = SalesOrder
-	success_url = '/order/order/list'
+	success_url = '/order/invoice/list'
 
 
 

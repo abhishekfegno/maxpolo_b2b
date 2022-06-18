@@ -8,12 +8,9 @@ from sib_api_v3_sdk.rest import ApiException
 from pprint import pprint
 
 
-
 class EmailHandler(object):
-
     # api_key = settings.SENDBLUE_API_KEY
-    # api_key = os.getenv('SENDBLUE_API_KEY')
-    api_key = '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'
+    api_key = os.getenv('SENDBLUE_API_KEY')
 
     # Configure API key authorization: api-key
     configuration = sib_api_v3_sdk.Configuration()
@@ -68,8 +65,3 @@ class EmailHandler(object):
 # e.sent_email_now(recipient, message1, subject)
 
 
-#
-# if subject == "Password Reset":
-#     template_id = 3
-# elif subject == "Notification to admin !":
-#     teplate_id = 4
