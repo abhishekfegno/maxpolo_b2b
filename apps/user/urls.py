@@ -13,7 +13,7 @@ urlpatterns = [
 
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('setpassword/<slug:token>/', password_reset, name='password_reset'),
+    path('setpassword/<slug:token>/', password_reset, name='password-reset-page'),
 
 
     path('complaint/list/', ComplaintListView.as_view(), name='complaint-list'),

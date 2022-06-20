@@ -14,3 +14,4 @@ drf-url-filters
 django-rest-auth
 sib-api-v3-sdk
 django-solo
+django-import-export

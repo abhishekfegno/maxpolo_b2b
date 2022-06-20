@@ -224,6 +224,7 @@ STATIC_URL = '/assets/'
 MEDIA_URL = '/src/'
 
 
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'public/staticfiles/')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'public/src/')
 
