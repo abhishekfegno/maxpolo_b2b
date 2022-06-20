@@ -1,4 +1,5 @@
 # New file created
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -6,8 +7,10 @@ from django.views.generic import CreateView, UpdateView, DetailView, DeleteView,
 from django.views.generic.edit import FormMixin
 
 from apps.catalogue.models import Product
-from apps.order.forms.salesorder_form import QuotationForm, QuotationLineForm, QuotationUpdateForm, InvoiceUpdateForm
+from apps.order.forms.salesorder_form import QuotationForm, QuotationLineForm, QuotationUpdateForm, InvoiceUpdateForm, \
+	SalesOrderUpdateForm
 from apps.order.models import SalesOrder, SalesOrderLine
+from lib.importexport import OrderReport
 
 
 def get_orderline_form(request):
@@ -20,11 +23,26 @@ def get_orderline(request, order_id):
 	return render(request, 'paper/order/order_line_list.html', context={'object_list': data})
 
 
+def get_excel_report_order(request, slug):
+	queryset = SalesOrder.objects.filter(is_quotation=True)
+	name = 'quotation'
+	if slug.lower() == 'salesorder':
+		queryset = SalesOrder.objects.filter(is_confirmed=True)
+		name = slug
+	if slug.lower() == 'invoice':
+		queryset = SalesOrder.objects.filter(is_invoice=True)
+		name = slug
+	dataset = OrderReport().export(queryset)
+	response = HttpResponse(dataset.xlsx, content_type='application/vnd.ms-excel')
+	response['Content-Disposition'] = f'attachment; filename="{name}.xls"'
+	return response
+
+
 class SalesOrderDetailView(UpdateView):
 	queryset = SalesOrder.objects.all().filter(is_confirmed=True).select_related('dealer')
 	template_name = 'paper/order/salesorder_form.html'
 	model = SalesOrder
-	form_class = QuotationUpdateForm
+	form_class = SalesOrderUpdateForm
 	success_url = '/order/order/list'
 
 

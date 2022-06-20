@@ -25,4 +25,6 @@ urlpatterns = [
     path('user/list/<int:role>/', UserListView.as_view(), name='user-list'),
     path('user/<int:pk>/update/', UserDetailView.as_view(), name='user-update'),
     path('user/<int:pk>/delete/', UserDeleteView.as_view(), name='user-delete'),
+
+    path('complaint/excel/export/', get_excel_report_complaint, name='get_excel_report_complaint')
 ]

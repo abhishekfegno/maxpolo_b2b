@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -9,6 +10,16 @@ from django.views.generic.edit import FormMixin
 
 from apps.payment.forms import TransactionForm
 from apps.payment.models import Transaction
+from lib.importexport import PaymentReport
+
+
+def get_excel_report_payment(request):
+    queryset = Transaction.objects.select_related('order')
+    name = 'payment'
+    dataset = PaymentReport().export(queryset)
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = f'attachment; filename="{name}.xls"'
+    return response
 
 
 class TransactionDetailView(UpdateView):

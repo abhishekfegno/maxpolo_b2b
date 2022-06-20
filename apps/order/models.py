@@ -18,6 +18,7 @@ class SalesOrder(models.Model):
     order_id = models.CharField(max_length=10)
     invoice_id = models.CharField(max_length=10, null=True, blank=True)
     dealer = models.ForeignKey('user.User', on_delete=models.SET_NULL, null=True, blank=False)
+    is_quotation = models.BooleanField(default=True)
     is_cancelled = models.BooleanField(default=False)
     is_confirmed = models.BooleanField(default=False)
     is_invoice = models.BooleanField(default=False)
@@ -53,11 +54,11 @@ def create_order_ids(sender, instance, created, **kwargs):
         SalesOrder.objects.filter(pk=instance.pk).update(order_id='QN'+f'{instance.pk}'.zfill(6))
     if instance.is_confirmed:
         print("changing order_id")
-        SalesOrder.objects.filter(pk=instance.pk).update(confirmed_date=datetime.now(),
+        SalesOrder.objects.filter(pk=instance.pk).update(confirmed_date=datetime.now(), is_quotation=False,
                                                          order_id='SO' + f'{instance.pk}'.zfill(6))
     if instance.is_invoice and instance.is_confirmed:
         print("changing invoice_id")
-        SalesOrder.objects.filter(pk=instance.pk).update(invoice_date=datetime.now(),
+        SalesOrder.objects.filter(pk=instance.pk).update(invoice_date=datetime.now(), is_quotation=False,
                                                          invoice_id='INV'+f'{instance.pk}'.zfill(6))
     # if instance.invoice_amount:
     #     print("credit status")

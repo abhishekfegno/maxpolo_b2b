@@ -16,6 +16,9 @@ from lib.utils import list_api_formatter
 
 class OrderListAPIView(ListAPIView):
     """
+    filters
+        ?is_confirmed=True
+        ?is_invoice=True
     POST data
     {
         "products":[1,2,3],
