@@ -5,7 +5,7 @@
     <div class='col-6'>
         <div class='card'>
             <div class='card-body'>
-                <h3>{{ order_type }} List</h3>
+                <h3>Payment List</h3>
 
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
@@ -15,6 +15,8 @@
                             <th scope="col">Name</th>
                             <th scope="col">Ordered_on</th>
                             <th scope="col">Paid</th>
+                            <th scope="col">Balance</th>
+                            <th scope="col">status</th>
                             <!--                    <th scope="col">Contact</th>-->
                             <!--                    <th scope="col">Subscription</th>-->
                             <!--                    <th scope="col">Last View</th>-->
@@ -46,6 +48,12 @@
                                 <div class="">₹{{ object.amount }}</div>
                             </td>
                             <td>
+                                <div class="">₹{{ object.amount_balance }}</div>
+                            </td>
+                            <td>
+                                <div class="">{{ object.status}}</div>
+                            </td>
+                            <td>
                                 <div class=""><a href="{% url 'transaction-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
                             </td>
                             <td>
@@ -62,6 +70,18 @@
         </div>
 
     </div>
+    <div class='col-6'>
+        <div class='card'>
+            <div class='card-body'>
+                <h3>Create {{ order_type }}</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    <button type='submit'  style="float:right;" class='btn btn-lg btn-success'> Save </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
-    {%endblock%}
+{%endblock%}

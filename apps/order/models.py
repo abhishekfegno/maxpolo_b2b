@@ -23,7 +23,7 @@ class SalesOrder(models.Model):
     is_invoice = models.BooleanField(default=False)
     invoice_status = models.CharField(max_length=20, choices=INVOICE_STATUS, default='new')
     invoice_amount = models.FloatField(default=0.0)
-    invoice_remaining_amount = models.FloatField(default=0.0)
+    invoice_remaining_amount = models.FloatField(default=0.1)  # must be set to 0.1 for programming purpose
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     confirmed_date = models.DateTimeField(null=True, blank=True)
     invoice_date = models.DateTimeField(null=True, blank=True)
@@ -59,4 +59,7 @@ def create_order_ids(sender, instance, created, **kwargs):
         print("changing invoice_id")
         SalesOrder.objects.filter(pk=instance.pk).update(invoice_date=datetime.now(),
                                                          invoice_id='INV'+f'{instance.pk}'.zfill(6))
+    # if instance.invoice_amount:
+    #     print("credit status")
+    #     SalesOrder.objects.filter(pk=instance.pk).update(invoice_status='credit')
     return instance

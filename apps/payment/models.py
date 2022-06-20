@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -14,6 +15,8 @@ from apps.order.models import SalesOrder
 class Transaction(models.Model):
     order = models.ForeignKey('order.SalesOrder', on_delete=models.SET_NULL, null=True, blank=False)
     amount = models.FloatField(default=0.0)
+    amount_balance = models.FloatField(default=0.0)
+    status = models.CharField(max_length=20, null=True, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -25,10 +28,24 @@ def invoice_amount_update(sender, created, instance, **kwargs):
     if created:
         actual_inv_amount = instance.order.invoice_amount
         paid_amount = instance.amount
+        # import pdb;pdb.set_trace()
         if paid_amount == actual_inv_amount:
             SalesOrder.objects.filter(pk=instance.order.pk).update(invoice_status='payment_done')
         elif paid_amount < actual_inv_amount:
             balance = actual_inv_amount - paid_amount
             print(f"balance:{balance},paid:{paid_amount}")
-            SalesOrder.objects.filter(pk=instance.order.pk).update(invoice_status='Payment Partial',
-                                                                   invoice_remaining_amount=balance)
+            status = 'payment_partial'
+            rem_amount = instance.order.invoice_remaining_amount
+            print(type(rem_amount), "rem amount")
+            if rem_amount != 0.1:
+                rem_amount -= paid_amount
+                if rem_amount in [0.0, 0]:
+                    status = 'payment_done'
+            elif rem_amount == 0.1:
+                rem_amount = balance
+
+            SalesOrder.objects.filter(pk=instance.order.pk).update(invoice_remaining_amount=rem_amount,
+                                                                   invoice_status=status)
+            Transaction.objects.filter(pk=instance.pk).update(amount_balance=rem_amount, status=status)
+        elif paid_amount > instance.order.invoice_remaining_amount:
+            raise ValidationError
