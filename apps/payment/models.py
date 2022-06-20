@@ -16,7 +16,7 @@ class Transaction(models.Model):
     order = models.ForeignKey('order.SalesOrder', on_delete=models.SET_NULL, null=True, blank=False)
     amount = models.FloatField(default=0.0)
     amount_balance = models.FloatField(default=0.0)
-    status = models.CharField(max_length=20, null=True, blank=False)
+    status = models.CharField(max_length=20, default='Credit', null=True, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

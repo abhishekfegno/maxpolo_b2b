@@ -7,6 +7,8 @@
         <div class='card'>
             <div class='card-body'>
                 <h3>{{ order_type }} List</h3>
+                    <a style="float:right;" href="{% url 'get_excel_report_order' slug=order_type %}" class="btn btn-primary">Download Excel</a>
+
 
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">

@@ -1,10 +1,21 @@
 # New file created
+from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
 
 from apps.user.forms.complaint_form import ComplaintForm
 from apps.user.models import Complaint
+from lib.importexport import ComplaintReport
+
+
+def get_excel_report_complaint(request):
+    queryset = Complaint.objects.select_related('created_by')
+    name = 'complaints'
+    dataset = ComplaintReport().export(queryset)
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = f'attachment; filename="{name}.xls"'
+    return response
 
 
 class ComplaintDetailView(UpdateView):

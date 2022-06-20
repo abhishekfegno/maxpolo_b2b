@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
     'debug_toolbar',
+    'import_export',
 ]
 
 MIDDLEWARE = [
