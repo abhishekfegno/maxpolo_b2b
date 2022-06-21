@@ -26,7 +26,7 @@ class Category(MP_Node):
     node_order_by = ['name']
 
     def __str__(self):
-        return 'Category: {}'.format(self.name)
+        return f"{self.name}"
 
 
 class PDF(models.Model):
