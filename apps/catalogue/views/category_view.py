@@ -2,7 +2,7 @@
 import os
 
 from django.conf import settings
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -79,11 +79,15 @@ class PDFDetailView(UpdateView):
 
 	def get(self, request, *args, **kwargs):
 		objkey = self.kwargs.get('pk', None)  # 1
-		pdf = get_object_or_404(PDF, pk=objkey)  # 2
-		fname = pdf.filename()  # 3
-		path = os.path.join(settings.MEDIA_ROOT, 'pdf/product/' + fname)  # 4
-		response = FileResponse(open(path, 'rb'), content_type="application/pdf")
-		response["Content-Disposition"] = "filename={}".format(fname)
+		try:
+			pdf = get_object_or_404(PDF, pk=objkey)  # 2
+			fname = pdf.filename()  # 3
+			path = os.path.join(settings.MEDIA_ROOT, 'pdf/product/' + fname)  # 4
+			response = FileResponse(open(path, 'rb'), content_type="application/pdf")
+			response["Content-Disposition"] = "filename={}".format(fname)
+		except Exception as e:
+			response = HttpResponse()
+			response['errors'] = str(e)
 		return response
 
 

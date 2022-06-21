@@ -15,5 +15,5 @@ class CategoryForm(MoveNodeForm):
 class PDFForm(forms.ModelForm):
 	class Meta:
 		model = PDF
-		fields = ('title', 'file', 'category', 'is_public')
+		fields = ('title', 'file', 'category')
 
