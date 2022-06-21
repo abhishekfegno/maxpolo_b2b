@@ -81,7 +81,7 @@ class SalesOrderDeleteView(DeleteView):
 
 
 class QuotationDetailView(UpdateView):
-	queryset = SalesOrder.objects.all().filter(is_confirmed=False).select_related('dealer')
+	queryset = SalesOrder.objects.all().filter(is_quotation=True, is_confirmed=False, is_invoice=False).select_related('dealer')
 	template_name = 'paper/order/salesorder_form.html'
 	model = SalesOrder
 	form_class = QuotationUpdateForm
@@ -89,7 +89,7 @@ class QuotationDetailView(UpdateView):
 
 
 class QuotationListView(FormMixin, ListView):
-	queryset = SalesOrder.objects.all().filter(is_confirmed=False).select_related('dealer')
+	queryset = SalesOrder.objects.all().filter(is_quotation=True, is_confirmed=False, is_invoice=False).select_related('dealer')
 	template_name = 'paper/order/quotation_list.html'
 	model = SalesOrder
 	form_class = QuotationForm

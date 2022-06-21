@@ -1,4 +1,5 @@
 # New file created
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
@@ -33,7 +34,16 @@ class ProductListView(FormMixin, ListView):
 		cxt = super().get_context_data(**kwargs)
 		# cxt['object_list'] = self.get_queryset()
 		cxt['filter'] = ProductFilter(self.request.GET, queryset=self.get_queryset())
+		# import pdb;pdb.set_trace()
 		return cxt
+
+	def post(self, request, *args, **kwargs):
+		form = self.form_class(request.POST)
+		if form.is_valid():
+			form.save()
+		else:
+			print(form.errors)
+		return redirect('product-list')
 
 
 @method_decorator(csrf_exempt, name='dispatch')

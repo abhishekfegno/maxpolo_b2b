@@ -7,8 +7,7 @@ from apps.order.models import SalesOrder
 class ProductFilter(FilterSet):
     class Meta:
         model = Product
-        fields = ('product_code', 'name', 'brand')
-
+        fields = {'product_code': ['icontains'], 'name': ['icontains'], 'brand': []}
 
 
 class OrderFilter(FilterSet):
