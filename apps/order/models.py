@@ -58,7 +58,7 @@ def create_order_ids(sender, instance, created, **kwargs):
                                                          order_id='SO' + f'{instance.pk}'.zfill(6))
     if instance.is_invoice and instance.is_confirmed:
         print("changing invoice_id")
-        SalesOrder.objects.filter(pk=instance.pk).update(invoice_date=datetime.now(), is_quotation=False,
+        SalesOrder.objects.filter(pk=instance.pk).update(invoice_date=datetime.now(), is_confirmed=False,
                                                          invoice_id='INV'+f'{instance.pk}'.zfill(6))
     # if instance.invoice_amount:
     #     print("credit status")
