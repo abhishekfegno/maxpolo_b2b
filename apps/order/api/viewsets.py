@@ -30,7 +30,7 @@ class OrderListAPIView(ListAPIView):
     queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
     serializer_class = OrderSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
-    filterset_fields = ['is_cancelled', 'is_confirmed', 'is_invoice']
+    filterset_fields = ['is_cancelled', 'is_confirmed', 'is_invoice', 'is_quotation']
     search_fields = ('order_id', 'invoice_id')
     ordering_fields = ()
     pagination_class = PageNumberPagination

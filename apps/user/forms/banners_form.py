@@ -29,26 +29,16 @@ class DealerForm(forms.ModelForm):
 
 	class Meta:
 		model = Dealer
-		fields = ('username', 'first_name', 'last_name', 'user_role', 'branch', 'mobile', 'email')
-
-	def clean(self):
-		import pdb;pdb.set_trace()
-		return super().clean()
+		fields = ('username', 'first_name', 'last_name', 'branch', 'mobile', 'email')
 
 
 class ExecutiveForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self.fields['user_role'].queryset = Dealer.objects.all()
+		self.fields['dealers'].queryset = Dealer.objects.all()
 
 	class Meta:
 		model = Executive
-		fields = ('username', 'first_name', 'last_name', 'user_role', 'branch', 'mobile', 'email', 'dealers')
+		fields = ('username', 'first_name', 'last_name', 'branch', 'mobile', 'email', 'dealers')
 
-	def clean(self):
-		if self.cleaned_data.get('user_role') == '16':
-			self.cleaned_data['user_role'] = 'Executive'
-		if self.cleaned_data.get('user_role') == '32':
-			self.cleaned_data['user_role'] = 'Dealer'
-		# import pdb;pdb.set_trace()
-		return super().clean()
+

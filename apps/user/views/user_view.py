@@ -45,14 +45,16 @@ class UserListView(FormMixin, ListView):
         return context
 
     def post(self, request, *args, **kwargs):
-        role = 16
         form = self.form_class(request.POST)
+        role = self.kwargs.get('role')
         # import pdb;pdb.set_trace()
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.user_role = role
+            user.save()
         else:
             print(form.errors)
-        role = form.data.get('user_role')
+            # role = form.data.get('user_role')
         return redirect('user-list', role=role)
 
 
