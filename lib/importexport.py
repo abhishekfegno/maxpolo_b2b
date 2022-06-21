@@ -1,4 +1,5 @@
-from import_export import resources
+from import_export import resources, fields
+from import_export.widgets import ForeignKeyWidget
 
 from apps.order.models import SalesOrder
 from apps.payment.models import Transaction
@@ -6,9 +7,10 @@ from apps.user.models import Complaint, Dealer
 
 
 class OrderReport(resources.ModelResource):
-    def __init__(self):
-        super().__init__()
-        self.fields['dealer'].queryset = Dealer.objects.all().values('username')
+    dealer = fields.Field(
+        column_name='dealer',
+        attribute='dealer',
+        widget=ForeignKeyWidget(Dealer, 'username'))
 
 
     class Meta:
@@ -17,15 +19,25 @@ class OrderReport(resources.ModelResource):
 
 
 class SalesOrderReport(resources.ModelResource):
+    dealer = fields.Field(
+        column_name='dealer',
+        attribute='dealer',
+        widget=ForeignKeyWidget(Dealer, 'username'))
+
     class Meta:
         model = SalesOrder
-        export_order = ('id', 'order_id', 'dealer__username', 'is_confirmed', 'confirmed_date', 'created_at')
+        export_order = ('id', 'order_id', 'dealer', 'is_confirmed', 'confirmed_date', 'created_at')
 
 
 class InvoiceReport(resources.ModelResource):
+    dealer = fields.Field(
+        column_name='dealer',
+        attribute='dealer',
+        widget=ForeignKeyWidget(Dealer, 'username'))
+
     class Meta:
         model = SalesOrder
-        export_order = ('id', 'order_id', 'invoice_id', 'dealer__username', 'is_confirmed', 'confirmed_date',
+        export_order = ('id', 'order_id', 'invoice_id', 'dealer', 'is_confirmed', 'confirmed_date',
                         'invoice_date', 'invoice_amount', 'invoice_remaining_amount', 'created_at')
 
 
