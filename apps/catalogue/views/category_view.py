@@ -85,3 +85,11 @@ class PDFDetailView(UpdateView):
 		response = FileResponse(open(path, 'rb'), content_type="application/pdf")
 		response["Content-Disposition"] = "filename={}".format(fname)
 		return response
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PDFDeleteView(DeleteView):
+	queryset = PDF.objects.all()
+	template_name = 'paper/catalogue/pdf_list.html'
+	model = PDF
+	success_url = '/catalogue/pdf/list/'

@@ -13,6 +13,7 @@ urlpatterns = [
 
     path('pdf/list/', PDFListView.as_view(), name='pdf-list'),
     path('pdf/<int:pk>/update/', PDFDetailView.as_view(), name='pdf-update'),
+    path('pdf/<int:pk>/delete/', PDFDeleteView.as_view(), name='pdf-delete'),
 
     path('brand/list/', BrandListView.as_view(), name='brand-list'),
     path('brand/<int:pk>/update/', BrandDetailView.as_view(), name='brand-update'),
