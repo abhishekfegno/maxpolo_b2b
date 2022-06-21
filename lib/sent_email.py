@@ -25,7 +25,7 @@ class EmailHandler(object):
 
 
     def sent_email_now(self, recipient, message, subject):
-        print("KEY", self.api_key)
+        # print("KEY", self.api_key)
         api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(self.configuration))
         send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
             to=[recipient],

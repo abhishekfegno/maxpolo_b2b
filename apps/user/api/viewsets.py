@@ -110,7 +110,7 @@ class PasswordResetView(GenericAPIView):
                 user = User.objects.get(username=serializer.data["username"])
                 token, _ = Token.objects.get_or_create(user=user)
 
-                _url = reverse('password_reset-', kwargs={"token": token.key})
+                _url = reverse('password-reset-page', request=request, format=None, kwargs={"token": token.key})
                 # url = f"{reverse('password_reset-', request=request, format=None)}/{token.key}/"
                 message = f'You can reset you password by visiting this link {_url}'
                 email.sent_email_now(recipient, message, subject)
