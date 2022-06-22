@@ -10,10 +10,12 @@ class OrderLineSerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField()
 
     def get_product(self, instance):
-        return {
-            "product_code": instance.product.product_code,
-            "product_name": instance.product.name
-        }
+        if instance.product:
+
+            return {
+                "product_code": instance.product.product_code,
+                "product_name": instance.product.name
+            }
 
     class Meta:
         model = SalesOrderLine
