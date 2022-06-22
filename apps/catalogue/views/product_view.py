@@ -32,9 +32,7 @@ class ProductListView(FormMixin, ListView):
 
 	def get_context_data(self, **kwargs):
 		cxt = super().get_context_data(**kwargs)
-		# cxt['object_list'] = self.get_queryset()
 		cxt['filter'] = ProductFilter(self.request.GET, queryset=self.get_queryset())
-		# import pdb;pdb.set_trace()
 		return cxt
 
 	def post(self, request, *args, **kwargs):

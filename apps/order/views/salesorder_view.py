@@ -5,11 +5,13 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
 from django.views.generic.edit import FormMixin
+from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.catalogue.models import Product
 from apps.order.forms.salesorder_form import QuotationForm, QuotationLineForm, QuotationUpdateForm, InvoiceUpdateForm, \
 	SalesOrderUpdateForm
 from apps.order.models import SalesOrder, SalesOrderLine
+from lib.filters import OrderFilter
 from lib.importexport import OrderReport
 
 
@@ -51,6 +53,9 @@ class SalesOrderListView(FormMixin, ListView):
 	template_name = 'paper/order/salesorder_list.html'
 	model = SalesOrder
 	form_class = QuotationForm
+	filtering_backends = (DjangoFilterBackend,)
+	filtering_class = OrderFilter
+	filterset_fields = ('order_id',)
 	success_url = '/order/order/list'
 
 	def get_context_data(self, **kwargs):
@@ -58,6 +63,7 @@ class SalesOrderListView(FormMixin, ListView):
 		context['orderform'] = QuotationForm
 		context['orderlineform'] = QuotationLineForm
 		context['order_type'] = 'SalesOrder'
+		context['filter'] = OrderFilter(self.request.GET, queryset=self.get_queryset())
 		return context
 
 	def post(self, request, *args, **kwargs):
@@ -93,6 +99,9 @@ class QuotationListView(FormMixin, ListView):
 	template_name = 'paper/order/quotation_list.html'
 	model = SalesOrder
 	form_class = QuotationForm
+	filtering_backends = (DjangoFilterBackend, )
+	filtering_class = OrderFilter
+	filterset_fields = ('order_id',)
 	success_url = '/order/quotation/list'
 
 	def get_context_data(self, **kwargs):
@@ -100,6 +109,7 @@ class QuotationListView(FormMixin, ListView):
 		context['orderform'] = QuotationForm
 		context['orderlineform'] = QuotationLineForm
 		context['order_type'] = 'Quotation'
+		context['filter'] = OrderFilter(self.request.GET, queryset=self.get_queryset())
 		return context
 
 	def post(self, request, *args, **kwargs):
@@ -135,6 +145,9 @@ class InvoiceListView(FormMixin, ListView):
 	template_name = 'paper/order/invoice_list.html'
 	model = SalesOrder
 	form_class = InvoiceUpdateForm
+	filtering_backends = (DjangoFilterBackend,)
+	filtering_class = OrderFilter
+	filterset_fields = ('order_id',)
 	success_url = '/order/invoice/list'
 
 	def get_context_data(self, **kwargs):
@@ -142,6 +155,7 @@ class InvoiceListView(FormMixin, ListView):
 		context['orderform'] = QuotationForm
 		context['orderlineform'] = QuotationLineForm
 		context['order_type'] = 'Invoice'
+		context['filter'] = OrderFilter(self.request.GET, queryset=self.get_queryset())
 		return context
 
 	def post(self, request, *args, **kwargs):
