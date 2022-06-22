@@ -142,7 +142,7 @@ class QuotationDeleteView(DeleteView):
 
 class InvoiceDetailView(UpdateView):
 	queryset = SalesOrder.objects.all().filter(is_invoice=True).select_related('dealer')
-	template_name = 'paper/order/salesorder_form.html'
+	template_name = 'paper/order/invoice_form.html'
 	model = SalesOrder
 	form_class = InvoiceUpdateForm
 	success_url = '/order/invoice/list'
