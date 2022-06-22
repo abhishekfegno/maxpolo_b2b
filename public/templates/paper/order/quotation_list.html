@@ -3,13 +3,13 @@
 {% block content%}
 {% include 'paper/htmx.html' %}
 <div class='row'>
-        {% include 'paper/catalogue/product_filter.html'%}
+    {% include 'paper/catalogue/product_filter.html'%}
 
     <div class='col-6'>
         <div class='card'>
             <div class='card-body'>
                 <h3>{{ order_type }} List</h3>
-                    <a style="float:right;" href="{% url 'get_excel_report_order' slug=order_type %}" class="btn btn-primary">Download Excel</a>
+                <a style="float:right;" href="{% url 'get_excel_report_order' slug=order_type %}" class="btn btn-primary">Download Excel</a>
 
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
@@ -67,19 +67,26 @@
 
     </div>
     <div class='col-6'>
-            <div class='card'>
-                <div class='card-body'>
-                    <h3>Create {{ order_type }}</h3>
-                    <form method="POST">
-                        {% csrf_token %}
-                        {{ orderform | crispy }}
-                        <button type="button" class="btn btn-primary" hx-get="{% url 'get_orderline_form' %}" hx-target="#lineform" hx-swap="beforeend">Add product</button>
-                        <div id="lineform"></div>
-                        <input type="hidden" hx-post="{% url 'salesorder-list' %}">
-                        <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
-                    </form>
+        <div class='card'>
+            <div class='card-body'>
+                <h3>Create {{ order_type }}</h3>
+                <div class="card-header">
+                    {% if form.errors %}
+                    <pre>
+                        {{ form.errors }}
+                    </pre>
+                    {% endif %}
                 </div>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ orderform | crispy }}
+                    <button type="button" class="btn btn-primary" hx-get="{% url 'get_orderline_form' %}" hx-target="#lineform" hx-swap="beforeend">Add product</button>
+                    <div id="lineform"></div>
+                    <input type="hidden" hx-post="{% url 'salesorder-list' %}">
+                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
+                </form>
             </div>
+        </div>
     </div>
 
 </div>

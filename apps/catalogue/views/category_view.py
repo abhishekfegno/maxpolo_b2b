@@ -2,6 +2,7 @@
 import os
 
 from django.conf import settings
+from django.contrib import messages
 from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
@@ -71,11 +72,13 @@ class PDFListView(CreateView, ListView):
 
 
 	def post(self, request, *args, **kwargs):
-		form = self.form_class(request.POST)
+		form = self.form_class(request.POST, request.FILES)
 		if form.is_valid():
 			form.save()
 		else:
 			print(form.errors)
+			# import pdb;pdb.set_trace()
+			messages.add_message(request, messages.INFO, form.errors.get('file')[0])
 		return redirect('pdf-list')
 
 
