@@ -3,6 +3,7 @@
 src/*
 public/media/*
 public/assets/*
+public/src/*
 public/staticfiles/*
 
 *.swp

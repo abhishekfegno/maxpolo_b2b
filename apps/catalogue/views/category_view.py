@@ -3,7 +3,7 @@ import os
 
 from django.conf import settings
 from django.http import FileResponse, Http404, HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
@@ -70,6 +70,15 @@ class PDFListView(CreateView, ListView):
 	success_url = '/catalogue/pdf/list/'
 
 
+	def post(self, request, *args, **kwargs):
+		form = self.form_class(request.POST)
+		if form.is_valid():
+			form.save()
+		else:
+			print(form.errors)
+		return redirect('pdf-list')
+
+
 class PDFDetailView(UpdateView):
 	queryset = PDF.objects.all()
 	template_name = 'paper/catalogue/pdf_form.html'
@@ -82,10 +91,13 @@ class PDFDetailView(UpdateView):
 		try:
 			pdf = get_object_or_404(PDF, pk=objkey)  # 2
 			fname = pdf.filename()  # 3
+			# import pdb;pdb.set_trace()
+
 			path = os.path.join(settings.MEDIA_ROOT, 'pdf/product/' + fname)  # 4
 			response = FileResponse(open(path, 'rb'), content_type="application/pdf")
 			response["Content-Disposition"] = "filename={}".format(fname)
 		except Exception as e:
+			print(str(e))
 			response = HttpResponse()
 			response['errors'] = str(e)
 		return response

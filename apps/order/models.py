@@ -3,6 +3,7 @@ from datetime import datetime
 from django.db import models
 
 # Create your models here.
+from django.db.models import Count, Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -37,6 +38,10 @@ class SalesOrder(models.Model):
     @property
     def id_as_text(self):
         return self.order_id
+
+    @property
+    def total_line_quantity(self):
+        return self.line.all().aggregate(total_quantity=Sum('quantity')).values()
 
 
 class SalesOrderLine(models.Model):
