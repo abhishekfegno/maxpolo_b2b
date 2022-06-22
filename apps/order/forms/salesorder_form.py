@@ -35,7 +35,7 @@ class QuotationUpdateForm(forms.ModelForm):
 class SalesOrderUpdateForm(forms.ModelForm):
 	class Meta:
 		model = SalesOrder
-		fields = ('is_confirmed', 'is_cancelled', 'is_invoice', 'is_quotation')
+		fields = ('is_confirmed', 'is_invoice', 'is_quotation')
 
 
 class InvoiceUpdateForm(forms.ModelForm):
@@ -43,4 +43,4 @@ class InvoiceUpdateForm(forms.ModelForm):
 
 	class Meta:
 		model = SalesOrder
-		fields = ('invoice_id', 'is_cancelled', 'is_invoice', 'invoice_status', 'invoice_amount', 'invoice_remaining_amount')
+		fields = ('invoice_id', 'is_invoice', 'invoice_status', 'invoice_amount', 'invoice_remaining_amount')
