@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
@@ -10,6 +11,7 @@ from django.views.generic.edit import FormMixin
 
 from apps.payment.forms import TransactionForm
 from apps.payment.models import Transaction
+from lib.filters import PaymentFilter
 from lib.importexport import PaymentReport
 
 
@@ -36,6 +38,22 @@ class TransactionListView(FormMixin, ListView):
     model = Transaction
     form_class = TransactionForm
     success_url = '/payment/transaction/list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page_number = self.request.GET.get('page', 1)
+        page_size = self.request.GET.get('page_size', 10)
+        queryset = PaymentFilter(self.request.GET, queryset=self.get_queryset())
+        context['filter_form'] = PaymentFilter(self.request.GET, queryset=self.get_queryset()).form
+        # import pdb;pdb.set_trace()
+        paginator = Paginator(queryset.qs, page_size)
+        try:
+            page_number = paginator.validate_number(page_number)
+        except EmptyPage:
+            page_number = paginator.num_pages
+        filter = paginator.get_page(page_number)
+        context['filter'] = filter
+        return context
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)

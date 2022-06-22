@@ -1,4 +1,5 @@
 # New file created
+from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -154,6 +155,8 @@ class QuotationListView(FormMixin, ListView):
 			for product, quantity in zip(products, quantity):
 				line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity, order=order)
 				print(f"line created {line} for order {order}")
+		else:
+			messages.add_message(request, messages.INFO, form.errors)
 		return redirect('quotation-list')
 
 
