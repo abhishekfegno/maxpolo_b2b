@@ -57,7 +57,7 @@ class SalesOrderDetailView(UpdateView):
 
 
 class SalesOrderListView(FormMixin, ListView):
-	queryset = SalesOrder.objects.all().filter(is_confirmed=True).select_related('dealer')
+	queryset = SalesOrder.objects.all().filter(is_confirmed=True, is_invoice=False).select_related('dealer')
 	template_name = 'paper/order/salesorder_list.html'
 	model = SalesOrder
 	form_class = QuotationForm

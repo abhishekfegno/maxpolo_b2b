@@ -18,24 +18,24 @@ class QuotationLineForm(forms.ModelForm):
 
 
 class QuotationUpdateForm(forms.ModelForm):
-	order_id = forms.CharField(required=False,
-		widget=forms.TextInput(attrs={'readonly': 'readonly'})
-	)
+	# order_id = forms.CharField(required=False,
+	# 	widget=forms.TextInput(attrs={'readonly': 'readonly'})
+	# )
 
 	class Meta:
 		model = SalesOrder
-		fields = ('order_id', 'is_confirmed', 'is_cancelled', 'is_invoice', 'is_quotation')
-		widgets = {
-			'is_confirmed': CheckboxInput(attrs={'class': 'required checkbox form-control'}),
-			'is_cancelled': CheckboxInput(attrs={'class': 'required checkbox form-control'}),
-			'is_invoice': CheckboxInput(attrs={'class': 'required checkbox form-control'}),
-		}
+		fields = ('is_confirmed', 'is_cancelled', 'is_invoice', 'is_quotation')
+		# widgets = {
+		# 	'is_confirmed': CheckboxInput(attrs={'class': 'required checkbox form-control'}),
+		# 	'is_cancelled': CheckboxInput(attrs={'class': 'required checkbox form-control'}),
+		# 	'is_invoice': CheckboxInput(attrs={'class': 'required checkbox form-control'}),
+		# }
 
 
 class SalesOrderUpdateForm(forms.ModelForm):
 	class Meta:
 		model = SalesOrder
-		fields = ('is_confirmed', 'is_invoice', 'is_quotation')
+		fields = ('is_confirmed', 'is_invoice')
 
 
 class InvoiceUpdateForm(forms.ModelForm):
