@@ -40,6 +40,14 @@ def get_excel_report_order(request, slug):
 	return response
 
 
+def cancelled_order(request):
+	queryset = SalesOrder.objects.all().filter(is_cancelled=True).select_related('dealer')
+	context = {}
+	context['filter'] = OrderFilter(request.GET, queryset=queryset)
+	context['order_type'] = 'Cancelled'
+	return render(request, 'paper/order/cancelled_order_list.html', context=context)
+
+
 class SalesOrderDetailView(UpdateView):
 	queryset = SalesOrder.objects.all().filter(is_confirmed=True).select_related('dealer')
 	template_name = 'paper/order/salesorder_form.html'
@@ -87,7 +95,7 @@ class SalesOrderDeleteView(DeleteView):
 
 
 class QuotationDetailView(UpdateView):
-	queryset = SalesOrder.objects.all().filter(is_quotation=True, is_confirmed=False, is_invoice=False).select_related('dealer')
+	queryset = SalesOrder.objects.all().filter(is_quotation=True).select_related('dealer')
 	template_name = 'paper/order/salesorder_form.html'
 	model = SalesOrder
 	form_class = QuotationUpdateForm
@@ -95,7 +103,7 @@ class QuotationDetailView(UpdateView):
 
 
 class QuotationListView(FormMixin, ListView):
-	queryset = SalesOrder.objects.all().filter(is_quotation=True, is_confirmed=False, is_invoice=False).select_related('dealer')
+	queryset = SalesOrder.objects.all().filter(is_quotation=True, is_cancelled=False, is_confirmed=False, is_invoice=False).select_related('dealer')
 	template_name = 'paper/order/quotation_list.html'
 	model = SalesOrder
 	form_class = QuotationForm
