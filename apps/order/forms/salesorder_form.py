@@ -43,4 +43,4 @@ class InvoiceUpdateForm(forms.ModelForm):
 
 	class Meta:
 		model = SalesOrder
-		fields = ('invoice_id', 'is_invoice', 'invoice_status', 'invoice_amount', 'invoice_remaining_amount')
+		fields = ('invoice_id', 'invoice_status', 'invoice_amount', 'invoice_remaining_amount')
