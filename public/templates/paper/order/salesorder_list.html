@@ -23,7 +23,7 @@
 
                         </thead>
                         <tbody>
-                        {% for object in filter.qs %}
+                        {% for object in filter %}
                         <tr>
                             <!--                    <td scope="row"> </td>-->
                             <td>
@@ -50,10 +50,9 @@
 
                     </table>
                 </div>
-
             </div>
+                        {% include 'paper/pagination.html' %}
         </div>
-
     </div>
 <!--    <div class='col-6'>-->
 <!--            <div class='card'>-->
