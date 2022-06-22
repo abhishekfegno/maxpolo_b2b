@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework import serializers
 
 from apps.catalogue.api.serializers import ProductSerializer
@@ -11,7 +12,6 @@ class OrderLineSerializer(serializers.ModelSerializer):
 
     def get_product(self, instance):
         if instance.product:
-
             return {
                 "product_code": instance.product.product_code,
                 "product_name": instance.product.name
@@ -25,6 +25,7 @@ class OrderLineSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     line = OrderLineSerializer(many=True)
     dealer = serializers.SerializerMethodField()
+
 
     def get_dealer(self, instance):
         return {

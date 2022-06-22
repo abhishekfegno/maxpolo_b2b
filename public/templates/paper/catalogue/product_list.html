@@ -13,6 +13,7 @@
                         <thead class="">
                         <tr class="">
                             <th scope="col">ID</th>
+                            <th scope="col">Image</th>
                             <th scope="col">Name</th>
                             <th scope="col">Code</th>
                             <th scope="col">Brand</th>
@@ -37,6 +38,9 @@
                             <!--                    <td scope="row"> </td>-->
                             <td>
                                 <div class="">{{ forloop.counter }}</div>
+                            </td>
+                            <td>
+                                <div class="">{{ object.photo_url }}</div>
                             </td>
                             <td>
                                 <div class="">{{ object.name }}</div>
@@ -71,7 +75,7 @@
         <div class='card'>
             <div class='card-body'>
                 <h3>Add Product</h3>
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ form | crispy }}
                     <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
