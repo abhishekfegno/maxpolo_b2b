@@ -45,7 +45,6 @@ class ProductAPIView(ListAPIView):
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page_number', 1)
         page_size = request.GET.get('page_size', 20)
-        serializer = self.get_serializer(self.get_queryset(), many=True, context={'request': request})
         queryset = self.filter_queryset(self.get_queryset())
         paginator = Paginator(queryset, page_size)
         try:
@@ -53,6 +52,7 @@ class ProductAPIView(ListAPIView):
         except EmptyPage:
             page_number = paginator.num_pages
         page_obj = paginator.get_page(page_number)
+        serializer = self.get_serializer(page_obj.object_list, many=True, context={'request': request})
         return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=serializer.data))
 
 
@@ -66,7 +66,7 @@ class ProductPDFView(ListAPIView):
     pagination_class = PageNumberPagination
 
     def list(self, request, *args, **kwargs):
-        page_number = request.GET.get('page_number', 1)
+        page_number = request.GET.get('page', 1)
         page_size = request.GET.get('page_size', 20)
         serializer = self.get_serializer(self.get_queryset(), many=True, context={'request': request})
         queryset = self.filter_queryset(self.get_queryset())

@@ -43,11 +43,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
+    'django.contrib.sites',
+    'django.contrib.flatpages',
+
     'apps.user',
     'apps.infrastructure',
     'apps.catalogue',
     'apps.order',
     'apps.executivetracking',
+    'apps.payment',
 
     'dg',
     'django_extensions',
@@ -57,6 +61,7 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
     'debug_toolbar',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -114,14 +119,13 @@ TEMPLATES = [
     },
 ]
 
+SITE_ID = 1
 
 REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-    #     'rest_framework.authentication.TokenAuthentication',
-    #
+        'rest_framework.authentication.SessionAuthentication',
     ],
 
     # "DEFAULT_PERMISSION_CLASSES": [
@@ -216,6 +220,7 @@ EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 
 STATIC_URL = '/assets/'
 MEDIA_URL = '/src/'
+
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'public/staticfiles/')

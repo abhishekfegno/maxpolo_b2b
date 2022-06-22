@@ -9,11 +9,9 @@ from pprint import pprint
 
 
 
-class EmailHandler(object):
 
-    # api_key = settings.SENDBLUE_API_KEY
-    # api_key = os.getenv('SENDBLUE_API_KEY')
-    api_key = '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'
+class EmailHandler(object):
+    api_key = os.environ.get('SENDINBLUE_API_KEY')
 
     # Configure API key authorization: api-key
     configuration = sib_api_v3_sdk.Configuration()
@@ -27,6 +25,7 @@ class EmailHandler(object):
 
 
     def sent_email_now(self, recipient, message, subject):
+        # print("KEY", self.api_key)
         api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(self.configuration))
         send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
             to=[recipient],
@@ -49,7 +48,6 @@ class EmailHandler(object):
             api_response = api_instance.send_transac_email(send_smtp_email)
             pprint(api_response)
             print("<<<<<<email sent>>>>>>")
-
         except ApiException as e:
             print("Exception when calling SMTPApi->send_transac_email: %s\n" % e)
 
@@ -68,8 +66,3 @@ class EmailHandler(object):
 # e.sent_email_now(recipient, message1, subject)
 
 
-#
-# if subject == "Password Reset":
-#     template_id = 3
-# elif subject == "Notification to admin !":
-#     teplate_id = 4

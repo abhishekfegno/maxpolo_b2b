@@ -13,7 +13,7 @@ urlpatterns = [
 
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('setpassword/<slug:token>/', password_reset, name='password_reset'),
+    path('setpassword/<slug:token>/', password_reset, name='password-reset-page'),
 
 
     path('complaint/list/', ComplaintListView.as_view(), name='complaint-list'),
@@ -25,4 +25,6 @@ urlpatterns = [
     path('user/list/<int:role>/', UserListView.as_view(), name='user-list'),
     path('user/<int:pk>/update/', UserDetailView.as_view(), name='user-update'),
     path('user/<int:pk>/delete/', UserDeleteView.as_view(), name='user-delete'),
+
+    path('complaint/excel/export/', get_excel_report_complaint, name='get_excel_report_complaint')
 ]

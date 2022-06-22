@@ -2,19 +2,8 @@
 {% load crispy_forms_tags %}
 {% block content%}
 <div class='row'>
+
     <div class='col-6'>
-        <div class='card'>
-            <div class='card-body'>
-                <h3>Create Banner</h3>
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form | crispy }}
-                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class='col-12'>
         <div class='card'>
             <div class='card-body'>
                 <h3>Banners List</h3>
@@ -58,7 +47,7 @@
                                 <div class=""><a href="{% url 'banners-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
                             </td>
                             <td>
-                                <div class=""><a href="javascript:void(0)" onclick="swalFunction(this, '{% url 'banners-delete' pk=object.pk %}')" class="delBrand btn btn-danger">Delete</a></div>
+                                <div class=""><a href="javascript:void(0)" onclick="swalFunction(this, '{% url 'banners-delete' pk=object.pk %}', '{% url 'banners-list' %}')" class="delBrand btn btn-danger">Delete</a></div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -71,7 +60,18 @@
         </div>
 
     </div>
-
+    <div class='col-6'>
+        <div class='card'>
+            <div class='card-body'>
+                <h3>Create Banner</h3>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
 </div>

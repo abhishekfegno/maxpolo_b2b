@@ -1,0 +1,109 @@
+{% extends 'paper/layout.html' %}
+{% load crispy_forms_tags %}
+{% block content%}
+{% include 'paper/htmx.html' %}
+<div class='row'>
+    <div class='col-6'>
+        <div class='card'>
+            <div class='card-body'>
+                <h3>{{ order_type }} List</h3>
+                    <a style="float:right;" href="{% url 'get_excel_report_order' slug=order_type %}" class="btn btn-primary">Download Excel</a>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead class="">
+                        <tr class="">
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Ordered_on</th>
+                            <th scope="col">Created_by</th>
+                            <!--                    <th scope="col">Contact</th>-->
+                            <!--                    <th scope="col">Subscription</th>-->
+                            <!--                    <th scope="col">Last View</th>-->
+                            <!--                    <th scope="col">Action</th>-->
+                        </tr>
+                        <!--                <tr>-->
+                        <!--                    <td class="text-dark text-sm"><small>#</small></td>-->
+                        <!--                    <td class="text-dark text-sm"><small>Name of the {{ title }}</small></td>-->
+                        <!--                    <td class="text-dark text-sm"><small>Contact</small></td>-->
+                        <!--                    <td class="text-dark text-sm"><small>Subscription</small></td>-->
+                        <!--                    <td class="text-dark text-sm"><small>Last View</small></td>-->
+                        <!--                    <td class="text-dark text-sm"><small>Hot links for quick actions.</small></td>-->
+                        <!--                </tr>-->
+                        </thead>
+                        <tbody>
+                        {% for object in object_list %}
+                        <tr>
+                            <!--                    <td scope="row"> </td>-->
+                            <td>
+                                <div class="">{{ forloop.counter }}</div>
+                            </td>
+                            <td>
+                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.order_id }}</a></div>
+                            </td>
+                            <td>
+                                <div class="">{{ object.created_at }}</div>
+                            </td>
+                            <td>
+                                <div class="">{{ object.dealer }}</div>
+                            </td>
+                            <td>
+                                <div class=""><a href="{% url 'quotation-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
+                            </td>
+                            <td>
+                                <div class=""><a href="javascript:void(0)" onclick="swalFunction(this, '{% url 'quotation-delete' object.pk %}')" class="delBrand btn btn-danger">Delete</a></div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class='col-6'>
+            <div class='card'>
+                <div class='card-body'>
+                    <h3>Create {{ order_type }}</h3>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ orderform | crispy }}
+                        <button type="button" class="btn btn-primary" hx-get="{% url 'get_orderline_form' %}" hx-target="#lineform" hx-swap="beforeend">Add product</button>
+                        <div id="lineform"></div>
+                        <input type="hidden" hx-post="{% url 'salesorder-list' %}">
+                        <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
+                    </form>
+                </div>
+            </div>
+    </div>
+
+</div>
+{% include 'paper/swal.html' %}
+
+<script type="tex/script">
+function showForm(e){
+  $('.'+e).toggle();
+}
+    var cloneForm = function(form, start) {
+        start = start || 0;
+
+        return function() {
+            var clone = form.clone();
+
+            clone.find(':input').attr('id', function(i, val) {
+                return val + start;
+            });
+            start++;
+
+            return clone;
+        };
+    };
+    var cloneContactForm = cloneForm($('.line-form'), 5);
+
+    // Now I want to clone it and put it somewhere.
+    $(cloneContactForm()).appendTo('.order-form');
+</script>
+{% endblock %}

@@ -29,14 +29,16 @@ class DealerForm(forms.ModelForm):
 
 	class Meta:
 		model = Dealer
-		fields = ('username', 'first_name', 'last_name', 'user_role', 'branch', 'mobile', 'email')
+		fields = ('username', 'first_name', 'last_name', 'branch', 'mobile', 'email')
 
 
 class ExecutiveForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self.fields['user_role'].queryset = Dealer.objects.all()
+		self.fields['dealers'].queryset = Dealer.objects.all()
 
 	class Meta:
 		model = Executive
-		fields = ('username', 'first_name', 'last_name', 'user_role', 'branch', 'mobile', 'email', 'dealers')
+		fields = ('username', 'first_name', 'last_name', 'branch', 'mobile', 'email', 'dealers')
+
+
