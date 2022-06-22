@@ -1,4 +1,5 @@
 # New file created
+from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -31,9 +32,20 @@ class ProductListView(FormMixin, ListView):
 	success_url = '/catalogue/product/list/'
 
 	def get_context_data(self, **kwargs):
-		cxt = super().get_context_data(**kwargs)
-		cxt['filter'] = ProductFilter(self.request.GET, queryset=self.get_queryset())
-		return cxt
+		context = super().get_context_data(**kwargs)
+		page_number = self.request.GET.get('page', 1)
+		page_size = self.request.GET.get('page_size', 10)
+		queryset = ProductFilter(self.request.GET, queryset=self.get_queryset())
+		context['filter_form'] = ProductFilter(self.request.GET, queryset=self.get_queryset()).form
+		# import pdb;pdb.set_trace()
+		paginator = Paginator(queryset.qs, page_size)
+		try:
+			page_number = paginator.validate_number(page_number)
+		except EmptyPage:
+			page_number = paginator.num_pages
+		filter = paginator.get_page(page_number)
+		context['filter'] = filter
+		return context
 
 	def post(self, request, *args, **kwargs):
 		form = self.form_class(request.POST, request.FILES)

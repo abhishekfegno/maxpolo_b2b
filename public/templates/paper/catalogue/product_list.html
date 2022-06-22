@@ -18,22 +18,11 @@
                             <th scope="col">Code</th>
                             <th scope="col">Brand</th>
                             <th scope="col">Category</th>
-                            <!--                    <th scope="col">Contact</th>-->
-                            <!--                    <th scope="col">Subscription</th>-->
-                            <!--                    <th scope="col">Last View</th>-->
-                            <!--                    <th scope="col">Action</th>-->
                         </tr>
-                        <!--                <tr>-->
-                        <!--                    <td class="text-dark text-sm"><small>#</small></td>-->
-                        <!--                    <td class="text-dark text-sm"><small>Name of the {{ title }}</small></td>-->
-                        <!--                    <td class="text-dark text-sm"><small>Contact</small></td>-->
-                        <!--                    <td class="text-dark text-sm"><small>Subscription</small></td>-->
-                        <!--                    <td class="text-dark text-sm"><small>Last View</small></td>-->
-                        <!--                    <td class="text-dark text-sm"><small>Hot links for quick actions.</small></td>-->
-                        <!--                </tr>-->
+
                         </thead>
                         <tbody>
-                        {% for object in filter.qs %}
+                        {% for object in filter %}
                         <tr>
                             <!--                    <td scope="row"> </td>-->
                             <td>
@@ -67,8 +56,8 @@
 
                     </table>
                 </div>
-
             </div>
+            {% include 'paper/pagination.html' %}
         </div>
     </div>
     <div class='col-6'>
