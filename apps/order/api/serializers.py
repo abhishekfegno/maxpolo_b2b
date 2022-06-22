@@ -13,6 +13,7 @@ class OrderLineSerializer(serializers.ModelSerializer):
     def get_product(self, instance):
         if instance.product:
             return {
+                "id": instance.product_id,
                 "product_code": instance.product.product_code,
                 "product_name": instance.product.name
             }
