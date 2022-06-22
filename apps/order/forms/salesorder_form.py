@@ -40,6 +40,7 @@ class SalesOrderUpdateForm(forms.ModelForm):
 
 class InvoiceUpdateForm(forms.ModelForm):
 	invoice_id = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+	invoice_amount = forms.FloatField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
 
 	class Meta:
 		model = SalesOrder

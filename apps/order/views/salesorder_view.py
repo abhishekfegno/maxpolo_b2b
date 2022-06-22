@@ -1,4 +1,5 @@
 # New file created
+from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
@@ -72,7 +73,20 @@ class SalesOrderListView(FormMixin, ListView):
 		context['orderlineform'] = QuotationLineForm
 		context['order_type'] = 'SalesOrder'
 		context['filter'] = OrderFilter(self.request.GET, queryset=self.get_queryset())
+		page_number = self.request.GET.get('page', 1)
+		page_size = self.request.GET.get('page_size', 10)
+		queryset = OrderFilter(self.request.GET, queryset=self.get_queryset())
+		context['filter_form'] = OrderFilter(self.request.GET, queryset=self.get_queryset()).form
+		# import pdb;pdb.set_trace()
+		paginator = Paginator(queryset.qs, page_size)
+		try:
+			page_number = paginator.validate_number(page_number)
+		except EmptyPage:
+			page_number = paginator.num_pages
+		filter = paginator.get_page(page_number)
+		context['filter'] = filter
 		return context
+
 
 	def post(self, request, *args, **kwargs):
 		form = QuotationForm(request.POST)
@@ -117,7 +131,18 @@ class QuotationListView(FormMixin, ListView):
 		context['orderform'] = QuotationForm
 		context['orderlineform'] = QuotationLineForm
 		context['order_type'] = 'Quotation'
-		context['filter'] = OrderFilter(self.request.GET, queryset=self.get_queryset())
+		page_number = self.request.GET.get('page', 1)
+		page_size = self.request.GET.get('page_size', 10)
+		queryset = OrderFilter(self.request.GET, queryset=self.get_queryset())
+		context['filter_form'] = OrderFilter(self.request.GET, queryset=self.get_queryset()).form
+		# import pdb;pdb.set_trace()
+		paginator = Paginator(queryset.qs, page_size)
+		try:
+			page_number = paginator.validate_number(page_number)
+		except EmptyPage:
+			page_number = paginator.num_pages
+		filter = paginator.get_page(page_number)
+		context['filter'] = filter
 		return context
 
 	def post(self, request, *args, **kwargs):
@@ -164,6 +189,18 @@ class InvoiceListView(FormMixin, ListView):
 		context['orderlineform'] = QuotationLineForm
 		context['order_type'] = 'Invoice'
 		context['filter'] = OrderFilter(self.request.GET, queryset=self.get_queryset())
+		page_number = self.request.GET.get('page', 1)
+		page_size = self.request.GET.get('page_size', 10)
+		queryset = OrderFilter(self.request.GET, queryset=self.get_queryset())
+		context['filter_form'] = OrderFilter(self.request.GET, queryset=self.get_queryset()).form
+		# import pdb;pdb.set_trace()
+		paginator = Paginator(queryset.qs, page_size)
+		try:
+			page_number = paginator.validate_number(page_number)
+		except EmptyPage:
+			page_number = paginator.num_pages
+		filter = paginator.get_page(page_number)
+		context['filter'] = filter
 		return context
 
 	def post(self, request, *args, **kwargs):
