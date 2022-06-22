@@ -3,6 +3,7 @@ from django import forms
 from treebeard.forms import MoveNodeForm
 
 from apps.catalogue.models import Category, PDF
+from django.core.validators import FileExtensionValidator
 
 
 class CategoryForm(MoveNodeForm):
@@ -13,6 +14,8 @@ class CategoryForm(MoveNodeForm):
 
 
 class PDFForm(forms.ModelForm):
+	file = forms.FileField(validators=[FileExtensionValidator(['pdf'])])
+
 	class Meta:
 		model = PDF
 		fields = ('title', 'file', 'category')

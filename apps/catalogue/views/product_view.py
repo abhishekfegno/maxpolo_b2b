@@ -36,7 +36,7 @@ class ProductListView(FormMixin, ListView):
 		return cxt
 
 	def post(self, request, *args, **kwargs):
-		form = self.form_class(request.POST)
+		form = self.form_class(request.POST, request.FILES)
 		if form.is_valid():
 			form.save()
 		else:
