@@ -61,8 +61,9 @@ class UserListView(FormMixin, ListView):
 @method_decorator(csrf_exempt, name='dispatch')
 class UserDeleteView(DeleteView):
     queryset = User.objects.all()
-    template_name = 'paper/user/user_delete.html'
+    template_name = 'paper/user/user_list.html'
     model = User
+    success_url = '/user/list/'
 
 
 def password_reset(request, token):

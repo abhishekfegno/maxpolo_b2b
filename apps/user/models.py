@@ -120,7 +120,9 @@ class Banners(models.Model):
 
     @property
     def photo_url(self):
-        return self.photo.url or None
+        if self.photo:
+            return self.photo.url
+        return None
 
     def __str__(self):
         return self.title

@@ -1,11 +1,15 @@
 {% extends 'paper/layout.html' %}
 {% load crispy_forms_tags %}
 {% block content%}
+{% include 'paper/htmx.html' %}
 <div class='row'>
-    <div class='col-8'>
+            {% include 'paper/catalogue/product_filter.html'%}
+
+    <div class='col-6'>
         <div class='card'>
             <div class='card-body'>
-                <h3>Product PDF List</h3>
+                <h3>{{ order_type }} List</h3>
+                    <a style="float:right;" href="{% url 'get_excel_report_order' slug=order_type %}" class="btn btn-primary">Download Excel</a>
 
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
@@ -13,8 +17,8 @@
                         <tr class="">
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
-                            <th scope="col">File</th>
-                            <th scope="col">Category</th>
+                            <th scope="col">Ordered_on</th>
+                            <th scope="col">Created_by</th>
                             <!--                    <th scope="col">Contact</th>-->
                             <!--                    <th scope="col">Subscription</th>-->
                             <!--                    <th scope="col">Last View</th>-->
@@ -30,27 +34,27 @@
                         <!--                </tr>-->
                         </thead>
                         <tbody>
-                        {% for object in object_list %}
+                        {% for object in filter.qs %}
                         <tr>
                             <!--                    <td scope="row"> </td>-->
                             <td>
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object.title }}</div>
+                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.order_id }}</a></div>
                             </td>
                             <td>
-                                <div class=""><a href="{% url 'pdf-update' pk=object.pk %}" target="_blank" class="btn btn-primary">View PDF</a></div>
+                                <div class="">{{ object.created_at }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object.category.name }}</div>
+                                <div class="">{{ object.dealer }}</div>
                             </td>
                             <td>
+                                <div class=""><a href="{% url 'quotation-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
                             </td>
                             <td>
-                                <div class=""><a href="javascript:void(0)" class="btn btn-danger" onclick="swalFunction(this, '{% url 'pdf-delete' pk=object.pk %}')">Delete</a></div>
+                                <div class=""><a href="javascript:void(0)" onclick="swalFunction(this, '{% url 'quotation-delete' object.pk %}')" class="delBrand btn btn-danger">Delete</a></div>
                             </td>
-
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -60,21 +64,10 @@
 
             </div>
         </div>
+
     </div>
-    <div class='col-4'>
-        <div class='card'>
-            <div class='card-body'>
-                <h3>Add PDF</h3>
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form | crispy }}
-                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
-                </form>
-            </div>
-        </div>
-    </div>
+
 
 </div>
 {% include 'paper/swal.html' %}
-
 {% endblock %}
