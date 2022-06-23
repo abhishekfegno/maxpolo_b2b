@@ -1,4 +1,5 @@
 from django.core.paginator import Paginator, EmptyPage
+from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -35,8 +36,10 @@ class TransactionListAPIView(ListAPIView):
             page_number = paginator.num_pages
         page_obj = paginator.get_page(page_number)
         serializer = self.get_serializer(page_obj.object_list, many=True, context={'request': request})
-
-        return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=serializer.data))
+        results = {}
+        results['total_amount'] = self.get_queryset().aggregate(Sum('order__invoice_remaining_amount'))
+        results['data'] = serializer.data
+        return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=results))
 
     # def post(self, request, *args, **kwargs):
     #     result = {}

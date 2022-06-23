@@ -143,6 +143,15 @@ class ComplaintListView(ListAPIView):
         page_obj = paginator.get_page(page_number)
         return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=serializer.data))
 
+    def post(self, request, *args, **kwargs):
+        data = {}
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            data['errors'] = serializer.errors
+        return Response(data)
+
 
 class HomePageAPI(APIView):
 
