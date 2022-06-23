@@ -45,7 +45,18 @@ def get_excel_report_order(request, slug):
 def cancelled_order(request):
 	queryset = SalesOrder.objects.all().filter(is_cancelled=True).select_related('dealer')
 	context = {}
-	context['filter'] = OrderFilter(request.GET, queryset=queryset)
+	page_number = request.GET.get('page', 1)
+	page_size = request.GET.get('page_size', 10)
+	queryset = OrderFilter(request.GET, queryset=queryset)
+	context['filter_form'] = queryset.form
+	# import pdb;pdb.set_trace()
+	paginator = Paginator(queryset.qs, page_size)
+	try:
+		page_number = paginator.validate_number(page_number)
+	except EmptyPage:
+		page_number = paginator.num_pages
+	filter = paginator.get_page(page_number)
+	context['filter'] = filter
 	context['order_type'] = 'Cancelled'
 	return render(request, 'paper/order/cancelled_order_list.html', context=context)
 
@@ -77,7 +88,7 @@ class SalesOrderListView(FormMixin, ListView):
 		page_number = self.request.GET.get('page', 1)
 		page_size = self.request.GET.get('page_size', 10)
 		queryset = OrderFilter(self.request.GET, queryset=self.get_queryset())
-		context['filter_form'] = OrderFilter(self.request.GET, queryset=self.get_queryset()).form
+		context['filter_form'] = queryset.form
 		# import pdb;pdb.set_trace()
 		paginator = Paginator(queryset.qs, page_size)
 		try:
@@ -135,7 +146,7 @@ class QuotationListView(FormMixin, ListView):
 		page_number = self.request.GET.get('page', 1)
 		page_size = self.request.GET.get('page_size', 10)
 		queryset = OrderFilter(self.request.GET, queryset=self.get_queryset())
-		context['filter_form'] = OrderFilter(self.request.GET, queryset=self.get_queryset()).form
+		context['filter_form'] = queryset.form
 		# import pdb;pdb.set_trace()
 		paginator = Paginator(queryset.qs, page_size)
 		try:
@@ -195,7 +206,7 @@ class InvoiceListView(FormMixin, ListView):
 		page_number = self.request.GET.get('page', 1)
 		page_size = self.request.GET.get('page_size', 10)
 		queryset = OrderFilter(self.request.GET, queryset=self.get_queryset())
-		context['filter_form'] = OrderFilter(self.request.GET, queryset=self.get_queryset()).form
+		context['filter_form'] = queryset.form
 		# import pdb;pdb.set_trace()
 		paginator = Paginator(queryset.qs, page_size)
 		try:
