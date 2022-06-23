@@ -7,4 +7,4 @@ from apps.user.models import Complaint
 class ComplaintForm(forms.ModelForm):
 	class Meta:
 		model = Complaint
-		fields = '__all__'
+		fields = ('status',)

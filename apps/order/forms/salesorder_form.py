@@ -24,12 +24,11 @@ class QuotationUpdateForm(forms.ModelForm):
 
 	class Meta:
 		model = SalesOrder
-		fields = ('is_confirmed', 'is_cancelled', 'is_invoice', 'is_quotation')
-		# widgets = {
-		# 	'is_confirmed': CheckboxInput(attrs={'class': 'required checkbox form-control'}),
-		# 	'is_cancelled': CheckboxInput(attrs={'class': 'required checkbox form-control'}),
-		# 	'is_invoice': CheckboxInput(attrs={'class': 'required checkbox form-control'}),
-		# }
+		fields = ('is_confirmed', 'is_cancelled')
+		labels = {
+			'is_confirmed': 'Confirm this order ?',
+			'is_cancelled': 'Cancel this order ?'
+		}
 
 
 class SalesOrderUpdateForm(forms.ModelForm):
@@ -39,9 +38,9 @@ class SalesOrderUpdateForm(forms.ModelForm):
 
 
 class InvoiceUpdateForm(forms.ModelForm):
-	invoice_id = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-	invoice_amount = forms.FloatField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+	# invoice_id = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+	# invoice_amount = forms.FloatField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
 
 	class Meta:
 		model = SalesOrder
-		fields = ('invoice_id', 'invoice_status', 'invoice_amount', 'invoice_remaining_amount')
+		fields = ('invoice_status',)

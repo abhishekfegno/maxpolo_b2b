@@ -3,6 +3,7 @@ from django_filters import FilterSet
 from apps.catalogue.models import Product
 from apps.order.models import SalesOrder
 from apps.payment.models import Transaction
+from apps.user.models import Complaint
 
 
 class ProductFilter(FilterSet):
@@ -21,3 +22,10 @@ class PaymentFilter(FilterSet):
     class Meta:
         model = Transaction
         fields = {'order__invoice_id': ['icontains'], 'status': []}
+
+
+class ComplaintFilter(FilterSet):
+    class Meta:
+        model = Complaint
+        fields = {'status': []}
+

@@ -23,8 +23,31 @@ def get_orderline_form(request):
 
 
 def get_orderline(request, order_id):
-	data = SalesOrderLine.objects.filter(order_id=order_id)
-	return render(request, 'paper/order/order_line_list.html', context={'object_list': data})
+	context = {}
+	data = SalesOrderLine.objects.filter(order_id=order_id).select_related('product', 'order')
+	try:
+		order = SalesOrder.objects.get(id=order_id)
+		context['del'] = order.order_type + '-delete'
+	except Exception as e:
+		print(str(e))
+	if order.order_type == 'quotation':
+		form = QuotationUpdateForm(request.POST, instance=order)
+	elif order.order_type == 'salesorder':
+		form = SalesOrderUpdateForm(request.POST, instance=order)
+	elif order.order_type == 'invoice':
+		form = InvoiceUpdateForm(request.POST, instance=order)
+		context['form'] = form
+		return render(request, 'paper/order/invoice_detail.html', context=context)
+
+	context['form'] = form
+	if request.method =='POST':
+		if form.is_valid():
+			form.save()
+		else:
+			messages.add_message(request, messages.INFO, form.errors)
+			print(form.errors)
+	context['object_list'] = data
+	return render(request, 'paper/order/order_line_list.html', context=context)
 
 
 def get_excel_report_order(request, slug):

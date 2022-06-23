@@ -36,6 +36,16 @@ class SalesOrder(models.Model):
         return self.order_id
 
     @property
+    def order_type(self):
+        if self.is_confirmed:
+            order = 'salesorder'
+        elif self.is_invoice:
+            order = 'invoice'
+        else:
+            order = 'quotation'
+        return order
+
+    @property
     def id_as_text(self):
         return self.order_id
 

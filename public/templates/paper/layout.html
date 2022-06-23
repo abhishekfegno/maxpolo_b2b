@@ -18,8 +18,10 @@ MAXPolo
 <!--<a class="dropdown-item" href="#">Something else here</a>-->
 {% endblock %}
 
-{% block title %}Dashboard | Salon {% endblock %}
-
+{% block title %}Dashboard | MAXpolo {% endblock %}
+{% block breadcrumb %}<ul class="breadcrumb">
+          <li><a href="{% url 'index' %}">Dashboard</a></li>
+        </ul>{% endblock %}
 {% block content_body %}
 <h3 class="description">Your content here</h3>
 {% endblock %}
