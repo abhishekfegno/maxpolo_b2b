@@ -29,10 +29,11 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
     def get_dealer(self, instance):
-        return {
-            "id": instance.dealer_id,
-            "name": instance.dealer.get_full_name()
-        }
+        if instance.dealer:
+            return {
+                "id": instance.dealer_id,
+                "name": instance.dealer.get_full_name()
+            }
 
 
     class Meta:
