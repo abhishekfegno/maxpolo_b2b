@@ -1,6 +1,15 @@
 import random
 from collections import OrderedDict
+
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.pagination import PageNumberPagination as CorePageNumberPagination
+
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        setattr(request, '_dont_enforce_csrf_checks', True)
+        return  # To not perform the csrf check previously happening
 
 
 class PageNumberPagination(CorePageNumberPagination):

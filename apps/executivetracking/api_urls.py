@@ -124,12 +124,12 @@ def admin_summary(request, **kwargs):
 
 
 urlpatterns = [
-    path('leads/', LeadList.as_view(), name="lead-list-api"),
-    path('dealers/', DealerList.as_view(), name="dealer-list-api"),
+    # path('leads/', LeadList.as_view(), name="lead-list-api"),
+    # path('dealers/', DealerList.as_view(), name="dealer-list-api"),
     path('check-point/', CheckPointCreate.as_view(), name="check-point-create-api"),
-    path('check-id-today/', CheckInDayCreate.as_view(), name="check-in-day-create-api"),
+    # path('check-id-today/', CheckInDayCreate.as_view(), name="check-in-day-create-api"),
     path('check-point/<int:pk>/', CheckPointUpdate.as_view(), name="check-point-update-api"),
-    path('check-id-today/<int:pk>/', CheckInDayCreate.as_view(), name="check-in-day-update-api"),
+    # path('check-id-today/<int:pk>/', CheckInDayCreate.as_view(), name="check-in-day-update-api"),
     path('districts/', district_list, name="district-list-api"),
     path('admin-summary/', admin_summary, name="admin-summary-api"),
     path('share-lead/<int:pk>/', share_lead, name="share-lead-api"),
