@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from apps.catalogue.api.serializers import ProductSerializer
 from apps.catalogue.models import Product
-from apps.order.api.serializers import OrderSerializer
+from apps.order.api.serializers import OrderSerializer, OrderDetailSerializer
 from apps.order.models import SalesOrder, SalesOrderLine
 from apps.user.models import Dealer
 from lib.utils import list_api_formatter
@@ -16,7 +16,7 @@ from lib.utils import list_api_formatter
 
 class OrderDetailAPIView(RetrieveAPIView):
     queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
-    serializer_class = OrderSerializer
+    serializer_class = OrderDetailSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_fields = ['is_cancelled', 'is_confirmed', 'is_invoice', 'is_quotation']
     search_fields = ('order_id', 'invoice_id')
