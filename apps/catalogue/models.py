@@ -1,5 +1,6 @@
 import os
 
+from django.conf import settings
 from django.db import models
 from django_extensions.db.fields import AutoSlugField
 from treebeard.mp_tree import MP_Node
@@ -9,10 +10,12 @@ from django.core.validators import FileExtensionValidator
 
 
 class Brand(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, unique=True)
 
     def __str__(self):
         return self.name
+
+
 
 
 class Category(MP_Node):
@@ -22,7 +25,7 @@ class Category(MP_Node):
      To add Child: Category.objects.get(name='Computer Hardware').add_child(name='Memory')
      To add Sibling: Category.objects.get(name='Memory').add_sibling(name='Desktop Memory')
     """
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, unique=True)
     node_order_by = ['name']
 
     def __str__(self):
@@ -48,7 +51,7 @@ class PDF(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=50)
-    image = models.ImageField(upload_to='product/', null=True, blank=True)
+    image = models.ImageField(upload_to='product/', default='public/default/image_not_found.jpg', null=True, blank=True)
     product_code = models.CharField(max_length=50)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
@@ -60,5 +63,5 @@ class Product(models.Model):
     def photo_url(self):
         if self.image:
             return self.image.url
-        return None
+        return settings.STATIC_URL + settings.DEFAULT_IMAGE
 

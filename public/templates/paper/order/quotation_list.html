@@ -38,12 +38,7 @@
                             <td>
                                 <div class="">{{ object.dealer }}</div>
                             </td>
-                            <td>
-                                <div class=""><a href="{% url 'quotation-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
-                            </td>
-                            <td>
-                                <div class=""><a href="javascript:void(0)" onclick="swalFunction(this, '{% url 'quotation-delete' object.pk %}')" class="delBrand btn btn-danger">Delete</a></div>
-                            </td>
+
                         </tr>
                         {% endfor %}
                         </tbody>

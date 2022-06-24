@@ -13,6 +13,7 @@ class CategoryForm(MoveNodeForm):
 		exclude = ('sib_order', 'parent', 'path', 'depth', 'numchild')
 
 
+
 class PDFForm(forms.ModelForm):
 	file = forms.FileField(validators=[FileExtensionValidator(['pdf'])])
 

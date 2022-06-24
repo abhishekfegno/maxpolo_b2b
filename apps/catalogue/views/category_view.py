@@ -50,9 +50,10 @@ class CategoryListView(ModelFormMixin, ListView, ProcessFormView):
 		"""
 		form = self.get_form()
 		if form.is_valid():
-			return self.form_valid(form)
+			form.save()
 		else:
-			return self.form_invalid(form)
+			messages.add_message(request, messages.INFO, form.errors.get('name')[0])
+		return redirect('category-list')
 
 
 @method_decorator(csrf_exempt, name='dispatch')

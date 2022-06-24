@@ -24,29 +24,28 @@ def get_orderline_form(request):
 
 def get_orderline(request, order_id):
 	context = {}
-	data = SalesOrderLine.objects.filter(order_id=order_id).select_related('product', 'order')
 	try:
 		order = SalesOrder.objects.get(id=order_id)
 		context['del'] = order.order_type + '-delete'
+		if order.order_type == 'quotation':
+			form = QuotationUpdateForm(request.POST, instance=order)
+		elif order.order_type == 'salesorder':
+			form = SalesOrderUpdateForm(request.POST, instance=order)
+		elif order.order_type == 'invoice':
+			form = InvoiceUpdateForm(request.POST, instance=order)
+			context['form'] = form
+			context['object_list'] = order.line.all()
+			return render(request, 'paper/order/invoice_detail.html', context=context)
+		context['form'] = form
+		context['object_list'] = order.line.all()
 	except Exception as e:
 		print(str(e))
-	if order.order_type == 'quotation':
-		form = QuotationUpdateForm(request.POST, instance=order)
-	elif order.order_type == 'salesorder':
-		form = SalesOrderUpdateForm(request.POST, instance=order)
-	elif order.order_type == 'invoice':
-		form = InvoiceUpdateForm(request.POST, instance=order)
-		context['form'] = form
-		return render(request, 'paper/order/invoice_detail.html', context=context)
 
-	context['form'] = form
-	if request.method =='POST':
-		if form.is_valid():
-			form.save()
-		else:
-			messages.add_message(request, messages.INFO, form.errors)
-			print(form.errors)
-	context['object_list'] = data
+	if request.POST and form.is_valid():
+		form.save()
+	else:
+		messages.add_message(request, messages.INFO, form.errors)
+		print(form.errors)
 	return render(request, 'paper/order/order_line_list.html', context=context)
 
 

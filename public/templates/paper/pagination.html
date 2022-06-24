@@ -4,11 +4,13 @@
     <a class="page-link" href="?page={{ filter.previous_page_number }}">previous</a>
   </li>
   {% endif %}
+  {% if filter.paginator.page_range.stop > 2 %}
   {% for i in filter.paginator.page_range %}
     {% if i < filter.number|add:5 and i > filter.number|add:-5 %}
       <li class="is-active"><a class="page-link"  href="?page={{i}}&{{search}}">{{i}}</a></li>
     {% endif %}
   {% endfor %}
+  {% endif %}
   {% if filter.has_next %}
   <li class="page-item">
     <a class="page-link" href="?page={{ filter.next_page_number }}">next</a>

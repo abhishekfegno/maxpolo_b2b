@@ -34,8 +34,10 @@ class QuotationUpdateForm(forms.ModelForm):
 class SalesOrderUpdateForm(forms.ModelForm):
 	class Meta:
 		model = SalesOrder
-		fields = ('is_confirmed', 'is_invoice')
-
+		fields = ('is_invoice', )
+		labels = {
+			'is_invoice': 'Invoice this order ?',
+		}
 
 class InvoiceUpdateForm(forms.ModelForm):
 	# invoice_id = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
