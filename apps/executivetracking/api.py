@@ -63,6 +63,14 @@ class CheckPointCreate(ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, context={'request': self.request})
+        if serializer.is_valid():
+            serializer.save(executive=self.request.user)
+        else:
+            print(serializer.errors)
+        return super().post(request, *args, **kwargs)
+
 
 class CheckPointUpdate(RetrieveUpdateAPIView):
     serializer_class = CheckPointSerializer

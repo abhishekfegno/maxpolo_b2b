@@ -31,7 +31,7 @@ class CrashReportSerializer(serializers.ModelSerializer):
 
 
 class CheckPointSerializer(serializers.ModelSerializer):
-    location = GeometryField()
+    # location = GeometryField()
     # store = LeadSerializer()
     check_in_type = serializers.SerializerMethodField()
 
@@ -46,7 +46,7 @@ class CheckPointSerializer(serializers.ModelSerializer):
     class Meta:
         model = CheckPoint
         fields = (
-            'id', "store", "check_in_at", "check_out_at", "description", "location",
+            'id', "store", "executive", "check_in_at", "check_out_at", "description",
             "file", "location_text", "device_name", "device_id", 'check_in_type',
             'battery_percentage'
         )
