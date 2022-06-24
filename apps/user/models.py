@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.db.models.signals import post_save
@@ -113,7 +114,7 @@ class Complaint(models.Model):
 class Banners(models.Model):
     title = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50)
-    photo = models.ImageField(null=True, blank=True)
+    photo = models.ImageField(upload_to='banners/', default='public/default/image_not_found.jpg', null=True, blank=True)
     is_public = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
@@ -124,7 +125,7 @@ class Banners(models.Model):
     def photo_url(self):
         if self.photo:
             return self.photo.url
-        return None
+        return settings.STATIC_URL + settings.DEFAULT_IMAGE
 
     def __str__(self):
         return self.title

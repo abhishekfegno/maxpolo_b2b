@@ -7,6 +7,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
+from apps.order.models import SalesOrder
 from apps.payment.api.serializers import TransactionSerializer
 from apps.payment.models import Transaction
 from lib.utils import list_api_formatter
@@ -37,7 +38,7 @@ class TransactionListAPIView(ListAPIView):
         page_obj = paginator.get_page(page_number)
         serializer = self.get_serializer(page_obj.object_list, many=True, context={'request': request})
         results = {}
-        results['total_amount'] = self.get_queryset().aggregate(Sum('order__invoice_remaining_amount'))
+        results['total_remaining_amount'] = SalesOrder.objects.filter(is_invoice=True).aggregate(Sum('invoice_remaining_amount'))
         results['data'] = serializer.data
         return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=results))
 

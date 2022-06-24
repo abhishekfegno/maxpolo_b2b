@@ -16,7 +16,6 @@
                             <th scope="col">ID</th>
                             <th scope="col">Description</th>
                             <th scope="col">Status</th>
-                            <th scope="col">Created by</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -31,9 +30,6 @@
                             </td>
                             <td>
                                 <div class="">{{ object.status }}</div>
-                            </td>
-                            <td>
-                                <div class="">{{ object.created_by }}</div>
                             </td>
                             <td>
                                 <div class=""><a href="{% url 'complaint-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
@@ -52,21 +48,9 @@
         </div>
 
     </div>
-<!--    <div class='col-6'>-->
-<!--        <div class='card'>-->
-<!--            <div class='card-body'>-->
-<!--                <h3>Create Complaint</h3>-->
-<!--                <form method="POST" enctype="multipart/form-data">-->
-<!--                    {% csrf_token %}-->
-<!--                    {{ form | crispy }}-->
-<!--                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+
 
 
 </div>
-{% include 'paper/swal.html' %}
 
 {% endblock %}

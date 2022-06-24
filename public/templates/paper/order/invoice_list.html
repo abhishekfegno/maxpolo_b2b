@@ -37,12 +37,7 @@
                             <td>
                                 <div class="">{{ object.dealer }}</div>
                             </td>
-                            <td>
-                                <div class=""><a href="{% url 'invoice-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
-                            </td>
-                            <td>
-                                <div class=""><a href="javascript:void(0)" onclick="swalFunction(this, '{% url 'invoice-delete' object.pk %}')" class="delBrand btn btn-danger">Delete</a></div>
-                            </td>
+
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -54,46 +49,9 @@
 
         </div>
     </div>
-<!--    <div class='col-6'>-->
-<!--            <div class='card'>-->
-<!--                <div class='card-body'>-->
-<!--                    <h3>Create {{ order_type }}</h3>-->
-<!--                    <form method="POST">-->
-<!--                        {% csrf_token %}-->
-<!--                        {{ orderform | crispy }}-->
-<!--                        <button type="button" class="btn btn-primary" hx-get="{% url 'get_orderline_form' %}" hx-target="#lineform" hx-swap="beforeend">Add product</button>-->
-<!--                        <div id="lineform"></div>-->
-<!--                        <input type="hidden" hx-post="{% url 'salesorder-list' %}">-->
-<!--                        <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>-->
-<!--                    </form>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--    </div>-->
+
 
 </div>
 {% include 'paper/swal.html' %}
 
-<script type="tex/script">
-function showForm(e){
-  $('.'+e).toggle();
-}
-    var cloneForm = function(form, start) {
-        start = start || 0;
-
-        return function() {
-            var clone = form.clone();
-
-            clone.find(':input').attr('id', function(i, val) {
-                return val + start;
-            });
-            start++;
-
-            return clone;
-        };
-    };
-    var cloneContactForm = cloneForm($('.line-form'), 5);
-
-    // Now I want to clone it and put it somewhere.
-    $(cloneContactForm()).appendTo('.order-form');
-</script>
 {% endblock %}

@@ -3,56 +3,7 @@
 {% block content%}
 
 <div class='row'>
-    <div class='col-6'>
-        <div class='card'>
-            <div class='card-body'>
-                <h3>Complaints Detail</h3>
-
-                <div class="table-responsive">
-                    <table class="table table-hover table-sm">
-                        <thead class="">
-                        <tr class="">
-                            <th scope="col">ID</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Created by</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for object in object_list %}
-                        <tr>
-                            <!--                    <td scope="row"> </td>-->
-                            <td>
-                                <div class="">{{ forloop.counter }}</div>
-                            </td>
-                            <td>
-                                <div class="">{{ object.description }}</div>
-                            </td>
-                            <td>
-                                <div class="">{{ object.status }}</div>
-                            </td>
-                            <td>
-                                <div class="">{{ object.created_by }}</div>
-                            </td>
-                            <td>
-                                <div class=""><a href="{% url 'complaint-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
-                            </td>
-                            <td>
-                                <div class=""><a href="javascript:void(0)" onclick="swalFunction(this, '{% url 'complaint-delete' pk=object.pk %}')" class="delBrand btn btn-danger">Delete</a></div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        </tbody>
-
-                    </table>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
-    <div class='col-md-6 '>
+    <div class='col-md-12 '>
         <div class='card'>
             <div class='card-body'>
                 <fieldset class='form-group '>
@@ -65,5 +16,49 @@
             </div>
         </div>
     </div>
+
+    <div class='col-md-12'>
+        <div class='card'>
+            <div class='card-body'>
+                <h3>Complaints Detail</h3>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead class="">
+                        <tr class="">
+                            <th scope="col">Description</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Created by</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <!--                    <td scope="row"> </td>-->
+
+                            <td>
+                                <div class="">{{ object.description }}</div>
+                            </td>
+                            <td>
+                                <div class="">{{ object.status }}</div>
+                            </td>
+                            <td>
+                                <div class="">{{ object.created_by }}</div>
+                            </td>
+                            <td>
+                                <div class=""><a href="javascript:void(0)" onclick="swalFunction(this, '{% url 'complaint-delete' pk=object.pk %}')" class="delBrand btn btn-danger">Delete</a></div>
+                            </td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
 </div>
+{% include 'paper/swal.html' %}
+
 {% endblock %}

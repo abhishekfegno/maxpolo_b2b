@@ -1,5 +1,7 @@
 # New file created
+from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -23,6 +25,15 @@ class BrandListView(CreateView, ListView):
 	model = Brand
 	form_class = BrandForm
 	success_url = '/catalogue/brand/list/'
+
+	def post(self, request, *args, **kwargs):
+		form = self.form_class(request.POST)
+		if form.is_valid():
+			form.save()
+		else:
+			messages.add_message(request, messages.INFO, form.errors.get('name')[0])
+		return redirect('brand-list')
+
 
 
 @method_decorator(csrf_exempt, name='dispatch')
