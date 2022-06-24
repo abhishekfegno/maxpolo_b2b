@@ -2,7 +2,7 @@ from django.core.paginator import Paginator, EmptyPage
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
@@ -12,6 +12,16 @@ from apps.order.api.serializers import OrderSerializer
 from apps.order.models import SalesOrder, SalesOrderLine
 from apps.user.models import Dealer
 from lib.utils import list_api_formatter
+
+
+class OrderDetailAPIView(RetrieveAPIView):
+    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
+    serializer_class = OrderSerializer
+    filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
+    filterset_fields = ['is_cancelled', 'is_confirmed', 'is_invoice', 'is_quotation']
+    search_fields = ('order_id', 'invoice_id')
+    ordering_fields = ()
+    pagination_class = PageNumberPagination
 
 
 class OrderListAPIView(ListAPIView):

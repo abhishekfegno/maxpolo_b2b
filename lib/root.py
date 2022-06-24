@@ -27,6 +27,7 @@ def PUBLIC_APIS(r, f) -> list:
             ("Category List", reverse('catalogue:api-category-list', request=r, format=f)),
 
             ("Order List", reverse('order:api-order-list', request=r, format=f)),
+            ("Order Detail", reverse('order:api-order-detail', request=r, format=f, kwargs={'pk': 27})),
 
             ("Transactions API", reverse('payment:api-transaction-list', request=r, format=f)),
             # ("Enter OTP", reverse('enter_otp', request=r, format=f)),
