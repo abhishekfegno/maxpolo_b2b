@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'debug_toolbar',
     'import_export',
+    'rest_framework_gis'
     # 'django_bootstrap_breadcrumbs'
 
 
