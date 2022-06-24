@@ -25,7 +25,7 @@ class Category(MP_Node):
      To add Child: Category.objects.get(name='Computer Hardware').add_child(name='Memory')
      To add Sibling: Category.objects.get(name='Memory').add_sibling(name='Desktop Memory')
     """
-    name = models.CharField(max_length=20, unique=True)
+    name = models.CharField(max_length=20)
     node_order_by = ['name']
 
     def __str__(self):
