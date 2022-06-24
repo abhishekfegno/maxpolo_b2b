@@ -19,6 +19,17 @@ class UserDetailView(UpdateView):
     form_class = DealerForm
     success_url = '/user/list/'
 
+    def post(self, request, *args, **kwargs):
+        super().post(request, *args, **kwargs)
+        form = self.form_class(request.POST, instance=self.object)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+        else:
+            print(form.errors)
+        role = form.instance.user_role
+        return redirect('user-list', role=role)
+
 
 class UserListView(FormMixin, ListView):
     queryset = User.objects.all()
