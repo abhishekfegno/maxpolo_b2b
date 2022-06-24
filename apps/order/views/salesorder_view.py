@@ -22,6 +22,15 @@ def get_orderline_form(request):
 	return render(request, 'paper/line_form_htmx.html', context={'form': form})
 
 
+def edit_line(request, line_id):
+	form = QuotationLineForm(request.POST)
+	line = SalesOrderLine.objects.get(id=line_id)
+	if request.POST:
+		# import pdb;pdb.set_trace()
+		form.save()
+	return redirect('get_orderline', order_id=line.order_id)
+
+
 def get_orderline(request, order_id):
 	context = {}
 	try:
@@ -43,6 +52,7 @@ def get_orderline(request, order_id):
 
 	if request.POST and form.is_valid():
 		form.save()
+		return redirect(order.order_type + '-list')
 	else:
 		messages.add_message(request, messages.INFO, form.errors)
 		print(form.errors)
