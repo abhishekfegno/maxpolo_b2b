@@ -22,40 +22,39 @@ def get_orderline_form(request):
 	return render(request, 'paper/line_form_htmx.html', context={'form': form})
 
 
-def edit_line(request, line_id):
-	form = QuotationLineForm(request.POST)
-	line = SalesOrderLine.objects.get(id=line_id)
-	if request.POST:
-		# import pdb;pdb.set_trace()
-		form.save()
-	return redirect('get_orderline', order_id=line.order_id)
+def form_submit(request, form, order):
+	if request.method == 'POST':
+		if form.is_valid():
+			form.save()
+			return redirect(order.order_type + '-list')
+		else:
+			messages.add_message(request, messages.INFO, form.errors)
+			print(form.errors)
 
 
 def get_orderline(request, order_id):
 	context = {}
 	try:
 		order = SalesOrder.objects.get(id=order_id)
-		context['del'] = order.order_type + '-delete'
 		if order.order_type == 'quotation':
 			form = QuotationUpdateForm(request.POST, instance=order)
+			form_submit(request, form, order)
+
 		elif order.order_type == 'salesorder':
 			form = SalesOrderUpdateForm(request.POST, instance=order)
+			form_submit(request, form, order)
+
 		elif order.order_type == 'invoice':
 			form = InvoiceUpdateForm(request.POST, instance=order)
+			form_submit(request, form, order)
 			context['form'] = form
 			context['object_list'] = order.line.all()
 			return render(request, 'paper/order/invoice_detail.html', context=context)
+		context['del'] = order.order_type + '-delete'
 		context['form'] = form
 		context['object_list'] = order.line.all()
 	except Exception as e:
 		print(str(e))
-
-	if request.POST and form.is_valid():
-		form.save()
-		return redirect(order.order_type + '-list')
-	else:
-		messages.add_message(request, messages.INFO, form.errors)
-		print(form.errors)
 	return render(request, 'paper/order/order_line_list.html', context=context)
 
 

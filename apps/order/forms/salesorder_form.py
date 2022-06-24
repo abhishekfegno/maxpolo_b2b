@@ -39,10 +39,11 @@ class SalesOrderUpdateForm(forms.ModelForm):
 			'is_invoice': 'Invoice this order ?',
 		}
 
+
 class InvoiceUpdateForm(forms.ModelForm):
-	# invoice_id = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-	# invoice_amount = forms.FloatField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+	# invoice_status = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+	invoice_amount = forms.FloatField(required=False)
 
 	class Meta:
 		model = SalesOrder
-		fields = ('invoice_status',)
+		fields = ('invoice_status', 'invoice_amount')
