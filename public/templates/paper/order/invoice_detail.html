@@ -22,7 +22,22 @@
             <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                    <i class=""></i>
+                    <div class="row">
+                        <div class="col">
+                            <p class="card-category">Invoice Amount</p>
+                            <i class="">{{ object_list.last.order.invoice_amount }}</i>
+                        </div>
+                        <div class="col">
+                            <p class="card-category">Invoice Balance</p>
+                            {% if object_list.last.order.invoice_remaining_amount == 0.1 %}
+                            <i class="">0.0</i>
+                            {% else %}
+                            <i class="">{{ object_list.last.order.invoice_remaining_amount }}</i>
+                            {% endif %}
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -65,9 +80,7 @@
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
                             <th scope="col">Quantity</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Invoice Amount</th>
-                            <th scope="col">Invoice Remaining Amount</th>
+
                         </tr>
                         </thead>
                         <tbody>
@@ -81,27 +94,6 @@
                             </td>
                             <td>
                                 <div class="">{{ object.quantity }}</div>
-                            </td><td>
-<!--                            {% if object.order.invoice_status == new %}-->
-<!--                                <div class=""><span class="badge badge-pill badge-info">Processing</span></div>-->
-<!--                            {% elif object.order.invoice_status == credit %}-->
-<!--                                <div class=""><span class="badge badge-pill badge-warn">Credit</span></div>-->
-<!--                            {% elif object.order.invoice_status == payment_partial %}-->
-<!--                                <div class=""><span class="badge badge-pill badge-danger">Partial Payment</span></div>-->
-<!--                            {% elif object.order.invoice_status == payment_done %}-->
-<!--                                <div class=""><span class="badge badge-pill badge-success">Payment Done</span></div>-->
-
-<!--                            {% endif %}-->
-                            <div class=""><span class="badge badge-pill badge-info">{{object.order.invoice_status}}</span></div>
-
-                            </td><td>
-                                <div class="">{{ object.order.invoice_amount }}</div>
-                            </td><td>
-                            {% if object.order.invoice_remaining_amount == 0.1 %}
-                                <div class="">0.0</div>
-                            {% else %}
-                                <div class="">{{ object.order.invoice_remaining_amount }}</div>
-                            {% endif %}
                             </td>
 
                         </tr>
