@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
@@ -11,7 +12,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.catalogue.models import Product
 from apps.order.forms.salesorder_form import QuotationForm, QuotationLineForm, QuotationUpdateForm, InvoiceUpdateForm, \
-	SalesOrderUpdateForm
+	SalesOrderUpdateForm, InvoiceAmountForm
 from apps.order.models import SalesOrder, SalesOrderLine
 from lib.filters import OrderFilter
 from lib.importexport import OrderReport
@@ -22,41 +23,48 @@ def get_orderline_form(request):
 	return render(request, 'paper/line_form_htmx.html', context={'form': form})
 
 
-def edit_line(request, line_id):
-	form = QuotationLineForm(request.POST)
-	line = SalesOrderLine.objects.get(id=line_id)
-	if request.POST:
-		# import pdb;pdb.set_trace()
-		form.save()
-	return redirect('get_orderline', order_id=line.order_id)
+def form_submit(request, order):
+	if order.order_type == 'quotation':
+		form = QuotationUpdateForm(request.POST or None, instance=order)
+	else:
+		form = SalesOrderUpdateForm(request.POST or None, instance=order)
+	return form
 
 
 def get_orderline(request, order_id):
 	context = {}
-	try:
-		order = SalesOrder.objects.get(id=order_id)
-		context['del'] = order.order_type + '-delete'
-		if order.order_type == 'quotation':
-			form = QuotationUpdateForm(request.POST, instance=order)
-		elif order.order_type == 'salesorder':
-			form = SalesOrderUpdateForm(request.POST, instance=order)
-		elif order.order_type == 'invoice':
-			form = InvoiceUpdateForm(request.POST, instance=order)
-			context['form'] = form
-			context['object_list'] = order.line.all()
-			return render(request, 'paper/order/invoice_detail.html', context=context)
-		context['form'] = form
-		context['object_list'] = order.line.all()
-	except Exception as e:
-		print(str(e))
+	order = SalesOrder.objects.get(id=order_id)
+	form = form_submit(request, order)
+	context['del'] = order.order_type + '-delete'
+	context['form'] = form
+	context['object_list'] = order.line.all()
 
-	if request.POST and form.is_valid():
-		form.save()
-		return redirect(order.order_type + '-list')
-	else:
-		messages.add_message(request, messages.INFO, form.errors)
-		print(form.errors)
+	if request.method == 'POST':
+		if form.is_valid():
+			form.save()
+			return redirect(order.order_type + '-list')
+		else:
+			messages.add_message(request, messages.INFO, form.errors)
+			print(form.errors)
 	return render(request, 'paper/order/order_line_list.html', context=context)
+
+
+def invoice_detail_edit(request, order_id):
+	context = {}
+	order = SalesOrder.objects.get(id=order_id)
+	form1 = InvoiceUpdateForm(request.POST or None, instance=order)
+	form2 = InvoiceAmountForm(request.POST or None, instance=order)
+	context['del'] = order.order_type + '-delete'
+	context['status_form'] = form1
+	context['amount_form'] = form2
+	context['object_list'] = order.line.all()
+	if request.method == 'POST':
+		# if form1.is_valid():
+		order.invoice_status = request.POST.get('invoice_status', order.invoice_status)
+		order.invoice_amount = request.POST.get('invoice_amount', order.invoice_amount)
+		order.save()
+		messages.add_message(request, messages.INFO, form1.errors, form2.errors)
+	return render(request, 'paper/order/invoice_detail.html', context=context)
 
 
 def get_excel_report_order(request, slug):

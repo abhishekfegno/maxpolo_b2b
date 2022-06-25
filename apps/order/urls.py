@@ -17,7 +17,7 @@ urlpatterns = [
 
     path('order/line/form/', get_orderline_form, name='get_orderline_form'),
     path('order/line/detail/<int:order_id>', get_orderline, name='get_orderline'),
-    path('order/line/update/<int:line_id>', edit_line, name='edit_line'),
+    path('invoice/line/detail/<int:order_id>', invoice_detail_edit, name='invoice_detail_edit'),
     path('order/excel/export/<str:slug>/', get_excel_report_order, name='get_excel_report_order'),
     path('cancelled/list/', cancelled_order, name='cancelled_order'),
 

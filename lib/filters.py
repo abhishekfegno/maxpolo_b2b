@@ -16,6 +16,10 @@ class OrderFilter(FilterSet):
     class Meta:
         model = SalesOrder
         fields = {'order_id': ['icontains'], 'dealer__username': ['icontains']}
+        label = {
+            'order_id': 'order id',
+            'dealer': 'dealer'
+        }
 
 
 class PaymentFilter(FilterSet):

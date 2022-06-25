@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% block content%}
 <div class='row'>
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="card card-stats">
             <div class="card-body ">
                 <div class="row">
@@ -27,34 +27,36 @@
             </div>
         </div>
     </div>
-    <div class='col-md-6 '>
+    <div class='col-md-4 '>
             <div class='card'>
                 <div class='card-body'>
                     <fieldset class='form-group '>
-                        <form action='' method='post' >
+                        <form class='status-form' method='post' >
                             {% csrf_token %}
-                            <div class="row">
-                                <div class="col">
-                                    {% for field in form %}
-                                    {{ field.label }}
-                                    {{ field }}
-<!--                                    <label class="switch" >-->
-<!--                                        <input type="checkbox" name="{{field.name}}" class="required checkbox form-control" id="id_{{field.name}}"{% if field.value %}checked{% endif %}>-->
-<!--                                        <span class="slider round"></span>-->
-<!--                                    </label>-->
-                                    {% endfor%}
-                                </div>
-                            </div>
-                            <button type='submit' class='btn btn-md btn-success' style="float:right;"> Save </button>
+                            {{ status_form | crispy }}
+                            <button type='submit' class=' status-form btn btn-md btn-success' style="float:right;"> Save </button>
                         </form>
                     </fieldset>
                 </div>
             </div>
         </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="car-body">
+                <fieldset class='form-group '>
+                    <form class='amount-form' method="POST">
+                            {% csrf_token %}
+                            {{ amount_form | crispy }}
+                            <button type='submit' class='amount-form btn btn-md btn-success' style="float:right;"> Save </button>
+                    </form>
+                    </fieldset>
+            </div>
+        </div>
+    </div>
     <div class='col-md-12'>
         <div class='card'>
             <div class='card-body'>
-                <h3>Order Line List</h3>
+                <h3>Invoice Line List</h3>
 
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
