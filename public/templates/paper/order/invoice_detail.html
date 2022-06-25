@@ -82,7 +82,18 @@
                             <td>
                                 <div class="">{{ object.quantity }}</div>
                             </td><td>
-                                <div class="">{{ object.order.invoice_status }}</div>
+<!--                            {% if object.order.invoice_status == new %}-->
+<!--                                <div class=""><span class="badge badge-pill badge-info">Processing</span></div>-->
+<!--                            {% elif object.order.invoice_status == credit %}-->
+<!--                                <div class=""><span class="badge badge-pill badge-warn">Credit</span></div>-->
+<!--                            {% elif object.order.invoice_status == payment_partial %}-->
+<!--                                <div class=""><span class="badge badge-pill badge-danger">Partial Payment</span></div>-->
+<!--                            {% elif object.order.invoice_status == payment_done %}-->
+<!--                                <div class=""><span class="badge badge-pill badge-success">Payment Done</span></div>-->
+
+<!--                            {% endif %}-->
+                            <div class=""><span class="badge badge-pill badge-info">{{object.order.invoice_status}}</span></div>
+
                             </td><td>
                                 <div class="">{{ object.order.invoice_amount }}</div>
                             </td><td>

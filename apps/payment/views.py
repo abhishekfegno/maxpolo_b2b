@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -58,7 +59,13 @@ class TransactionListView(FormMixin, ListView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            form.save()
+            try:
+                form.save()
+            except Exception as e:
+                print(str(e))
+                messages.add_message(request, messages.INFO, str(e))
+        else:
+            messages.add_message(request, messages.INFO, form.errors)
         return redirect('transaction-list')
 
 

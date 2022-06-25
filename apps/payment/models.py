@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, RequestAborted
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -10,6 +10,10 @@ from apps.order.models import SalesOrder
 #     amount_credited = models.FloatField(default=0.0)
 #     amount_remaining = models.FloatField(default=0.0)
 #     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class AmountMissMatchException(Exception):
+    pass
 
 
 class Transaction(models.Model):
@@ -32,11 +36,15 @@ def invoice_amount_update(sender, created, instance, **kwargs):
         if paid_amount == actual_inv_amount:
             SalesOrder.objects.filter(pk=instance.order.pk).update(invoice_status='payment_done')
         elif paid_amount < actual_inv_amount:
+            if paid_amount > instance.order.invoice_remaining_amount:
+                instance.delete()
+                print("deleted instance")
+                raise AmountMissMatchException("Amount is Greater than balance amount !!")
             balance = actual_inv_amount - paid_amount
             print(f"balance:{balance},paid:{paid_amount}")
             status = 'payment_partial'
             rem_amount = instance.order.invoice_remaining_amount
-            print(type(rem_amount), "rem amount")
+            # print(type(rem_amount), "rem amount")
             if rem_amount != 0.1:
                 rem_amount -= paid_amount
                 if rem_amount in [0.0, 0]:
@@ -47,5 +55,4 @@ def invoice_amount_update(sender, created, instance, **kwargs):
             SalesOrder.objects.filter(pk=instance.order.pk).update(invoice_remaining_amount=rem_amount,
                                                                    invoice_status=status)
             Transaction.objects.filter(pk=instance.pk).update(amount_balance=rem_amount, status=status)
-        elif paid_amount > instance.order.invoice_remaining_amount:
-            raise ValidationError
+

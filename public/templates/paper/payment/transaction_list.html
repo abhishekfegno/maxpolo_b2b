@@ -40,7 +40,7 @@
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class=""><a href="">{{ object.order.invoice_id }}</a></div>
+                                <div class=""><a href="{% url 'invoice_detail_edit' order_id=object.order.id %}">{{ object.order.invoice_id }}</a></div>
                             </td>
                             <td>
                                 <div class="">{{ object.created_at }}</div>
@@ -52,7 +52,7 @@
                                 <div class="">₹{{ object.amount_balance }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object.status}}</div>
+                                <div class=""><span class="badge badge-pill badge-info">{{object.status}}</span></div>
                             </td>
                             <td>
                                 <div class=""><a href="{% url 'transaction-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
