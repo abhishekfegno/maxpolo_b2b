@@ -86,7 +86,11 @@
                             </td><td>
                                 <div class="">{{ object.order.invoice_amount }}</div>
                             </td><td>
+                            {% if object.order.invoice_remaining_amount == 0.1 %}
+                                <div class="">0.0</div>
+                            {% else %}
                                 <div class="">{{ object.order.invoice_remaining_amount }}</div>
+                            {% endif %}
                             </td>
 
                         </tr>
