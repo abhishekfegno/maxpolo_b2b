@@ -45,8 +45,6 @@ class LoginAPIView(GenericAPIView):
             except Exception as e:
                 out['errors'] = str(e)
                 return Response(out, status=status.HTTP_401_UNAUTHORIZED)
-
-
         else:
             out['errors'] = serializer.errors
             return Response(out, status=status.HTTP_400_BAD_REQUEST)
