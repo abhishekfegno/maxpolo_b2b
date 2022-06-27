@@ -147,7 +147,8 @@ class ComplaintListView(ListAPIView):
         data = {}
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            instance = serializer.save()
+            EmailHandler().sent_mail_complaint(instance)
         else:
             data['errors'] = serializer.errors
         return Response(data)

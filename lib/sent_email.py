@@ -23,7 +23,7 @@ class EmailHandler(object):
 
     # create an instance of the API class
 
-    def sent_mail_for_pdf(self, object, url):
+    def sent_mail_for_pdf(self, instance, url):
         recipient = Dealer.objects.all().values('email', 'first_name')
         message = f"New products have been arrived.Please visit {url}"
         subject = {
@@ -33,7 +33,7 @@ class EmailHandler(object):
         self.sent_email_now(recipient, message, subject)
 
 
-    def sent_mail_for_banners(self, object, url):
+    def sent_mail_for_banners(self, instance, url):
         recipient = Dealer.objects.all().values('email', 'first_name')
         message = f"New Advertisement have been arrived.Please visit {url}"
         subject = {
@@ -41,6 +41,18 @@ class EmailHandler(object):
             "subheadline": "New Advertisement have been created !!!"
             }
 
+        self.sent_email_now(recipient, message, subject)
+
+    def sent_mail_complaint(self, instance):
+        recipient = []
+        recipient.append({'email': instance.created_by.email, 'first_name': instance.created_by.first_name})
+        recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
+        message = f"New Claim have been arrived."
+        subject = {
+            "subject": "New Claim has been raised",
+            "subheadline": f"New Claim have been raised by Mr/Mrs{recipient.get('first_name')} !!!"
+        }
+        import pdb;pdb.set_trace()
         self.sent_email_now(recipient, message, subject)
 
     def sent_email_now(self, recipient, message, subject):
