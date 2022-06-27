@@ -24,7 +24,8 @@ class EmailHandler(object):
     # create an instance of the API class
 
     def sent_mail_for_pdf(self, instance, url):
-        recipient = Dealer.objects.all().values('email', 'first_name')
+        recipient = [i for i in Dealer.objects.all().values('email', 'first_name')]
+        recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
         message = f"New products have been arrived.Please visit {url}"
         subject = {
             "subject": "New Product",
@@ -34,7 +35,9 @@ class EmailHandler(object):
 
 
     def sent_mail_for_banners(self, instance, url):
-        recipient = Dealer.objects.all().values('email', 'first_name')
+        recipient = [i for i in Dealer.objects.all().values('email', 'first_name')]
+        recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
+
         message = f"New Advertisement have been arrived.Please visit {url}"
         subject = {
             "subject": "New Advertisement",
@@ -50,10 +53,23 @@ class EmailHandler(object):
         message = f"New Claim have been arrived."
         subject = {
             "subject": "New Claim has been raised",
-            "subheadline": f"New Claim have been raised by Mr/Mrs{recipient.get('first_name')} !!!"
+            "subheadline": f"New Claim have been raised by Mr/Mrs {recipient[0].get('first_name')} !!!"
         }
-        import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         self.sent_email_now(recipient, message, subject)
+
+    def sent_mail_order(self, instance):
+        recipient = []
+        recipient.append({'email': instance.dealer.email, 'first_name': instance.dealer.first_name})
+        recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
+        message = f"New Order have been Created."
+        subject = {
+            "subject": "New Order has been Created",
+            "subheadline": f"New Order have been created by Mr/Mrs {recipient[0].get('first_name')} !!!"
+        }
+        # import pdb;pdb.set_trace()
+        self.sent_email_now(recipient, message, subject)
+
 
     def sent_email_now(self, recipient, message, subject):
         # print("KEY", self.api_key)
@@ -65,7 +81,7 @@ class EmailHandler(object):
             to=receivers,
             sender={"name": "Fegno Technologies", "email": "abhishekfegno@gmail.com"},
             template_id=3,
-            params={"name": receivers[0].get('first_name'), "subheadline": subject.get("subheadline"), "message": message},  # used to render inside email template
+            params={"name": '', "subheadline": subject.get("subheadline"), "message": message},  # used to render inside email template
             headers={"X-Mailin-custom": "custom_header_1:custom_value_1|custom_header_2:custom_value_2|custom_header_3:custom_value_3",
                      "charset": "iso-8859-1",
                      "api-key": self.api_key,

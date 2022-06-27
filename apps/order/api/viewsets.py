@@ -11,6 +11,7 @@ from apps.catalogue.models import Product
 from apps.order.api.serializers import OrderSerializer, OrderDetailSerializer
 from apps.order.models import SalesOrder, SalesOrderLine
 from apps.user.models import Dealer
+from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter
 
 
@@ -34,7 +35,7 @@ class OrderListAPIView(ListAPIView):
     {
         "products":[1,2,3],
         "quantites":[1,2,3],
-        "dealer":2
+        "dealer":3
     }
 
     """
@@ -64,7 +65,8 @@ class OrderListAPIView(ListAPIView):
 
     def post(self, request, *args, **kwargs):
         result = {}
-        dealer = request.data.get('dealer')
+        dealer = request.data.get('dealer', request.user.id)
+        print(dealer)
         quantity = request.data.get('products')
         products = request.data.get('quantites')
         serializer = self.get_serializer(data=request.data)
@@ -74,6 +76,7 @@ class OrderListAPIView(ListAPIView):
                 line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity,
                                                      order=order)
                 print(f"line created {line} for order {order}")
+            EmailHandler().sent_mail_order(order)
         except Exception as e:
             result['errors'] = str(e)
         return Response(result, status=status.HTTP_200_OK)
