@@ -5,6 +5,8 @@ from django.conf import settings
 from django.contrib import messages
 from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
+from rest_framework.reverse import reverse
+
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
@@ -21,6 +23,7 @@ from apps.catalogue.models import Category, PDF
 # 	model = Category
 # 	form_class = CategoryForm
 # 	success_url = '/catalogue/category/list/'
+from lib.sent_email import EmailHandler
 
 
 class CategoryListView(ModelFormMixin, ListView, ProcessFormView):
@@ -73,9 +76,11 @@ class PDFListView(CreateView, ListView):
 
 
 	def post(self, request, *args, **kwargs):
+		url = reverse('pdf-list', request=request, format=None, )
 		form = self.form_class(request.POST, request.FILES)
 		if form.is_valid():
-			form.save()
+			instance = form.save()
+			EmailHandler().sent_mail_for_pdf(instance, url)
 		else:
 			print(form.errors)
 			# import pdb;pdb.set_trace()

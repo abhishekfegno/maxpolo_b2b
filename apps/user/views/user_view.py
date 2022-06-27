@@ -2,13 +2,21 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
+from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView, TemplateView
 from django.views.generic.edit import FormMixin
 from rest_framework.authtoken.models import Token
 
 from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm
 from apps.user.models import Banners, User, Role, Dealer, Executive
 from lib.token_handler import token_expire_handler, is_token_expired
+
+
+
+class IndexView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        context['advertisements'] = Banners.objects.all()
+        return self.render_to_response(context)
 
 
 class UserDetailView(UpdateView):

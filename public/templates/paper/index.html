@@ -7,63 +7,109 @@
 {% endblock %}
 {% block content %}
 
-<div class="container-fluid" >
-    <div class="row">
-        <div class="col-md-4">
-            <div class="row">
-                {% if new_joinies %}
-                <div class="col-md-12">
-                    <!--  🎉 New Joinies  -->
-                    <div class="card">
-                        <div class="card-header with-border">
-                            <h4> 👶 New Joinies </h4>
-                        </div>
-                        <div class="card-body with-border">
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for user in new_joinies %}
-                                <tr>
-                                    <td>{{ forloop.counter }}</td>
-                                    <td>
-                                        <span class="d-block text-muted ">Welcome {{ user.get_full_name }} 🎉! </span>
-                                    </td>
-                                    <td>
-                                        <span class="d-block text-muted text-sm">{{ user.doj|date }} </span>
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr><td colspan="100%"> No information available </td></tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+<!--<div class="container-fluid" >-->
+<!--    <div class="row">-->
+<!--        <div class="col-md-4">-->
+<!--            <div class="row">-->
+<!--                {% if new_joinies %}-->
+<!--                <div class="col-md-12">-->
+<!--                    &lt;!&ndash;  🎉 New Joinies  &ndash;&gt;-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-header with-border">-->
+<!--                            <h4> 👶 New Joinies </h4>-->
+<!--                        </div>-->
+<!--                        <div class="card-body with-border">-->
+<!--                            <table class="table table-striped">-->
+<!--                                <thead>-->
+<!--                                <tr>-->
+<!--                                    <th>#</th>-->
+<!--                                    <th>Name</th>-->
+<!--                                    <th></th>-->
+<!--                                </tr>-->
+<!--                                </thead>-->
+<!--                                <tbody>-->
+<!--                                {% for user in new_joinies %}-->
+<!--                                <tr>-->
+<!--                                    <td>{{ forloop.counter }}</td>-->
+<!--                                    <td>-->
+<!--                                        <span class="d-block text-muted ">Welcome {{ user.get_full_name }} 🎉! </span>-->
+<!--                                    </td>-->
+<!--                                    <td>-->
+<!--                                        <span class="d-block text-muted text-sm">{{ user.doj|date }} </span>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+<!--                                {% empty %}-->
+<!--                                <tr><td colspan="100%"> No information available </td></tr>-->
+<!--                                {% endfor %}-->
+<!--                                </tbody>-->
+<!--                            </table>-->
 
-                        </div>
-                        <div class="card-footer with-border">
-                        </div>
-                    </div>
-                </div>
-                {% else %}
-                                <div class="col-md-12">
-                    <!--  🎉 New Joinies  -->
-                    <div class="card">
-                        <div class="card-header with-border">
-                            <h4> 👶 No Informations Available </h4>
-                        </div>
-                    </div>
-                </div>
+<!--                        </div>-->
+<!--                        <div class="card-footer with-border">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                {% else %}-->
+<!--                <div class="col-md-12">-->
+<!--                    &lt;!&ndash;  🎉 New Joinies  &ndash;&gt;-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-header with-border">-->
+<!--                            <h4> 👶 No Informations Available </h4>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
 
-                {% endif %}
+<!--                {% endif %}-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card ">
+            <div class="card-header ">
+                <h5 class="card-title">Orders</h5>
+                <p class="card-category">Total number</p>
+            </div>
+            <div class="card-body ">
+                <canvas id="chartDonut3" class="ct-chart ct-perfect-fourth" width="456" height="300"></canvas>
+            </div>
+            <div class="card-footer ">
+                <div class="legend">
+                    <i class="fa fa-circle text-danger"></i> Completed
+                </div>
+                <hr>
+                <div class="stats">
+                    <!--                <i class="fa fa-clock-o"></i> Updated 3 minutes ago-->
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-
-{% endblock %}
+    <div class="col-md-4">
+        <div class="card ">
+            <div class="card-header ">
+                <h5 class="card-title">Orders</h5>
+<!--                <p class="card-category">Last Campaign Performance</p>-->
+            </div>
+            <div class="card-body ">
+                <canvas id="chartEmail"></canvas>
+            </div>
+            <div class="card-footer ">
+                <div class="legend">
+                    <i class="fa fa-circle text-primary"></i> Opened
+                    <i class="fa fa-circle text-warning"></i> Read
+                    <i class="fa fa-circle text-danger"></i> Deleted
+                    <i class="fa fa-circle text-gray"></i> Unopened
+                </div>
+                <hr>
+                <div class="stats">
+<!--                    <i class="fa fa-calendar"></i> Number of emails sent-->
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

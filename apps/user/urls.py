@@ -8,9 +8,13 @@ from .views import *
 from .views.user_view import *
 from .views.banners_view import *
 from .views.complaint_view import *
+from ..order.views.salesorder_view import QuotationListView
 
 urlpatterns = [
-    path('', login_required(TemplateView.as_view(template_name='paper/index.html')), name='index'),
+    # path('', login_required(TemplateView.as_view(template_name='paper/index.html')), name='index'),
+    path('', login_required(IndexView.as_view(template_name='paper/index.html')), name='index'),
+    # path('', QuotationListView.as_view(), name='quotation_list'),
+
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), name='logout'),
     path('setpassword/<slug:token>/', password_reset, name='password-reset-page'),
