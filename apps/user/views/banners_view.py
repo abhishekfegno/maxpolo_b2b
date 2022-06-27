@@ -46,5 +46,6 @@ class BannersDeleteView(DeleteView):
 	queryset = Banners.objects.all()
 	template_name = 'paper/user/banners_delete.html'
 	model = Banners
+	success_url = '/banners/list/'
 
 

@@ -225,7 +225,7 @@ EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 STATIC_URL = '/assets/'
 MEDIA_URL = '/src/'
 
-DEFAULT_IMAGE = 'public/default/image_not_found.jpg'
+DEFAULT_IMAGE = 'default/image_not_found.jpg'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'public/staticfiles/')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'public/src/')
