@@ -64,5 +64,5 @@ class Product(models.Model):
     def photo_url(self):
         if self.image:
             return self.image.url
-        return settings.STATIC_URL + settings.DEFAULT_IMAGE
+        return settings.MEDIA_URL + settings.DEFAULT_IMAGE
 

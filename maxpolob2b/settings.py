@@ -62,7 +62,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'debug_toolbar',
     'import_export',
-    'rest_framework_gis'
+    'rest_framework_gis',
+    
+    'view_breadcrumbs',
     # 'django_bootstrap_breadcrumbs'
 
 
@@ -110,11 +112,12 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'apps.context_processors.settings',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'apps.context_processors.settings',
+
             ],
             'libraries': {
                 'templatetags': 'apps.templatetags',
@@ -211,6 +214,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
+BREADCRUMBS_TEMPLATE = "view_breadcrumbs/breadcrumbs.html"
+
+
 
 TOKEN_EXPIRED_AFTER_SECONDS = 300
 

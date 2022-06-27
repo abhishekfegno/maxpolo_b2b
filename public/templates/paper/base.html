@@ -1,6 +1,5 @@
-{% load static %}
-
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -103,10 +102,10 @@
     {% block navbar %}
     {% include 'paper/utils/navbar_header.html' %}
     {% endblock %}
-        {% block breadcrumb %}
 
-        {% endblock%}
     <div class="content" >
+    {% block breadcrumbs %}
+    {% endblock%}
       {% block content %}
       <div class="row">
         <div class="col-md-12">

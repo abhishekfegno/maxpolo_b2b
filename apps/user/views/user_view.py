@@ -5,6 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView, TemplateView
 from django.views.generic.edit import FormMixin
 from rest_framework.authtoken.models import Token
+from view_breadcrumbs import DetailBreadcrumbMixin, ListBreadcrumbMixin
+from django.utils.translation import gettext_lazy as _
 
 from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm
 from apps.user.models import Banners, User, Role, Dealer, Executive
@@ -39,9 +41,10 @@ class UserDetailView(UpdateView):
         return redirect('user-list', role=role)
 
 
-class UserListView(FormMixin, ListView):
+class UserListView(FormMixin, ListView, ListBreadcrumbMixin):
     queryset = User.objects.all()
     template_name = 'paper/user/user_list.html'
+    home_label = _("User list")
     model = User
     form_class = DealerForm
 
@@ -87,7 +90,7 @@ class UserDeleteView(DeleteView):
 
 def password_reset(request, token):
     errors = ""
-    form = ResetPasswordForm(request.POST)
+    form = ResetPasswordForm(request.POST)\
 
     if request.method == 'POST':
         try:
