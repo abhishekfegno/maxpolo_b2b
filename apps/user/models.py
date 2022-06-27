@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from solo.models import SingletonModel
 
 # Create your models here.
+from lib.faker import FakeImage
 
 
 class Role:
@@ -117,7 +118,7 @@ class Complaint(models.Model):
 class Banners(models.Model):
     title = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50)
-    photo = models.ImageField(upload_to='banners/', default='public/default/image_not_found.jpg', null=True, blank=True)
+    photo = models.ImageField(upload_to='banners/', default='default/banner.jpg', null=True, blank=True)
     is_public = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
@@ -127,8 +128,9 @@ class Banners(models.Model):
     @property
     def photo_url(self):
         if self.photo:
+            print(self.photo)
             return self.photo.url
-        return settings.STATIC_URL + settings.DEFAULT_IMAGE
+        return settings.DEFAULT_IMAGE
 
     def __str__(self):
         return self.title
