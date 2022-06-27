@@ -46,7 +46,7 @@
             <div class='card'>
                 <div class='card-body'>
                     <fieldset class='form-group '>
-                        <form class='status-form' method='post' >
+                        <form class='' method='post' >
                             {% csrf_token %}
                             {{ status_form | crispy }}
                             <button type='submit' class=' status-form btn btn-md btn-success' style="float:right;"> Save </button>
@@ -59,7 +59,7 @@
         <div class="card">
             <div class="car-body">
                 <fieldset class='form-group '>
-                    <form class='amount-form' method="POST">
+                    <form class='form-group' method="POST">
                             {% csrf_token %}
                             {{ amount_form | crispy }}
                             <button type='submit' class='amount-form btn btn-md btn-success' style="float:right;"> Save </button>

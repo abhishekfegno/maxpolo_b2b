@@ -128,9 +128,8 @@ class Banners(models.Model):
     @property
     def photo_url(self):
         if self.photo:
-            print(self.photo)
             return self.photo.url
-        return settings.DEFAULT_IMAGE
+        return settings.MEDIA_URL + settings.DEFAULT_IMAGE
 
     def __str__(self):
         return self.title

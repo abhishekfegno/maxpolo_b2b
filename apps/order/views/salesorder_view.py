@@ -102,7 +102,7 @@ def cancelled_order(request):
 
 
 class SalesOrderDetailView(UpdateView):
-	queryset = SalesOrder.objects.all().filter(is_confirmed=True).select_related('dealer')
+	queryset = SalesOrder.objects.all().filter(is_confirmed=True).select_related('dealer').prefetch_related('line')
 	template_name = 'paper/order/salesorder_form.html'
 	model = SalesOrder
 	form_class = SalesOrderUpdateForm
@@ -161,7 +161,7 @@ class SalesOrderDeleteView(DeleteView):
 
 
 class QuotationDetailView(UpdateView):
-	queryset = SalesOrder.objects.all().filter(is_quotation=True).select_related('dealer')
+	queryset = SalesOrder.objects.all().filter(is_quotation=True).select_related('dealer').prefetch_related('line')
 	template_name = 'paper/order/salesorder_form.html'
 	model = SalesOrder
 	form_class = QuotationUpdateForm
@@ -220,7 +220,7 @@ class QuotationDeleteView(DeleteView):
 
 
 class InvoiceDetailView(UpdateView):
-	queryset = SalesOrder.objects.all().filter(is_invoice=True).select_related('dealer')
+	queryset = SalesOrder.objects.all().filter(is_invoice=True).select_related('dealer').prefetch_related('line')
 	template_name = 'paper/order/invoice_form.html'
 	model = SalesOrder
 	form_class = InvoiceUpdateForm
