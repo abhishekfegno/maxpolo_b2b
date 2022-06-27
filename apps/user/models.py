@@ -110,6 +110,9 @@ class Complaint(models.Model):
     def __str__(self):
         return self.description
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
 
 class Banners(models.Model):
     title = models.CharField(max_length=50)

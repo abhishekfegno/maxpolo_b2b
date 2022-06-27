@@ -46,6 +46,7 @@ class PDF(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = str(self.title).lower().replace(' ', '-')
+
         return super().save(*args, **kwargs)
 
 

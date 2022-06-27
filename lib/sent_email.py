@@ -7,7 +7,7 @@ from django.conf import settings
 from sib_api_v3_sdk.rest import ApiException
 from pprint import pprint
 
-
+from apps.user.models import Dealer
 
 
 class EmailHandler(object):
@@ -23,15 +23,37 @@ class EmailHandler(object):
 
     # create an instance of the API class
 
+    def sent_mail_for_pdf(self, object, url):
+        recipient = Dealer.objects.all().values('email', 'first_name')
+        message = f"New products have been arrived.Please visit {url}"
+        subject = {
+            "subject": "New Product",
+            "subheadline": "New products have been arrived !!!"
+            }
+        self.sent_email_now(recipient, message, subject)
+
+
+    def sent_mail_for_banners(self, object, url):
+        recipient = Dealer.objects.all().values('email', 'first_name')
+        message = f"New Advertisement have been arrived.Please visit {url}"
+        subject = {
+            "subject": "New Advertisement",
+            "subheadline": "New Advertisement have been created !!!"
+            }
+
+        self.sent_email_now(recipient, message, subject)
 
     def sent_email_now(self, recipient, message, subject):
         # print("KEY", self.api_key)
+        receivers = [i for i in recipient]
+        # import pdb;pdb.set_trace()
+
         api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(self.configuration))
         send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
-            to=[recipient],
+            to=receivers,
             sender={"name": "Fegno Technologies", "email": "abhishekfegno@gmail.com"},
             template_id=3,
-            params={"name": recipient.get('name'), "subheadline": subject.get("subheadline"), "message": message},  # used to render inside email template
+            params={"name": receivers[0].get('first_name'), "subheadline": subject.get("subheadline"), "message": message},  # used to render inside email template
             headers={"X-Mailin-custom": "custom_header_1:custom_value_1|custom_header_2:custom_value_2|custom_header_3:custom_value_3",
                      "charset": "iso-8859-1",
                      "api-key": self.api_key,
