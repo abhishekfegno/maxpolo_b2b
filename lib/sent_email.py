@@ -67,7 +67,7 @@ class EmailHandler(object):
             "subject": "New Order has been Created",
             "subheadline": f"New Order have been created by Mr/Mrs {recipient[0].get('first_name')} !!!"
         }
-        import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         self.sent_email_now(recipient, message, subject)
 
 
