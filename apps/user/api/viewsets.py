@@ -148,6 +148,8 @@ class ComplaintListView(ListAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             instance = serializer.save()
+            instance.created_by = request.user
+            instance.save()
             EmailHandler().sent_mail_complaint(instance)
         else:
             data['errors'] = serializer.errors
@@ -159,7 +161,7 @@ class HomePageAPI(APIView):
     def get(self, request, *args, **kwargs):
         advertisements = AdvertisementSerializer(Banners.objects.all(), many=True, context={'request': request}).data
         pdf = ProductPDFSerializer(PDF.objects.select_related('category'), many=True, context={'request': request}).data
-        upcoming_payments = UpcomingPaymentSerializer(SalesOrder.objects.filter(is_invoice=True),
+        upcoming_payments = UpcomingPaymentSerializer(SalesOrder.objects.filter(is_invoice=True, invoice_status__in=['payment_partial', 'credit']),
                                                                                 many=True, context={'request': request}).data
         result = {
             "banners": advertisements,
