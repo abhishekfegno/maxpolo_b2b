@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator, EmptyPage
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from rest_framework.authentication import BasicAuthentication
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.pagination import PageNumberPagination
@@ -12,7 +13,7 @@ from apps.order.api.serializers import OrderSerializer, OrderDetailSerializer
 from apps.order.models import SalesOrder, SalesOrderLine
 from apps.user.models import Dealer
 from lib.sent_email import EmailHandler
-from lib.utils import list_api_formatter
+from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
 
 
 class OrderDetailAPIView(RetrieveAPIView):
@@ -46,6 +47,7 @@ class OrderListAPIView(ListAPIView):
     search_fields = ('order_id', 'invoice_id')
     ordering_fields = ()
     pagination_class = PageNumberPagination
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def list(self, request, *args, **kwargs):
 
