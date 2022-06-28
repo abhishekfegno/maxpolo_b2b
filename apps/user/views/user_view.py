@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -47,6 +48,9 @@ class UserListView(FormMixin, ListView, ListBreadcrumbMixin):
     home_label = _("User list")
     model = User
     form_class = DealerForm
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('user-list')
+    }
 
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset()

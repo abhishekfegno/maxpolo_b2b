@@ -7,7 +7,8 @@ def settings(request):
     from django.conf import settings
     logo = SiteConfiguration.objects.first()
     data['settings'] = settings
-    data['current_url'] = resolve(request.path_info).url_name
+    view_name = resolve(request.path_info).url_name
+    data['current_url'] = view_name.split('-')[0].capitalize()
     if logo:
         data['logo'] = logo.site_logo.url
     return data

@@ -15,6 +15,8 @@ from rest_framework.views import APIView
 
 from apps.catalogue.api.serializers import ProductPDFSerializer
 from apps.catalogue.models import PDF
+from apps.order.api.serializers import UpcomingPaymentSerializer
+from apps.order.models import SalesOrder
 from apps.user.api.serializers import LoginSerializer, ProfileAPISerializer, ComplaintSerialzer, \
     PasswordResetSerializer, AdvertisementSerializer, DealerSerializer
 from apps.user.models import User, Complaint, Banners, Dealer
@@ -120,7 +122,7 @@ class PasswordResetView(GenericAPIView):
 
 
 class ComplaintListView(ListAPIView):
-    queryset = Complaint.objects.all()
+    queryset = Complaint.objects.select_related('created_by', 'order_id')
     serializer_class = ComplaintSerialzer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_fields = ()
@@ -156,10 +158,12 @@ class HomePageAPI(APIView):
 
     def get(self, request, *args, **kwargs):
         advertisements = AdvertisementSerializer(Banners.objects.all(), many=True, context={'request': request}).data
-        pdf = ProductPDFSerializer(PDF.objects.all(), many=True, context={'request': request}).data
+        pdf = ProductPDFSerializer(PDF.objects.select_related('category'), many=True, context={'request': request}).data
+        upcoming_payments = UpcomingPaymentSerializer(SalesOrder.objects.filter(is_invoice=True),
+                                                                                many=True, context={'request': request}).data
         result = {
             "banners": advertisements,
             "new arrival": pdf,
-            "payment": "Payment"
+            "payment": upcoming_payments
         }
         return Response(result)

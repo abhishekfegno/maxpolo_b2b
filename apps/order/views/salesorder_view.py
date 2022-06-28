@@ -1,4 +1,5 @@
 # New file created
+from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse
@@ -98,6 +99,7 @@ def cancelled_order(request):
 	filter = paginator.get_page(page_number)
 	context['filter'] = filter
 	context['order_type'] = 'Cancelled'
+	context["breadcrumbs"] = settings.BREAD.get('cancelled_order')
 	return render(request, 'paper/order/cancelled_order_list.html', context=context)
 
 
@@ -118,6 +120,9 @@ class SalesOrderListView(FormMixin, ListView):
 	filtering_class = OrderFilter
 	filterset_fields = ('order_id',)
 	success_url = '/order/order/list'
+	extra_context = {
+		"breadcrumbs": settings.BREAD.get('salesorder-list')
+	}
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -177,6 +182,9 @@ class QuotationListView(FormMixin, ListView):
 	filtering_class = OrderFilter
 	filterset_fields = ('order_id',)
 	success_url = '/order/quotation/list'
+	extra_context = {
+		"breadcrumbs": settings.BREAD.get('quotation-list')
+	}
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -236,7 +244,9 @@ class InvoiceListView(FormMixin, ListView):
 	filtering_class = OrderFilter
 	filterset_fields = ('order_id',)
 	success_url = '/order/invoice/list'
-
+	extra_context = {
+		"breadcrumbs": settings.BREAD.get('invoice-list')
+	}
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		context['orderform'] = QuotationForm

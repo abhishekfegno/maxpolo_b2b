@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse
@@ -39,6 +40,9 @@ class TransactionListView(FormMixin, ListView):
     model = Transaction
     form_class = TransactionForm
     success_url = '/payment/transaction/list'
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('transaction-list')
+    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

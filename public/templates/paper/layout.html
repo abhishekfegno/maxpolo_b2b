@@ -10,7 +10,7 @@ MAXPolo
 {% endblock %}
 
 {% block sidebar_wrapper %}
-        {% include 'paper/utils/common_menu.html' %}
+{% include 'paper/utils/common_menu.html' %}
 {% endblock %}
 
 <!--{% block notifications %}-->
@@ -21,13 +21,21 @@ MAXPolo
 
 {% block title %}Dashboard | MAXpolo {% endblock %}
 {% block breadcrumbs %}
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ current_url }}</li>
-  </ol>
+<nav aria-label="breadcrumb" class="breadcrumbs">
+    <ol class="breadcrumb">
+        {% for crumb in breadcrumbs %}
+        {% if not forloop.last %}
+        <li class="breadcrumb-item">
+            <a class=" " href="{{ crumb.1 }}"> {{ crumb.0 }} </a>
+        </li>
+        {% else %}
+        <li class="breadcrumb-item">
+            <a class=" current"> {{ crumb.0 }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ol>
 </nav>
-
 {% endblock %}
 {% block content_body %}
 <h3 class="description">Your content here</h3>
