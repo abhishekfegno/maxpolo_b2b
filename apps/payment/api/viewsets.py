@@ -16,7 +16,7 @@ from lib.utils import list_api_formatter
 class TransactionListAPIView(ListAPIView):
     """
     """
-    queryset = Transaction.objects.all().select_related('order')
+    queryset = Transaction.objects.all().select_related('order').order_by('created_at')
     serializer_class = TransactionSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_fields = []
