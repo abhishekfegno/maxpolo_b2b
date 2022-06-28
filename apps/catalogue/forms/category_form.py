@@ -19,5 +19,5 @@ class PDFForm(forms.ModelForm):
 
 	class Meta:
 		model = PDF
-		fields = ('title', 'file', 'category')
+		fields = ('title', 'file', 'image', 'category')
 
