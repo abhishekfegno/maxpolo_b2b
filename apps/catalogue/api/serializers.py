@@ -21,7 +21,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class ProductPDFSerializer(serializers.ModelSerializer):
     class Meta:
         model = PDF
-        fields = ('id', "title", 'file')
+        fields = ('id', "title", "image", 'file')
 
 
 class CategorySerializer(serializers.ModelSerializer):
