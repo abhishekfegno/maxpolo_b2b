@@ -12,4 +12,4 @@ class TransactionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['order'].queryset = SalesOrder.objects.filter(is_invoice=True).exclude(invoice_status='payment_done')
+        self.fields['order'].queryset = SalesOrder.objects.filter(is_invoice=True, invoice_status='credit').exclude(invoice_status='payment_done')
