@@ -23,6 +23,15 @@ def get_excel_report_complaint(request):
 
 
 class ComplaintDetailView(UpdateView):
+	"""
+		{
+			"title":,
+			"description":,
+			"photo":,
+			"created_by":,
+			"order_id":
+		}
+	"""
 	queryset = Complaint.objects.all()
 	template_name = 'paper/user/complaint_form.html'
 	model = Complaint
