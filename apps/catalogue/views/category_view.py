@@ -33,6 +33,9 @@ class CategoryListView(ModelFormMixin, ListView, ProcessFormView):
 	form_class = CategoryForm
 	success_url = '/catalogue/category/list/'
 	allow_empty = True
+	extra_context = {
+		"breadcrumbs": settings.BREAD.get('category-list')
+	}
 
 	def get_object(self, queryset=None):
 		if 'pk' in self.kwargs:
@@ -73,6 +76,9 @@ class PDFListView(CreateView, ListView):
 	model = PDF
 	form_class = PDFForm
 	success_url = '/catalogue/pdf/list/'
+	extra_context = {
+		"breadcrumbs": settings.BREAD.get('pdf-list')
+	}
 
 
 	def post(self, request, *args, **kwargs):

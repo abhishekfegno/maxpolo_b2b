@@ -1,4 +1,5 @@
 # New file created
+from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from rest_framework.reverse import reverse
@@ -6,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
 from rest_framework.authtoken.models import Token
+from view_breadcrumbs import ListBreadcrumbMixin
 
 from apps.user.forms.banners_form import BannersForm, ResetPasswordForm
 from apps.user.models import Banners, User
@@ -27,6 +29,9 @@ class BannersListView(CreateView, ListView):
 	model = Banners
 	form_class = BannersForm
 	success_url = '/banners/list/'
+	extra_context = {
+		"breadcrumbs": settings.BREAD.get('banners-list')
+	}
 
 	def post(self, request, *args, **kwargs):
 		url = reverse('banners-list', request=request, format=None)
