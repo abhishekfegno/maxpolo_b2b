@@ -111,6 +111,8 @@ class Complaint(models.Model):
     photo = models.ImageField(null=True, blank=True)
     is_public = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=False)
+    order_id = models.ForeignKey('order.SalesOrder', on_delete=models.SET_NULL, null=True, blank=True)
+
 
     def __str__(self):
         return self.description
