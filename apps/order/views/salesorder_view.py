@@ -264,6 +264,7 @@ class InvoiceListView(FormMixin, ListView):
 	extra_context = {
 		"breadcrumbs": settings.BREAD.get('invoice-list')
 	}
+	
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		context['orderform'] = QuotationForm
