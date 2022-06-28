@@ -103,17 +103,21 @@ class Complaint(models.Model):
         ('resolved', 'Resolved'),
         ('rejected', 'Rejected'),
     )
+    ticket_id = models.CharField(max_length=10, null=True, blank=True)
+    title = models.CharField(max_length=100, null=True, blank=False)
     description = models.CharField(max_length=200)
     status = models.CharField(max_length=20, choices=STATUS)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     photo = models.ImageField(null=True, blank=True)
-    # is_public = models.BooleanField(default=True)
+    is_public = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=False)
 
     def __str__(self):
         return self.description
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+        self.ticket_id = 'TKT'+f'{self.pk}'.zfill(6)
+        return super().save(*args, **kwargs)
 
 
 class Banners(models.Model):
