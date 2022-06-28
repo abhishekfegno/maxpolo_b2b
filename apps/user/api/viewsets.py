@@ -122,6 +122,12 @@ class PasswordResetView(GenericAPIView):
 
 
 class ComplaintListView(ListAPIView):
+    """
+        {
+            "title":"asdf",
+            "description":"asdfasdfa"
+        }
+    """
     queryset = Complaint.objects.select_related('created_by', 'order_id')
     serializer_class = ComplaintSerialzer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
