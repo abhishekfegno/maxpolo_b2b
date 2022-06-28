@@ -160,9 +160,14 @@ class SalesOrderListView(FormMixin, ListView):
 @method_decorator(csrf_exempt, name='dispatch')
 class SalesOrderDeleteView(DeleteView):
 	queryset = SalesOrder.objects.all().select_related('dealer')
-	template_name = 'templates/salesorder_list.html'
+	template_name = 'paper/order/salesorder_list.html'
 	model = SalesOrder
 	success_url = '/order/order/list'
+
+	def get(self, request, *args, **kwargs):
+		# import pdb;pdb.set_trace()
+		print(self.get_object().delete())
+		return redirect('salesorder-list')
 
 
 class QuotationDetailView(UpdateView):
@@ -222,9 +227,14 @@ class QuotationListView(FormMixin, ListView):
 @method_decorator(csrf_exempt, name='dispatch')
 class QuotationDeleteView(DeleteView):
 	queryset = SalesOrder.objects.all().select_related('dealer')
-	template_name = 'templates/quotation_list.html'
+	template_name = 'paper/order/quotation_list.html'
 	model = SalesOrder
 	success_url = '/order/quotation/list'
+
+	def get(self, request, *args, **kwargs):
+		# import pdb;pdb.set_trace()
+		print(self.get_object().delete())
+		return redirect('quotation-list')
 
 
 class InvoiceDetailView(UpdateView):
@@ -282,7 +292,7 @@ class InvoiceListView(FormMixin, ListView):
 @method_decorator(csrf_exempt, name='dispatch')
 class InvoiceDeleteView(DeleteView):
 	queryset = SalesOrder.objects.all().select_related('dealer')
-	template_name = 'templates/invoice_list.html'
+	template_name = 'paper/order/invoice_list.html'
 	model = SalesOrder
 	success_url = '/order/invoice/list'
 

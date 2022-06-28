@@ -9,7 +9,7 @@ from apps.order.models import SalesOrder, SalesOrderLine
 class UpcomingPaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = SalesOrder
-        fields = ('invoice_id', 'invoice_date')
+        fields = ('id', 'invoice_id', 'invoice_date')
 
 
 class OrderLineSerializer(serializers.ModelSerializer):
