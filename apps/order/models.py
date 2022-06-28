@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.core.validators import MinValueValidator
 from django.db import models
 
 # Create your models here.
@@ -57,7 +58,7 @@ class SalesOrder(models.Model):
 class SalesOrderLine(models.Model):
     order = models.ForeignKey('order.SalesOrder', on_delete=models.SET_NULL, related_name='line', null=True, blank=True)
     product = models.ForeignKey('catalogue.Product', on_delete=models.SET_NULL, null=True, blank=True)
-    quantity = models.IntegerField(default=1)
+    quantity = models.IntegerField(default=1, validators=[MinValueValidator])
 
     def __str__(self):
         return self.product.name

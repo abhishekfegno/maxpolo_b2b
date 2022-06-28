@@ -12,6 +12,7 @@ class QuotationForm(forms.ModelForm):
 
 
 class QuotationLineForm(forms.ModelForm):
+
 	class Meta:
 		model = SalesOrderLine
 		fields = ('product', 'quantity')

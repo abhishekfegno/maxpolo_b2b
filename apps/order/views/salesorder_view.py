@@ -215,10 +215,17 @@ class QuotationListView(FormMixin, ListView):
 		if form.is_valid():
 			products = form.data.get('product')
 			quantity = form.data.get('quantity')
+			print(products, quantity)
 			order = form.save()
-			for product, quantity in zip(products, quantity):
-				line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity, order=order)
-				print(f"line created {line} for order {order}")
+			print(f"order {order} created")
+			try:
+				for product, quantity in zip(products, quantity):
+					print(product)
+					line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity, order=order)
+					print(f"line created {line} for order {order}")
+			except Exception as e:
+				print(str(e))
+				messages.add_message(request, messages.INFO, str(e))
 		else:
 			messages.add_message(request, messages.INFO, form.errors)
 		return redirect('quotation-list')
