@@ -239,7 +239,9 @@ class QuotationListView(FormMixin, ListView):
             quantities = form.data.getlist('quantity')
             print(products, quantities)
             try:
-                if not products or not quantities:
+                if not products:
+                    raise QuantityInvalidException("Please select product")
+                if not quantities:
                     raise QuantityInvalidException("Please select product")
                 order = form.save()
                 for product, quantity in zip(products, quantities):
