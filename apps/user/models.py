@@ -100,7 +100,7 @@ class Complaint(models.Model):
         ('resolved', 'Resolved'),
         ('rejected', 'Rejected'),
     )
-    ticket_id = models.CharField(max_length=10, null=True, blank=True)
+    # ticket_id = models.CharField(max_length=10, null=True, blank=True)
     title = models.CharField(max_length=100, null=True, blank=False)
     description = models.CharField(max_length=200)
     status = models.CharField(max_length=20, choices=STATUS, default='new')
@@ -113,8 +113,11 @@ class Complaint(models.Model):
     def __str__(self):
         return self.description
 
+    @property
+    def ticket_id(self):
+        return 'TKT' + f'{self.pk}'.zfill(6)
+
     def save(self, *args, **kwargs):
-        self.ticket_id = 'TKT' + f'{self.pk}'.zfill(6)
         return super().save(*args, **kwargs)
 
 
