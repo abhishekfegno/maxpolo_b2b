@@ -6,7 +6,7 @@ from pprint import pprint
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 
-from apps.user.models import Dealer
+# from apps.user.models import Dealer
 
 
 class EmailHandler(object):
@@ -22,27 +22,28 @@ class EmailHandler(object):
 
     # create an instance of the API class
 
-    def sent_mail_for_pdf(self, instance, url):
-        recipient = [i for i in Dealer.objects.all().values('email', 'first_name')]
-        recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
-        message = f"New products have been arrived.Please visit {url}"
-        subject = {
-            "subject": "New Product",
-            "subheadline": "New products have been arrived !!!"
-        }
-        self.sent_email_now(recipient, message, subject)
-
-    def sent_mail_for_banners(self, instance, url):
-        recipient = [i for i in Dealer.objects.all().values('email', 'first_name')]
-        recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
-
-        message = f"New Advertisement have been arrived.Please visit {url}"
-        subject = {
-            "subject": "New Advertisement",
-            "subheadline": "New Advertisement have been created !!!"
-        }
-
-        self.sent_email_now(recipient, message, subject)
+    # def sent_mail_for_pdf(self, instance, url):
+    #     recipient = [i for i in Dealer.objects.all().values('email', 'first_name')]
+    #     recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
+    #     message = f"New products have been arrived.Please visit {url}"
+    #     subject = {
+    #         "subject": "New Product",
+    #         "subheadline": "New products have been arrived !!!"
+    #         }
+    #     self.sent_email_now(recipient, message, subject)
+    #
+    #
+    # def sent_mail_for_banners(self, instance, url):
+    #     recipient = [i for i in Dealer.objects.all().values('email', 'first_name')]
+    #     recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
+    #
+    #     message = f"New Advertisement have been arrived.Please visit {url}"
+    #     subject = {
+    #         "subject": "New Advertisement",
+    #         "subheadline": "New Advertisement have been created !!!"
+    #         }
+    #
+    #     self.sent_email_now(recipient, message, subject)
 
     def sent_mail_complaint(self, instance):
         recipient = []

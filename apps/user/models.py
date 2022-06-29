@@ -1,10 +1,14 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from solo.models import SingletonModel
 
 
 # Create your models here.
+from lib.faker import FakeImage
+from lib.sent_email import EmailHandler
 
 
 class Role:
@@ -165,7 +169,16 @@ class SiteConfiguration(SingletonModel):
             if index < 4:
                 setattr(self, f'email_0{index + 1}', value[index])
 
-# @receiver(post_save,sender=Complaint)
-# def sent_complaint(sender, created, instance, **kwargs)
-#     if created:
-#         instance.
+
+
+@receiver(post_save, sender=Complaint)
+def sent_email_complaint(sender, created, instance, **kwargs):
+    if created:
+        EmailHandler().sent_mail_complaint(instance)
+
+
+@receiver(post_save, sender=Complaint)
+def sent_email_banners(sender, created, instance, **kwargs):
+    if created:
+        EmailHandler().sent_mail_for_banners(instance)
+

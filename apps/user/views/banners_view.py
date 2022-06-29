@@ -13,38 +13,38 @@ from lib.sent_email import EmailHandler
 
 
 class BannersDetailView(UpdateView):
-    queryset = Banners.objects.all()
-    template_name = 'paper/user/banners_form.html'
-    model = Banners
-    form_class = BannersForm
-    success_url = '/banners/list/'
+	queryset = Banners.objects.all()
+	template_name = 'paper/user/banners_form.html'
+	model = Banners
+	form_class = BannersForm
+	success_url = '/banners/list/'
 
 
-class BannersListView(SuccessMessageMixin, CreateView, ListView):
-    queryset = Banners.objects.all()
-    template_name = 'paper/user/banners_list.html'
-    model = Banners
-    form_class = BannersForm
-    success_url = '/banners/list/'
-    extra_context = {
-        "breadcrumbs": settings.BREAD.get('banners-list')
-    }
-    success_message = 'Banner'
+class BannersListView(CreateView, ListView):
+	queryset = Banners.objects.all()
+	template_name = 'paper/user/banners_list.html'
+	model = Banners
+	form_class = BannersForm
+	success_url = '/banners/list/'
+	extra_context = {
+		"breadcrumbs": settings.BREAD.get('banners-list')
+	}
 
-    def post(self, request, *args, **kwargs):
-        url = reverse('banners-list', request=request, format=None)
-        form = self.form_class(request.POST, request.FILES)
-        if form.is_valid():
-            instance = form.save()
-            EmailHandler().sent_mail_for_banners(instance, url)
-        else:
-            print(form.errors)
-            messages.add_message(request, messages.INFO, form.errors.get('file')[0])
-        return redirect('banners-list')
+	def post(self, request, *args, **kwargs):
+		# url = reverse('banners-list', request=request, format=None)
+		form = self.form_class(request.POST, request.FILES)
+		if form.is_valid():
+			instance = form.save()
+		else:
+			print(form.errors)
+			# import pdb;pdb.set_trace()
+			messages.add_message(request, messages.INFO, form.errors.get('file')[0])
+		return redirect('banners-list')
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class BannersDeleteView(DeleteView):
+
     queryset = Banners.objects.all()
     template_name = 'paper/user/banners_delete.html'
     model = Banners

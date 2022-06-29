@@ -34,8 +34,7 @@
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.order_id
-                                    }}</a></div>
+                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.order_id }}</a></div>
                             </td>
                             <td>
                                 <div class="">{{ object.confirmed_date }}</div>

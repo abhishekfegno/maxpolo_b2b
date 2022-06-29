@@ -1,10 +1,11 @@
 {% extends 'paper/layout.html' %}{% load crispy_forms_tags %}{% block content%}
 <div class='row'>
-    {% include 'paper/catalogue/product_filter.html' %}
     <div class='col-12'>
         <div class='card'>
             <div class='card-body'>
                 <h3>Complaints List</h3>
+                    {% include 'paper/catalogue/product_filter.html' %}
+
                 <a class="btn btn-primary" href="{% url 'get_excel_report_complaint' %}" style="float:right;">Download
                     Excel</a>
 
