@@ -7,8 +7,7 @@
 
                 <div>
                     {% if filter.qs %}
-                    <a class="btn btn-primary btn-sm" href="{% url 'get_excel_report_order' slug=order_type %}"
-                       style="float:right;">Download Excel</a>
+                    <a class="btn btn-primary btn-sm" href="{% url 'get_excel_report_order' slug=order_type %}" style="float:right;">Download Excel</a>
                     {% endif %}
                     <h5 class=""> {{ order_type }} List </h5>
 

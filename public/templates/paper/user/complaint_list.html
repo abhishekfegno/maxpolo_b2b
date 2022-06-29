@@ -3,19 +3,21 @@
     <div class='col-12'>
         <div class='card'>
             <div class='card-body'>
-                <h3>Complaints List</h3>
-                    {% include 'paper/catalogue/product_filter.html' %}
+                <a class="btn btn-primary" href="{% url 'get_excel_report_complaint' %}" style="float:right;">Download Excel</a>
 
-                <a class="btn btn-primary" href="{% url 'get_excel_report_complaint' %}" style="float:right;">Download
-                    Excel</a>
+                <h3>Claims List</h3>
+
+                {% include 'paper/catalogue/product_filter.html' %}
+
 
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
-                        <thead class="">
-                        <tr class="">
+                        <thead class="thead-dark">
+                        <tr class="table-header">
                             <th scope="col">ID</th>
                             <th scope="col">Description</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -36,6 +38,11 @@
                                                  href="{% url 'complaint-update' pk=object.pk %}">Edit</a></div>
                             </td>
                             <td></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="text-center text-muted" colspan="100%"> No Complaints have not been raised so far .
+                            </td>
                         </tr>
                         {% endfor %}
                         </tbody>
