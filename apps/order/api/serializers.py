@@ -44,7 +44,7 @@ class OrderSerializer(serializers.ModelSerializer):
             }
 
     def get_invoice_remaining_amount(self, instance):
-        return instance.invoice_amount - instance.transaction_set.all().aggregate(recieved=Sum('amount')['recieved'])
+        return instance.invoice_amount - instance.transaction_set.all().aggregate(recieved=Sum('amount'))['recieved']
 
     class Meta:
         model = SalesOrder
