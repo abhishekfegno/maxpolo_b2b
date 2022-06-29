@@ -137,7 +137,7 @@
 <!--    </div>-->
 <!--</div>-->
 
-<div class="col-md-4">
+<div class="col-md-6">
     <div class="card ">
         <div class="card-header ">
             <h5 class="card-title">Orders</h5>
@@ -150,10 +150,10 @@
         </div>
         <div class="card-footer ">
             <div class="legend">
-                <i class="fa fa-circle text-primary"></i> Opened
-                <i class="fa fa-circle text-warning"></i> Read
-                <i class="fa fa-circle text-danger"></i> Deleted
-                <i class="fa fa-circle text-gray"></i> Unopened
+<!--                <i class="fa fa-circle text-primary"></i> Opened-->
+<!--                <i class="fa fa-circle text-warning"></i> Read-->
+<!--                <i class="fa fa-circle text-danger"></i> Deleted-->
+<!--                <i class="fa fa-circle text-gray"></i> Unopened-->
             </div>
             <hr>
             <div class="stats">
@@ -211,7 +211,12 @@
         datasets: [{
           data: [{% for key,value in pie_data.items %}'{{ value }}',{% endfor %}],
           backgroundColor: [
-            '#696969', '#808080', '#A9A9A9', '#C0C0C0', '#D3D3D3'
+<!--                            'rgba(255, 99, 132, 0.2)',-->
+<!--                            'rgba(54, 162, 235, 0.2)',-->
+<!--                            'rgba(255, 206, 86, 0.2)',-->
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
           ],
           label: 'Population'
         }],
