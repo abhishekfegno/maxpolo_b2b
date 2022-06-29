@@ -40,10 +40,14 @@ class LoginAPIView(GenericAPIView):
                 login(request, user)
                 print(user, request.user)
                 out['user'] = {
+                    "id": user.id,
                     "role": user.user_role_name,
-                    "company_name": user.username,
-                    "zone": user.zone,
-                    "id": user.id
+                    "company_name": user.get_full_name(),
+                    "company_cin": user.company_cin,
+                    "address_street": user.address_street,
+                    "address_city": user.address_city,
+                    "address_state": user.address_state,
+                    "zone": user.zone.name,
                 }
             except Exception as e:
                 out['errors'] = str(e)
