@@ -2,6 +2,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
+from django.forms import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -195,6 +196,8 @@ class QuotationListView(FormMixin, ListView):
 		context = super().get_context_data(**kwargs)
 		context['orderform'] = QuotationForm
 		context['orderlineform'] = QuotationLineForm
+		# orderline_formset = inlineformset_factory(SalesOrder, SalesOrderLine, fields=('product', 'quantity'))
+		# context['orderlineformset'] = orderline_formset
 		context['order_type'] = 'Quotation'
 		page_number = self.request.GET.get('page', 1)
 		page_size = self.request.GET.get('page_size', 10)
@@ -212,16 +215,19 @@ class QuotationListView(FormMixin, ListView):
 
 	def post(self, request, *args, **kwargs):
 		form = QuotationForm(request.POST)
+
+		# orderline_formset = inlineformset_factory(SalesOrder, SalesOrderLine, fields=('product', 'quantity'))
 		if form.is_valid():
-			products = form.data.get('product')
-			quantity = form.data.get('quantity')
+			products = form.data.getlist('product')
+			quantity = form.data.getlist('quantity')
 			print(products, quantity)
 			order = form.save()
 			print(f"order {order} created")
 			try:
 				for product, quantity in zip(products, quantity):
+					product = Product.objects.get(id=product)
 					print(product)
-					line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity, order=order)
+					line = SalesOrderLine.objects.create(product=product, quantity=quantity, order=order)
 					print(f"line created {line} for order {order}")
 			except Exception as e:
 				print(str(e))

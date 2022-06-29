@@ -62,6 +62,7 @@
                 <form method="POST">
                     {% csrf_token %}
                     {{ orderform | crispy }}
+
                     <button type="button" class="btn btn-primary" hx-get="{% url 'get_orderline_form' %}" hx-target="#lineform" hx-swap="beforeend">Add product</button>
                     <div id="lineform"></div>
                     <input type="hidden" hx-post="{% url 'salesorder-list' %}">

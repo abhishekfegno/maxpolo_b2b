@@ -69,8 +69,8 @@ class OrderListAPIView(ListAPIView):
         result = {}
         dealer = request.data.get('dealer', request.user.id)
         print(dealer)
-        quantity = request.data.get('products')
-        products = request.data.get('quantites')
+        quantity = request.data.getlist('products')
+        products = request.data.getlist('quantites')
         serializer = self.get_serializer(data=request.data)
         try:
             order = SalesOrder.objects.create(dealer=Dealer.objects.get(id=dealer))
