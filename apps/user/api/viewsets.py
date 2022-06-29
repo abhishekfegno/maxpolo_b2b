@@ -28,6 +28,8 @@ from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    permission_classes = (permissions.AllowAny, )
 
     def post(self, request, *args, **kwargs):
         out = {}
@@ -62,6 +64,7 @@ class LoginAPIView(GenericAPIView):
         return Response(out, status=status.HTTP_200_OK)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class LogoutAPIView(GenericAPIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     permission_classes = (permissions.AllowAny, )
@@ -186,6 +189,7 @@ class HomePageAPI(APIView):
     permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
+
         dealer_id = request.GET.get('dealer', request.user.id)
         advertisements = AdvertisementSerializer(Banners.objects.all(), many=True, context={'request': request}).data
         pdf = ProductPDFSerializer(PDF.objects.select_related('category')[:6], many=True, context={'request': request}).data
