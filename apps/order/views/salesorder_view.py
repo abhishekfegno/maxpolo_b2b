@@ -5,7 +5,7 @@ from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView, DeleteView, ListView
@@ -64,7 +64,9 @@ def get_orderline(request, order_id, pk=None):
     else:
         context['order_line_item'] = None
     context['object_count'] = order.line.all().count()
-    context['net_total_items'] = order.line.all().aggregate(nc=Sum('quantity'))['nc']
+    context['net_total_items'] = order.line.all().aggregate(nc=Sum('quantity'))['nc'] or 0
+    context['net_txn_amt'] = order.transaction_set.all().aggregate(nc=Sum('amount'))['nc'] or 0
+    context['net_txn_remaining'] = order.invoice_amount - context['net_txn_amt']
 
     if request.method == 'POST':
         if form.is_valid():
@@ -204,11 +206,17 @@ class SalesOrderDeleteView(DeleteView):
 
 
 class QuotationDetailView(UpdateView):
-    queryset = SalesOrder.objects.all().filter(is_quotation=True).select_related('dealer').prefetch_related('line')
+    queryset = SalesOrder.objects.all().filter().select_related('dealer').prefetch_related('line')
     template_name = 'paper/order/salesorder_form.html'
     model = SalesOrder
     form_class = QuotationUpdateForm
-    success_url = '/order/quotation/list'
+
+    def form_invalid(self, form):
+        import pdb; pdb.set_trace()
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('get_orderline', kwargs={'order_id': self.kwargs['pk']})
 
 
 class QuotationListView(FormMixin, ListView):

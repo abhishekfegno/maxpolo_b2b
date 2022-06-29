@@ -25,14 +25,21 @@ class QuotationUpdateForm(forms.ModelForm):
     # order_id = forms.CharField(required=False,
     # 	widget=forms.TextInput(attrs={'readonly': 'readonly'})
     # )
+    is_confirmed = forms.BooleanField(required=False)
+    is_cancelled = forms.BooleanField(required=False)
+    is_quotation = forms.BooleanField(required=False)
+    invoice_id = forms.CharField(required=False)
+    invoice_status = forms.CharField(required=False)
+    invoice_amount = forms.FloatField(required=False)
+    invoice_remaining_amount = forms.FloatField(required=False)
+    confirmed_date = forms.DateField(required=False)
+    invoice_date = forms.DateField(required=False)
 
     class Meta:
         model = SalesOrder
-        fields = ('is_confirmed', 'is_cancelled')
-        labels = {
-            'is_confirmed': 'Confirm this order ?',
-            'is_cancelled': 'Cancel this order ?'
-        }
+        fields = ('is_confirmed', 'is_cancelled', 'is_quotation', 'is_invoice', 'invoice_id',
+                  'invoice_status', 'invoice_amount', 'invoice_remaining_amount',
+                  'confirmed_date', 'invoice_date')
 
 
 class SalesOrderUpdateForm(forms.ModelForm):
