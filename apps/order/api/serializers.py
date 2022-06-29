@@ -3,6 +3,12 @@ from rest_framework import serializers
 from apps.order.models import SalesOrder, SalesOrderLine
 
 
+class UpcomingPaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SalesOrder
+        fields = ('id', 'invoice_id', 'invoice_date')
+
+
 class OrderLineSerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField()
 

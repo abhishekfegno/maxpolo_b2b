@@ -6,6 +6,7 @@ from apps.user.models import Banners, Dealer, Executive
 
 
 class BannersForm(forms.ModelForm):
+
     class Meta:
         model = Banners
         fields = ('title', 'photo')

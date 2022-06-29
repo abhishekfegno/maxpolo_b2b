@@ -1,6 +1,8 @@
 # New file created
+from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
+from django.forms import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
@@ -11,8 +13,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.catalogue.models import Product
 from apps.order.forms.salesorder_form import QuotationForm, QuotationLineForm, QuotationUpdateForm, InvoiceUpdateForm, \
-	SalesOrderUpdateForm, InvoiceAmountForm
+    SalesOrderUpdateForm, InvoiceAmountForm
 from apps.order.models import SalesOrder, SalesOrderLine
+from apps.payment.models import QuantityInvalidException
 from lib.filters import OrderFilter
 from lib.importexport import OrderReport
 
@@ -36,6 +39,7 @@ def get_orderline(request, order_id):
     form = form_submit(request, order)
     context['del'] = order.order_type + '-delete'
     context['form'] = form
+    context['order'] = order
     context['object_list'] = order.line.all()
 
     if request.method == 'POST':
@@ -46,6 +50,7 @@ def get_orderline(request, order_id):
             messages.add_message(request, messages.INFO, form.errors)
             print(form.errors)
     return render(request, 'paper/order/order_line_list.html', context=context)
+
 
 
 def invoice_detail_edit(request, order_id):
@@ -97,6 +102,7 @@ def cancelled_order(request):
     filter = paginator.get_page(page_number)
     context['filter'] = filter
     context['order_type'] = 'Cancelled'
+    context["breadcrumbs"] = settings.BREAD.get('cancelled_order')
     return render(request, 'paper/order/cancelled_order_list.html', context=context)
 
 
@@ -117,6 +123,9 @@ class SalesOrderListView(FormMixin, ListView):
     filtering_class = OrderFilter
     filterset_fields = ('order_id',)
     success_url = '/order/order/list'
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('salesorder-list')
+    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -138,6 +147,7 @@ class SalesOrderListView(FormMixin, ListView):
         context['filter'] = filter
         return context
 
+
     def post(self, request, *args, **kwargs):
         form = QuotationForm(request.POST)
         if form.is_valid():
@@ -145,8 +155,7 @@ class SalesOrderListView(FormMixin, ListView):
             quantity = form.data.get('quantity')
             order = form.save()
             for product, quantity in zip(products, quantity):
-                line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity,
-                                                     order=order)
+                line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity, order=order)
                 print(f"line created {line} for order {order}")
         return redirect('salesorder-list')
 
@@ -154,9 +163,14 @@ class SalesOrderListView(FormMixin, ListView):
 @method_decorator(csrf_exempt, name='dispatch')
 class SalesOrderDeleteView(DeleteView):
     queryset = SalesOrder.objects.all().select_related('dealer')
-    template_name = 'templates/salesorder_list.html'
+    template_name = 'paper/order/salesorder_list.html'
     model = SalesOrder
     success_url = '/order/order/list'
+
+    def get(self, request, *args, **kwargs):
+        # import pdb;pdb.set_trace()
+        print(self.get_object().delete())
+        return redirect('salesorder-list')
 
 
 class QuotationDetailView(UpdateView):
@@ -168,20 +182,25 @@ class QuotationDetailView(UpdateView):
 
 
 class QuotationListView(FormMixin, ListView):
-    queryset = SalesOrder.objects.all().filter(is_quotation=True, is_cancelled=False, is_confirmed=False,
-                                               is_invoice=False).select_related('dealer')
+
+    queryset = SalesOrder.objects.all().filter(is_quotation=True, is_cancelled=False, is_confirmed=False, is_invoice=False).select_related('dealer')
     template_name = 'paper/order/quotation_list.html'
     model = SalesOrder
     form_class = QuotationForm
-    filtering_backends = (DjangoFilterBackend,)
+    filtering_backends = (DjangoFilterBackend, )
     filtering_class = OrderFilter
     filterset_fields = ('order_id',)
     success_url = '/order/quotation/list'
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('quotation-list')
+    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['orderform'] = QuotationForm
         context['orderlineform'] = QuotationLineForm
+        # orderline_formset = inlineformset_factory(SalesOrder, SalesOrderLine, fields=('product', 'quantity'))
+        # context['orderlineformset'] = orderline_formset
         context['order_type'] = 'Quotation'
         page_number = self.request.GET.get('page', 1)
         page_size = self.request.GET.get('page_size', 10)
@@ -199,16 +218,29 @@ class QuotationListView(FormMixin, ListView):
 
     def post(self, request, *args, **kwargs):
         form = QuotationForm(request.POST)
+
+        # orderline_formset = inlineformset_factory(SalesOrder, SalesOrderLine, fields=('product', 'quantity'))
         if form.is_valid():
-            products = form.data.get('product')
-            quantity = form.data.get('quantity')
+            products = form.data.getlist('product')
+            quantity = form.data.getlist('quantity')
+            print(products, quantity)
             order = form.save()
-            for product, quantity in zip(products, quantity):
-                line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity,
-                                                     order=order)
-                print(f"line created {line} for order {order}")
+            try:
+                for product, quantity in zip(products, quantity):
+                    product = Product.objects.get(id=product)
+                    print(product)
+                    if int(quantity) <= 0:
+                        raise QuantityInvalidException("Invalid Quantity")
+
+                    line = SalesOrderLine.objects.create(product=product, quantity=quantity, order=order)
+                    print(f"line created {line} for order {order}")
+                    print(f"order {order} created")
+                    messages.add_message(request, messages.INFO, f"New Order {order} has been created")
+            except Exception as e:
+                print(str(e))
+                messages.add_message(request, messages.INFO, str(e))
         else:
-            messages.add_message(request, messages.INFO, form.errors)
+            messages.add_message(request, messages.SUCCESS, form.errors)
         return redirect('quotation-list')
 
 
@@ -217,7 +249,12 @@ class QuotationDeleteView(DeleteView):
     queryset = SalesOrder.objects.all().select_related('dealer')
     template_name = 'templates/quotation_list.html'
     model = SalesOrder
-    success_url = '/order/quotation/list'
+    success_url = '/order/quotation/list/'
+
+    def get(self, request, *args, **kwargs):
+        # import pdb;pdb.set_trace()
+        print(self.get_object().delete())
+        return redirect('quotation-list')
 
 
 class InvoiceDetailView(UpdateView):
@@ -237,6 +274,9 @@ class InvoiceListView(FormMixin, ListView):
     filtering_class = OrderFilter
     filterset_fields = ('order_id',)
     success_url = '/order/invoice/list'
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('invoice-list')
+    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -265,8 +305,7 @@ class InvoiceListView(FormMixin, ListView):
             quantity = form.data.get('quantity')
             order = form.save()
             for product, quantity in zip(products, quantity):
-                line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity,
-                                                     order=order)
+                line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity, order=order)
                 print(f"line created {line} for order {order}")
         return redirect('invoice-list')
 
@@ -274,6 +313,9 @@ class InvoiceListView(FormMixin, ListView):
 @method_decorator(csrf_exempt, name='dispatch')
 class InvoiceDeleteView(DeleteView):
     queryset = SalesOrder.objects.all().select_related('dealer')
-    template_name = 'templates/invoice_list.html'
+    template_name = 'paper/order/invoice_list.html'
     model = SalesOrder
     success_url = '/order/invoice/list'
+
+
+

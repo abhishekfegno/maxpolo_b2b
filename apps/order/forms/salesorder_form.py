@@ -10,6 +10,10 @@ class QuotationForm(forms.ModelForm):
         fields = ('dealer',)
 
 
+class QuotationLineFormset():
+    pass
+
+
 class QuotationLineForm(forms.ModelForm):
     class Meta:
         model = SalesOrderLine
@@ -17,6 +21,7 @@ class QuotationLineForm(forms.ModelForm):
 
 
 class QuotationUpdateForm(forms.ModelForm):
+
     # order_id = forms.CharField(required=False,
     # 	widget=forms.TextInput(attrs={'readonly': 'readonly'})
     # )

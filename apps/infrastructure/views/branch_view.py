@@ -1,4 +1,5 @@
 # New file created
+from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
@@ -15,6 +16,9 @@ class BranchListView(CreateView, ListView):
     model = Branch
     form_class = BranchForm
     success_url = '/infrastructure/branch/list/'
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('branch-list')
+    }
 
 
 class BranchDetailView(UpdateView, ListView):
@@ -31,3 +35,5 @@ class BranchDeleteView(DeleteView):
     template_name = 'templates/branch_delete.html'
     model = Branch
     success_url = '/infrastructure/branch/list/'
+
+

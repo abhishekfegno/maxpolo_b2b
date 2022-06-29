@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
@@ -40,10 +41,13 @@ class UserDetailView(UpdateView):
 
 class UserListView(FormMixin, ListView):
     queryset = User.objects.all()
-    form_class = UserCreationForm
     template_name = 'paper/user/user_list.html'
     home_label = _("User list")
     model = User
+    form_class = DealerForm
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('user-list')
+    }
 
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset()

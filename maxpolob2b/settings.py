@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 
+from django.urls import reverse_lazy
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -214,7 +215,7 @@ EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 STATIC_URL = '/assets/'
 MEDIA_URL = '/src/'
 
-
+SITE_NAME = "MaxPolo Ceramics"
 
 DEFAULT_IMAGE = 'default/image_not_found.jpg'
 
@@ -229,6 +230,23 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'public/static')]
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 LOGO = f'{STATIC_URL}company_logo.png'
+
+BREAD_HOME = ('Home', reverse_lazy('index'))
+
+BREAD = {
+    'banners-list': [BREAD_HOME, ('Banners', reverse_lazy('banners-list'))],
+    'user-list': [BREAD_HOME, ('Users', reverse_lazy('user-list'))],
+    'quotation-list': [BREAD_HOME, ('Quotation', reverse_lazy('quotation-list'))],
+    'salesorder-list': [BREAD_HOME, ('Sales Order', reverse_lazy('salesorder-list'))],
+    'invoice-list': [BREAD_HOME, ('Invoice', reverse_lazy('invoice-list'))],
+    'cancelled_order': [BREAD_HOME, ('Cancelled', reverse_lazy('cancelled_order'))],
+    'transaction-list': [BREAD_HOME, ('Payments', reverse_lazy('transaction-list'))],
+    'category-list': [BREAD_HOME, ('Category', reverse_lazy('category-list'))],
+    'pdf-list': [BREAD_HOME, ('PDF', reverse_lazy('pdf-list'))],
+    'brand-list': [BREAD_HOME, ('Brand', reverse_lazy('brand-list'))],
+    'product-list': [BREAD_HOME, ('Product', reverse_lazy('product-list'))],
+    'complaint-list': [BREAD_HOME, ('Claims', reverse_lazy('complaint-list'))],
+    'branch-list': [BREAD_HOME, ('Branch', reverse_lazy('branch-list'))],
+}
 

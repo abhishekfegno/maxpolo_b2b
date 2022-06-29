@@ -1,24 +1,40 @@
 {% extends 'paper/base.html' %}
 
-{% block page_title %}MAXPolo{% endblock %}
+{% block page_title %}{% endblock %}
 
 {% block user_sidebar %}{% include 'paper/utils/user_menu.html' %}{% endblock %}
 
-{% block sidebar_wrapper %}{% include 'paper/utils/common_menu.html' %}{% endblock %}
+{% block sidebar_wrapper %}
+{% include 'paper/utils/common_menu.html' %}
+{% endblock %}
 
-<!--{% block notifications %}-->
-<!--<a class="dropdown-item" href="#">Action</a>-->
-<!--<a class="dropdown-item" href="#">Another action</a>-->
-<!--<a class="dropdown-item" href="#">Something else here</a>-->
-<!--{% endblock %}-->
+{% block notifications %}
+<!--
+<a class="dropdown-item" href="#">Action</a>
+<a class="dropdown-item" href="#">Another action</a>
+<a class="dropdown-item" href="#">Something else here</a>
+-->
+{% endblock %}
 
-{% block title %}Dashboard | MAXpolo {% endblock %}{% block breadcrumbs %}
-<nav aria-label="breadcrumb">
+{% block title %}Dashboard | {{ settings.SITE_NAME }} {% endblock %}
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb" class="breadcrumbs">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-        <li aria-current="page" class="breadcrumb-item active">{{ current_url }}</li>
+        {% for crumb in breadcrumbs %}
+        {% if not forloop.last %}
+        <li class="breadcrumb-item">
+            <a class=" " href="{{ crumb.1 }}"> {{ crumb.0 }} </a>
+        </li>
+        {% else %}
+        <li class="breadcrumb-item">
+            <a class=" current"> {{ crumb.0 }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
     </ol>
 </nav>
-
-{% endblock %}{% block content_body %}<h3 class="description">Your content here</h3>{% endblock %}
+{% endblock %}
+{% block content_body %}
+<h3 class="description">Your content here</h3>
+{% endblock %}
 

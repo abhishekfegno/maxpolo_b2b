@@ -13,12 +13,6 @@ from rest_framework.reverse import reverse
 
 from apps.catalogue.forms.category_form import CategoryForm, PDFForm
 from apps.catalogue.models import Category, PDF
-# class CategoryDetailView(UpdateView):
-# 	queryset = Category.objects.all()
-# 	template_name = 'paper/catalogue/category_form.html'
-# 	model = Category
-# 	form_class = CategoryForm
-# 	success_url = '/catalogue/category/list/'
 from lib.sent_email import EmailHandler
 
 
@@ -29,6 +23,9 @@ class CategoryListView(ModelFormMixin, ListView, ProcessFormView):
     form_class = CategoryForm
     success_url = '/catalogue/category/list/'
     allow_empty = True
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('category-list')
+    }
 
     def get_object(self, queryset=None):
         if 'pk' in self.kwargs:
@@ -44,9 +41,9 @@ class CategoryListView(ModelFormMixin, ListView, ProcessFormView):
 
     def post(self, request, *args, **kwargs):
         """
-        Handle POST requests: instantiate a form instance with the passed
-        POST variables and then check if it's valid.
-        """
+		Handle POST requests: instantiate a form instance with the passed
+		POST variables and then check if it's valid.
+		"""
         form = self.get_form()
         if form.is_valid():
             form.save()
@@ -69,6 +66,9 @@ class PDFListView(CreateView, ListView):
     model = PDF
     form_class = PDFForm
     success_url = '/catalogue/pdf/list/'
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('pdf-list')
+    }
 
     def post(self, request, *args, **kwargs):
         url = reverse('pdf-list', request=request, format=None, )

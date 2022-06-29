@@ -103,7 +103,7 @@ class Complaint(models.Model):
     ticket_id = models.CharField(max_length=10, null=True, blank=True)
     title = models.CharField(max_length=100, null=True, blank=False)
     description = models.CharField(max_length=200)
-    status = models.CharField(max_length=20, choices=STATUS)
+    status = models.CharField(max_length=20, choices=STATUS, default='new')
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     photo = models.ImageField(null=True, blank=True)
     is_public = models.BooleanField(default=True)

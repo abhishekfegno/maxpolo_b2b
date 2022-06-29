@@ -7,7 +7,7 @@
     <link href="images/fegno.png" rel="icon" type="image/png">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
     <title>
-        {% block page_title %}{% endblock %} </title>
+        {% block page_title %}Dashboard{% endblock %} | {{ settings.SITE_NAME }}</title>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
           name='viewport'/>
     <!--     Fonts and icons     -->
@@ -115,8 +115,6 @@
                     <h3></h3>
                     {% block content_body %}
                     <h3 class="description">Your content here</h3>
-
-
                     {% endblock %}
                 </div>
             </div>
@@ -150,33 +148,29 @@
 {% endblock %}
 
 <script>
-    (function(){
-        {% if messages %}
-        {% for message in messages %}
-            Swal.fire({
-              icon: '{% if message.tags %}{{ message.tags }}{% endif %}',
-              title: '',
-              text: '{{ message|safe }}',
-<!--              footer: '<a href="">Why do I have this issue?</a>',-->
-              customClass: {
-                input: 'exclude-select2',
-              }
-            })
+                (function(){
+                    {% if messages %}
+                    {% for message in messages %}
+                        Swal.fire({
+                          icon: '{% if message.tags %}{{ message.tags }}{% endif %}',
+                          title: '',
+                          text: '{{ message|safe }}',
 
-        {% endfor %}
-        {% endif %}
-    })()
-    $(document).ready(function() {
-        $.fn.select2.defaults.set( "theme", "bootstrap" );
-        $('select').filter(function(){
-          return ! ($(this).hasClass('exclude-select2') || $(this).hasClass('swal2-select'))
-        }).select2();
-        $('#listing-table-search-form input.form-control').addClass('form-control-sm')
-    });
+                          customClass: {
+                            input: 'exclude-select2',
+                          }
+                        })
 
-
-</script>
-
-</body>
-
+                    {% endfor %}
+                    {% endif %}
+                })()
+                $(document).ready(function() {
+                    $.fn.select2.defaults.set( "theme", "bootstrap" );
+                    $('select').filter(function(){
+                      return ! ($(this).hasClass('exclude-select2') || $(this).hasClass('swal2-select'))
+                    }).select2();
+                    $('#listing-table-search-form input.form-control').addClass('form-control-sm')
+                });
+        </script>
+    </body>
 </html>

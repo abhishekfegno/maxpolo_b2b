@@ -4,6 +4,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from rest_framework.authentication import BasicAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView, GenericAPIView
@@ -15,11 +16,14 @@ from rest_framework.views import APIView
 
 from apps.catalogue.api.serializers import ProductPDFSerializer
 from apps.catalogue.models import PDF
+from apps.order.api.serializers import UpcomingPaymentSerializer
+from apps.order.models import SalesOrder
 from apps.user.api.serializers import LoginSerializer, ProfileAPISerializer, ComplaintSerialzer, \
     PasswordResetSerializer, AdvertisementSerializer, DealerSerializer
 from apps.user.models import User, Complaint, Banners, Dealer
 from lib.sent_email import EmailHandler
-from lib.utils import list_api_formatter
+from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
+from django.contrib.auth import logout
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -39,7 +43,8 @@ class LoginAPIView(GenericAPIView):
                 out['user'] = {
                     "role": user.user_role_name,
                     "company_name": user.username,
-                    "zone": user.zone
+                    "zone": user.zone,
+                    "id": user.id
                 }
             except Exception as e:
                 out['errors'] = str(e)
@@ -116,13 +121,20 @@ class PasswordResetView(GenericAPIView):
 
 
 class ComplaintListView(ListAPIView):
-    queryset = Complaint.objects.all()
+    """
+        {
+            "title":"asdf",
+            "description":"asdfasdfa"
+        }
+    """
+    queryset = Complaint.objects.select_related('created_by', 'order_id')
     serializer_class = ComplaintSerialzer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_fields = ()
     search_fields = ()
     ordering_fields = ()
     pagination_class = PageNumberPagination
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page_number', 1)
@@ -137,11 +149,15 @@ class ComplaintListView(ListAPIView):
         page_obj = paginator.get_page(page_number)
         return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=serializer.data))
 
+    @csrf_exempt
     def post(self, request, *args, **kwargs):
         data = {}
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             instance = serializer.save()
+            if not instance.created_by:
+                instance.created_by = request.user
+                instance.save()
             EmailHandler().sent_mail_complaint(instance)
         else:
             data['errors'] = serializer.errors
@@ -152,10 +168,12 @@ class HomePageAPI(APIView):
 
     def get(self, request, *args, **kwargs):
         advertisements = AdvertisementSerializer(Banners.objects.all(), many=True, context={'request': request}).data
-        pdf = ProductPDFSerializer(PDF.objects.all(), many=True, context={'request': request}).data
+        pdf = ProductPDFSerializer(PDF.objects.select_related('category'), many=True, context={'request': request}).data
+        upcoming_payments = UpcomingPaymentSerializer(SalesOrder.objects.filter(is_invoice=True, invoice_status__in=['payment_partial', 'credit']),
+                                                                                many=True, context={'request': request}).data
         result = {
             "banners": advertisements,
             "new arrival": pdf,
-            "payment": "Payment"
+            "payment": upcoming_payments
         }
         return Response(result)

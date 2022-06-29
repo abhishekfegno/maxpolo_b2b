@@ -1,4 +1,5 @@
 # New file created
+from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
@@ -25,10 +26,13 @@ class ProductListView(FormMixin, ListView):
     template_name = 'paper/catalogue/product_list.html'
     model = Product
     form_class = ProductForm
-    filtering_backends = (DjangoFilterBackend,)
+    filtering_backends = (DjangoFilterBackend, )
     filtering_class = ProductFilter
     filterset_fields = ('name', 'product_code', 'brand')
     success_url = '/catalogue/product/list/'
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('product-list')
+    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

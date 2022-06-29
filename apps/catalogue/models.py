@@ -32,6 +32,7 @@ class Category(MP_Node):
 class PDF(models.Model):
     title = models.CharField(max_length=50, null=True, blank=True)
     slug = AutoSlugField(max_length=50, populate_from='title', null=True, blank=True)
+    image = models.ImageField(upload_to='pdf/product/', blank=True, null=True)
     file = models.FileField(upload_to='pdf/product/', blank=True, null=True)
     is_public = models.BooleanField(default=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name='pdf', blank=False, null=True)

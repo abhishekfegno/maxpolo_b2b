@@ -1,4 +1,5 @@
 # New file created
+from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
@@ -22,6 +23,15 @@ def get_excel_report_complaint(request):
 
 
 class ComplaintDetailView(UpdateView):
+    """
+        {
+            "title":,
+            "description":,
+            "photo":,
+            "created_by":,
+            "order_id":
+        }
+    """
     queryset = Complaint.objects.all()
     template_name = 'paper/user/complaint_form.html'
     model = Complaint
@@ -38,6 +48,9 @@ class ComplaintListView(CreateView, ListView):
     filtering_backends = (DjangoFilterBackend,)
     filtering_class = ComplaintFilter
     filterset_fields = ('status',)
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('complaint-list')
+    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

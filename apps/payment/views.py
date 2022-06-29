@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse
@@ -15,7 +16,7 @@ from lib.importexport import PaymentReport
 
 
 def get_excel_report_payment(request):
-    queryset = Transaction.objects.select_related('order')
+    queryset = Transaction.objects.select_related('order').order_by('created_at')
     name = 'payment'
     dataset = PaymentReport().export(queryset)
     response = HttpResponse(dataset.xlsx, content_type='application/vnd.ms-excel')
@@ -32,11 +33,14 @@ class TransactionDetailView(UpdateView):
 
 
 class TransactionListView(FormMixin, ListView):
-    queryset = Transaction.objects.select_related('order')
+    queryset = Transaction.objects.select_related('order').order_by('created_at')
     template_name = 'paper/payment/transaction_list.html'
     model = Transaction
     form_class = TransactionForm
     success_url = '/payment/transaction/list'
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('transaction-list')
+    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

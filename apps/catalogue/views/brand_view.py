@@ -1,4 +1,5 @@
 # New file created
+from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
@@ -25,6 +26,9 @@ class BrandListView(CreateView, ListView):
     model = Brand
     form_class = BrandForm
     success_url = '/catalogue/brand/list/'
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('brand-list')
+    }
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
@@ -33,6 +37,7 @@ class BrandListView(CreateView, ListView):
         else:
             messages.add_message(request, messages.INFO, form.errors.get('name')[0])
         return redirect('brand-list')
+
 
 
 @method_decorator(csrf_exempt, name='dispatch')
