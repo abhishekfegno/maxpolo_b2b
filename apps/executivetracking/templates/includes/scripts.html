@@ -3,24 +3,20 @@
 <!--   Core   -->
 <script src="{% static 'js/plugins/jquery/dist/jquery.min.js' %}"></script>
 <script src="{% static 'js/plugins/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
-<script src="{% static 'js/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}" ></script>
+<script src="{% static 'js/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
 <script src="{% static '' %}js/select2.min.js"></script>
 <script src="{% static '' %}js/stockexplanation.js"></script>
 
 <!--   Optional JS   -->
-  <script src="/assets/js/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script src="/assets/js/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
-<!--  <script src="{% static 'js/plugins/chart.js/dist/Chart.min.js' %}"></script>-->
-<!--  <script src="{% static 'js/plugins/chart.js/dist/Chart.extension.js' %}"></script>-->
-<!--   G.Maps   -->
-<!--  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>-->
-<!--   Argon JS   -->
-<script src="{% static 'js/argon-dashboard.min.js' %}?v=1.1.0"></script>
-{% if DEBUG %}
+<!--  <script src="{% static 'js/plugins/chart.js/dist/Chart.min.js' %}"></script>--><!--  <script src="{% static 'js/plugins/chart.js/dist/Chart.extension.js' %}"></script>--><!--   G.Maps   --><!--  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>--><!--   Argon JS   -->
+<script src="{% static 'js/argon-dashboard.min.js' %}?v=1.1.0"></script>{% if DEBUG %}
 <script>
 (function(){document.addEventListener('DOMContentLoaded', function(){(window.djdt && djdt.init())});})()
-</script>
-{% endif %}
+
+
+</script>{% endif %}
 
 <!-- Specific JS goes HERE -->
 <style>
@@ -36,6 +32,8 @@
 }
 
 @keyframes spin {0% { transform: rotate(0deg); }100% { transform: rotate(360deg); }}
+
+
 </style>
 <script>
   function hasDuplicates(array) {
@@ -92,6 +90,8 @@
        }
   }
   document.querySelectorAll("select[name^='entries-']").forEach(function(node){ change_detector({target:node}); $(node).on('select2:select', change_detector )});
+
+
 </script>
 
 <script type="text/javascript">
@@ -100,6 +100,8 @@
         $('.select2.select2-container').removeAttr('style').addClass('w-100');
         $('[data-cloak]').removeAttr('data-cloak');
     });
+
+
 </script>
 
 <script type="text/javascript">
@@ -117,6 +119,8 @@
             return false;
         });
     });
+
+
 </script>
 
 

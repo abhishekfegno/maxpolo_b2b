@@ -31,7 +31,8 @@ def PUBLIC_APIS(r, f) -> list:
 
             ("Transactions API", reverse('payment:api-transaction-list', request=r, format=f)),
             ("Check-in Create API", reverse('executive-tracking-api:check-point-create-api', request=r, format=f)),
-            ("Check-in Update API", reverse('executive-tracking-api:check-point-update-api', request=r, format=f, kwargs={'pk': 1})),
+            ("Check-in Update API",
+             reverse('executive-tracking-api:check-point-update-api', request=r, format=f, kwargs={'pk': 1})),
 
             # ("Enter OTP", reverse('enter_otp', request=r, format=f)),
             # ("Community List", reverse('operator:communitycarwashextension-list', request=r, format=f)),
@@ -65,4 +66,3 @@ def api_root(request, format=None):  # pylint: disable=redefined-builtin
 
     apis = PUBLIC_APIS(request, format)
     return Response(OrderedDict(apis))
-

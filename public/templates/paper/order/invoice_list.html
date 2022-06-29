@@ -1,19 +1,22 @@
-{% extends 'paper/layout.html' %}
-{% load crispy_forms_tags %}
-{% block content%}
-{% include 'paper/htmx.html' %}
+{% extends 'paper/layout.html' %}{% load crispy_forms_tags %}{% block content%}{% include 'paper/htmx.html' %}
 <div class='row'>
-            {% include 'paper/catalogue/product_filter.html'%}
 
     <div class='col-md-12'>
         <div class='card'>
             <div class='card-body'>
-                <h3>{{ order_type }} List</h3>
-                    <a style="float:right;" href="{% url 'get_excel_report_order' slug=order_type %}" class="btn btn-primary">Download Excel</a>
+                <div>
+                    <a class="btn btn-primary" href="{% url 'get_excel_report_order' slug=order_type %}"
+                       style="float:right;">Download Excel</a>
+                    <h3>{{ order_type }} List</h3>
+                </div>
+                <div>
+                    {% include 'paper/catalogue/product_filter.html'%}
+                </div>
+                <p class="text-muted"> Here you can find all the Invoice Uploaded Sale Orders (SO). </p>
 
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
-                        <thead class="">
+                        <thead class="thead-dark">
                         <tr class="">
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
@@ -29,7 +32,8 @@
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class=""><a href="{% url 'invoice_detail_edit' order_id=object.id %}">{{ object.invoice_id }}</a></div>
+                                <div class=""><a href="{% url 'invoice_detail_edit' order_id=object.id %}">{{
+                                    object.invoice_id }}</a></div>
                             </td>
                             <td>
                                 <div class="">{{ object.invoice_date }}</div>
@@ -39,19 +43,25 @@
                             </td>
 
                         </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="text-center text-muted" colspan="100%"> No Active Invoices in the book. Check
+                                back later
+                            </td>
+                        </tr>
+
                         {% endfor %}
                         </tbody>
 
                     </table>
                 </div>
             </div>
-                        {% include 'paper/pagination.html' %}
+            {% include 'paper/pagination.html' %}
 
         </div>
     </div>
 
 
-</div>
-{% include 'paper/swal.html' %}
+</div>{% include 'paper/swal.html' %}
 
 {% endblock %}

@@ -1,5 +1,5 @@
 # New file created 
-from django.urls import path, include
+from django.urls import path
 
 from apps.catalogue.views.brand_view import *
 from apps.catalogue.views.category_view import *

@@ -1,8 +1,7 @@
 # New file created 
-from django.urls import path, include
+from django.urls import path
 
 from apps.order.views.salesorder_view import *
-
 
 urlpatterns = [
     path('quotation/list/', QuotationListView.as_view(), name='quotation-list'),
@@ -22,5 +21,3 @@ urlpatterns = [
     path('cancelled/list/', cancelled_order, name='cancelled_order'),
 
 ]
-
-

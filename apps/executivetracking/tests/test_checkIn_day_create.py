@@ -1,14 +1,14 @@
 from rest_framework import status
 from rest_framework.reverse import reverse
-from rest_framework.test import APIRequestFactory, APITestCase
+from rest_framework.test import APITestCase
 
 from apps.executivetracking.models import CheckInDay
-from apps.user.models import Executive
 
 
 class ExecutiveCheckInFlow(APITestCase):
     fixtures = ['test_executive_inflow.json', ]
     databases = 'testdb'
+
     def test_create_checkin(self):
         url = reverse('executive-tracking-api:check-in-day-create-api')
         data = {
@@ -25,9 +25,3 @@ class ExecutiveCheckInFlow(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(CheckInDay.objects.all().count(), initial_count + 1)
         self.assertEqual(response.data['device_id'], '6c96191c0ae9bbf7')
-
-
-
-
-
-

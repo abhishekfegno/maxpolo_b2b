@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from solo.models import SingletonModel
 
+
 # Create your models here.
 from lib.faker import FakeImage
 from lib.sent_email import EmailHandler
@@ -38,7 +39,7 @@ class Role:
         (EXECUTIVE, EXECUTIVE_STR),
         (DEALER, DEALER_STR),
         (RECEPTIONIST, RECEPTIONIST_STR),
-)
+    )
 
 
 class DealerManager(UserManager):
@@ -62,7 +63,6 @@ class User(AbstractUser):
     address_city = models.CharField(max_length=50, null=True, blank=False)
     address_state = models.CharField(max_length=50, null=True, blank=False)
     zone = models.ForeignKey('executivetracking.Zone', on_delete=models.SET_NULL, null=True, blank=False)
-
 
     @property
     def user_role_name(self):
@@ -114,12 +114,11 @@ class Complaint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=False)
     order_id = models.ForeignKey('order.SalesOrder', on_delete=models.SET_NULL, null=True, blank=True)
 
-
     def __str__(self):
         return self.description
 
     def save(self, *args, **kwargs):
-        self.ticket_id = 'TKT'+f'{self.pk}'.zfill(6)
+        self.ticket_id = 'TKT' + f'{self.pk}'.zfill(6)
         return super().save(*args, **kwargs)
 
 
@@ -144,7 +143,6 @@ class Banners(models.Model):
 
 
 class SiteConfiguration(SingletonModel):
-
     site_logo = models.ImageField(null=True)
     email_01 = models.EmailField(default='hello@fegno.com')
     email_02 = models.EmailField(default='manoj@fegno.com')
@@ -166,10 +164,11 @@ class SiteConfiguration(SingletonModel):
 @receiver(post_save, sender=Complaint)
 def sent_email_complaint(sender, created, instance, **kwargs):
     if created:
-        EmailHandler().sent_mail_for_banners(instance)
+        EmailHandler().sent_mail_complaint(instance)
 
 
 @receiver(post_save, sender=Complaint)
 def sent_email_banners(sender, created, instance, **kwargs):
     if created:
         EmailHandler().sent_mail_for_banners(instance)
+

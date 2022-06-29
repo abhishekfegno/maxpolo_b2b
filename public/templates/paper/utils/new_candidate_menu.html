@@ -1,17 +1,17 @@
 <ul class="nav">
-<!--    {% if settings.DEBUG %}-->
-<!--        {% include 'paper/utils/example_menu.html' %}-->
-<!--    {% endif %}-->
+    <!--    {% if settings.DEBUG %}-->
+    <!--        {% include 'paper/utils/example_menu.html' %}-->
+    <!--    {% endif %}-->
 
-{% block nav_links_ul %}
-<ul class="sidebar-menu" >
-    {% block nav_links_outer %}
-    <li class="header">{% block nav_heading %}MAIN NAVIGATION{% endblock %}</li>
+    {% block nav_links_ul %}
+    <ul class="sidebar-menu">
+        {% block nav_links_outer %}
+        <li class="header">{% block nav_heading %}MAIN NAVIGATION{% endblock %}</li>
 
         {% block nav_links %}
         <li>
             <a href="">
-                <i class="fa fa-sitemap" aria-hidden="true"></i><span>Information</span>
+                <i aria-hidden="true" class="fa fa-sitemap"></i><span>Information</span>
             </a>
         </li>
         <li>
@@ -21,19 +21,18 @@
         </li>
         <li>
             <a href="">
-                <i class="fa fa-file" aria-hidden="true"></i><span>Add Documents</span>
+                <i aria-hidden="true" class="fa fa-file"></i><span>Add Documents</span>
             </a>
         </li>
         <li>
             <a href="">
-                <i class="fa fa-cloud" aria-hidden="true"></i><span>Submit Your Profile</span>
+                <i aria-hidden="true" class="fa fa-cloud"></i><span>Submit Your Profile</span>
             </a>
         </li>
         {% endblock nav_links %}
-    {% endblock nav_links_outer %}
-</ul>
-{% endblock nav_links_ul %}
-
+        {% endblock nav_links_outer %}
+    </ul>
+    {% endblock nav_links_ul %}
 
 
 </ul>

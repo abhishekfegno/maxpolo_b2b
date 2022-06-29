@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('infrastructure', '0003_alter_branch_id_alter_warehouse_id'),
     ]

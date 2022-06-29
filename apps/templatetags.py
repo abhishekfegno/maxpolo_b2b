@@ -63,7 +63,6 @@ def show_in_submenu(url_list, request):
     return ''
 
 
-
 @register.filter
 def getattr(instance, field):
     return (hasattr(instance, field) and getattr(instance, field)) or '-'
@@ -78,5 +77,3 @@ def params(field_name, value, urlencode=None):
         encoded_querystring = '&'.join(filtered_querystring)
         url = '{}&{}'.format(url, encoded_querystring)
     return url.rstrip('&')
-
-

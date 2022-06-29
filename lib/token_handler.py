@@ -1,8 +1,9 @@
 # this return left time
-from rest_framework.authtoken.models import Token
 from datetime import timedelta
-from django.utils import timezone
+
 from django.conf import settings
+from django.utils import timezone
+from rest_framework.authtoken.models import Token
 
 
 def expires_in(token):

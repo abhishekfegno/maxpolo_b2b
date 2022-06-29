@@ -30,4 +30,3 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.create_category()
         # raise NotImplementedError()
-

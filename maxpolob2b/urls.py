@@ -17,10 +17,16 @@ import debug_toolbar
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.shortcuts import render
 from django.urls import path, include
 
 import lib.root
 from .settings import DEBUG
+
+
+def index(request):
+    return render(request, 'contact-us.html', )
+
 
 urlpatterns = [
     path('pages/', include('django.contrib.flatpages.urls')),
@@ -44,7 +50,9 @@ urlpatterns = [
         path('tracking/', include('apps.executivetracking.api_urls')),
     ])),
     path('__debug__/', include(debug_toolbar.urls)),
-
+    # path('contact-us.html', index, name="contact-us")
 ]
 if DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += (static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) +
+                    static(settings.STATIC_URL, document_root=settings.STATIC_ROOT))
+

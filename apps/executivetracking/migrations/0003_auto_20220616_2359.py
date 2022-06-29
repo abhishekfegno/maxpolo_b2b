@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('executivetracking', '0002_alter_checkpoint_id_alter_crashreport_id_and_more'),
     ]

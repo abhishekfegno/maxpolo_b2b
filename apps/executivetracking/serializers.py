@@ -1,11 +1,9 @@
-from django.contrib.gis.forms import PointField
 from rest_framework import serializers
-from rest_framework_gis.fields import GeometryField
 
 from apps.executivetracking.models import CheckPoint, CrashReport
-    # CheckInDay,
 
-from apps.catalogue.models import Product
+
+# CheckInDay,
 
 
 # class LeadSerializer(serializers.ModelSerializer):
@@ -17,11 +15,11 @@ from apps.catalogue.models import Product
 #             "id", "name", "address", "mobile", "place", "location", "dealer_account",
 #         )
 
-    # def save(self, **kwargs):
-    #     user = self.context['request'].user
-    #     if user.is_authenticated and user.user_role == user.EXECUTIVE:
-    #         kwargs.update({'executive': user.account})
-    #     return super(LeadSerializer, self).save(**kwargs)
+# def save(self, **kwargs):
+#     user = self.context['request'].user
+#     if user.is_authenticated and user.user_role == user.EXECUTIVE:
+#         kwargs.update({'executive': user.account})
+#     return super(LeadSerializer, self).save(**kwargs)
 
 
 class CrashReportSerializer(serializers.ModelSerializer):
@@ -89,4 +87,3 @@ class CheckPointReadSerializer(CheckPointSerializer):
 #         return super(CheckInDaySerializer, self).save(**kwargs)
 #
 #
-

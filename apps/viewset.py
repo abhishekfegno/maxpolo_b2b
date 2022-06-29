@@ -1,26 +1,16 @@
-
-import django_filters
-from django import forms
-from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import transaction
+from django.db.models import QuerySet, Q
 from django.forms import ModelForm
 from django.http import HttpResponseRedirect, Http404
-from django.urls import include, path, reverse_lazy, NoReverseMatch
-from django.db.models import QuerySet, Q
-from django.forms.fields import DateField, TimeField, DateTimeField
-from django.urls import reverse
-from django.utils.functional import lazy
-from django.views.generic import ListView
+from django.urls import include, path, reverse_lazy, NoReverseMatch, reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django_filters.constants import ALL_FIELDS
 from django_filters.views import FilterView
 
-from apps.catalogue.models import Product, Category
 from apps.infrastructure.models import Warehouse
-from apps.permissionmixin import PermissionMixin
-from apps.user.models import User, Dealer, Executive, Role
+from apps.user.models import Dealer, Executive, Role
 
 
 class QuerysetFilterMixin:
@@ -44,7 +34,9 @@ class QuerysetFilterMixin:
                 self.request.user.is_superuser or self.request.user.user_role == self.request.user.ADMIN)
 
 
-class ModelSelectorMixin(QuerysetFilterMixin, PermissionMixin):
+class ModelSelectorMixin(QuerysetFilterMixin,
+                         # PermissionMixin
+                         ):
     model = None
     app_name = None
     access_to = Role.DEFAULT
@@ -80,6 +72,7 @@ class ModelSelectorMixin(QuerysetFilterMixin, PermissionMixin):
         def format_title(plural=False):
             field = 'verbose_name' + ((plural and '_plural') or '')
             return " ".join([name[0].upper() + name[1:] for name in getattr(self.model._meta, field).split(' ')])
+
         _app_name = ''
         if self.app_name:
             _app_name += self.app_name + ':'
@@ -169,14 +162,16 @@ class ModelSelectorMixin(QuerysetFilterMixin, PermissionMixin):
                     if not attrs.get('dealer'):
                         if attrs.get('transfer_type') == C.SALES_OUT:
                             raise ValidationError(f'"Dealer" must be specified for {attrs["transfer_type"]} Entry')
-                        if attrs["transfer_type"] == C.DAMAGE_OUT and attrs["reason_damage"] and 'dealer' in attrs["reason_damage"].lower():
+                        if attrs["transfer_type"] == C.DAMAGE_OUT and attrs["reason_damage"] and 'dealer' in attrs[
+                            "reason_damage"].lower():
                             raise ValidationError(
                                 f'"Dealer" must be specified for {C.DAMAGE_OUT} with {attrs["reason_damage"]}')
 
                     if not attrs.get("manufacturer"):
                         if attrs["transfer_type"] == C.PURCHASE_IN:
                             raise ValidationError('"Manufacturer" must be specified for a Purchase Entry')
-                        if attrs["transfer_type"] == C.DAMAGE_OUT and attrs.get("reason_damage") and 'manufacturer' in attrs.get("reason_damage").lower():
+                        if attrs["transfer_type"] == C.DAMAGE_OUT and attrs.get(
+                                "reason_damage") and 'manufacturer' in attrs.get("reason_damage").lower():
                             raise ValidationError(
                                 f'"Manufacturer" must be specified for {C.DAMAGE_OUT} with {attrs["reason_damage"]}')
 
@@ -188,9 +183,11 @@ class ModelSelectorMixin(QuerysetFilterMixin, PermissionMixin):
                             and attrs["partner"] in (attrs["branch"], usr.user_role > usr.ADMIN and usr.account.branch)
                             and attrs["transfer_type"] in (C.TRANSFER_IN, C.TRANSFER_OUT)
                     ):
-                        raise ValidationError(f'"Partner Branch" cannot be same as {"your" if usr.user_role > usr.ADMIN else "Owner"} Branch')
+                        raise ValidationError(
+                            f'"Partner Branch" cannot be same as {"your" if usr.user_role > usr.ADMIN else "Owner"} Branch')
 
-                    if not attrs.get("summary") and attrs["transfer_type"] in (C.RETURN_IN, C.TRANSFER_IN, C.DAMAGE_OUT):
+                    if not attrs.get("summary") and attrs["transfer_type"] in (
+                            C.RETURN_IN, C.TRANSFER_IN, C.DAMAGE_OUT):
                         raise ValidationError(f'"Summary" must be specified for {attrs["transfer_type"]} Entry!')
                 if self.context2.get('formset_object'):
                     self.context2.get('formset_object').is_valid()
@@ -241,8 +238,8 @@ class ModelSelectorFormMixin(ModelSelectorMixin):
 
                 if not created:
                     messages.success(self.request,
-                                 f"{form.instance.__class__._meta.verbose_name.capitalize()} "
-                                 f"\"{str(form.instance)}\" Updated Successfully!")
+                                     f"{form.instance.__class__._meta.verbose_name.capitalize()} "
+                                     f"\"{str(form.instance)}\" Updated Successfully!")
                 return HttpResponseRedirect(self.get_success_url())
             except Exception as e:
                 # if isinstance(form.instance, AbstractProfile) and hasattr(form.instance, 'user'):
@@ -312,6 +309,7 @@ def view_set_generator(model, app_name=None, queryset=None, visibility_above=Rol
             if not self.request.user.is_authenticated or self.request.user.user_role > self.access_to:
                 raise PermissionDenied(" You are not authorized to access this page. ")
             return super().dispatch(request, *args, **kwargs)
+
         filter_object = None
 
         def get_queryset(self) -> QuerySet:
@@ -396,6 +394,3 @@ def view_set_generator(model, app_name=None, queryset=None, visibility_above=Rol
         path('<int:pk>/', update_view, name=f'{model.reverser}-update'),
         path('<int:pk>/delete/', delete_view, name=f'{model.reverser}-delete'),
     ]))
-
-
-

@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('order', '0011_alter_salesorder_invoice_remaining_amount_and_more'),
     ]

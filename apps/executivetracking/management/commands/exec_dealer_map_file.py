@@ -1,6 +1,5 @@
 from django.core.management import BaseCommand
 
-from apps.executivetracking.models import Lead
 from apps.user.models import Dealer, Executive
 
 
@@ -13,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-           _exec = Executive.objects.get(pk=options.get('exec'))
+            _exec = Executive.objects.get(pk=options.get('exec'))
         except Exception as e:
             print("Executive with this email doesnot exists.")
             return

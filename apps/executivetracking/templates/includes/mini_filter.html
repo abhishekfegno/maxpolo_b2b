@@ -5,11 +5,11 @@
     {% for field in filter.form %}
     {% include 'form-utils/input_without_label.html' with field=field %}
     {% endfor %}
-    <input type="submit" class="btn btn-primary btn-sm"/>
+    <input class="btn btn-primary btn-sm" type="submit"/>
     {% for name in request.GET %}
-        {% if 'product__' not in name %}
-        <input type="hidden" name="{{ name|safe }}" value="{{ request.GET|getattribute:name }}" />
-        {% endif %}
+    {% if 'product__' not in name %}
+    <input name="{{ name|safe }}" type="hidden" value="{{ request.GET|getattribute:name }}"/>
+    {% endif %}
     {% endfor %}
 </form>
 
