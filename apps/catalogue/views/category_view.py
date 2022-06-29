@@ -78,7 +78,6 @@ class PDFListView(CreateView, ListView):
             EmailHandler().sent_mail_for_pdf(instance, url)
         else:
             print(form.errors)
-            # import pdb;pdb.set_trace()
             messages.add_message(request, messages.INFO, form.errors.get('file')[0])
         return redirect('pdf-list')
 

@@ -36,9 +36,13 @@ class AdminForm(UserCreationForm):
 
 
 class DealerForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['dealers'].queryset = Executive.objects.all()
+
     class Meta:
         model = Dealer
-        fields = ('username', "password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email')
+        fields = ('username', "password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email', 'executives')
 
     def save(self, commit=True):
         self.instance.user_role = Role.DEALER
@@ -46,13 +50,10 @@ class DealerForm(UserCreationForm):
 
 
 class ExecutiveForm(UserCreationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['dealers'].queryset = Dealer.objects.all()
 
     class Meta:
         model = Executive
-        fields = ('username', "password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email', 'dealers')
+        fields = ('username', "password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email')
 
     def save(self, commit=True):
         self.instance.user_role = Role.EXECUTIVE

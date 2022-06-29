@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
@@ -49,6 +50,7 @@ class UserListView(ModelFormMixin, SuccessMessageMixin, ListView, ProcessFormVie
     extra_context = {
         "breadcrumbs": settings.BREAD.get('user-list')
     }
+    success_url = ''
 
     def get_success_message(self, cleaned_data):
         return f"{self.kwargs.get('role', '').capitalize()} has been Saved!"
@@ -70,7 +72,7 @@ class UserListView(ModelFormMixin, SuccessMessageMixin, ListView, ProcessFormVie
             return AdminForm
         if self.kwargs.get('role') == 'executive':
             return ExecutiveForm
-        return UserCreationForm
+        return None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -83,20 +85,17 @@ class UserListView(ModelFormMixin, SuccessMessageMixin, ListView, ProcessFormVie
         return None
 
     def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
         self.object = self.get_object()
         return super(UserListView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
         self.object = self.get_object()
-        form = self.form_class(request.POST)
-        role = self.kwargs.get('role')
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.user_role = role
-            user.save()
-        else:
-            print(form.errors)
-        return redirect('user-list', role=role)
+        return super(UserListView, self).post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('user-list', kwargs=self.kwargs)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
