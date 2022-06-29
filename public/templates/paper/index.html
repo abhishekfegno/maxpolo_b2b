@@ -209,13 +209,13 @@
       type: 'pie',
       data: {
         datasets: [{
-          data: [{% for i in invoice %}'{{ i }}',{% endfor %}],
+          data: [{% for key,value in pie_data.items %}'{{ value }}',{% endfor %}],
           backgroundColor: [
             '#696969', '#808080', '#A9A9A9', '#C0C0C0', '#D3D3D3'
           ],
           label: 'Population'
         }],
-        labels: ['A','B','C','D'],
+        labels: [{% for key,value in pie_data.items %}'{{ key }}',{% endfor %}],
       },
       options: {
         responsive: true
