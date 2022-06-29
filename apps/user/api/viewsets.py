@@ -40,8 +40,10 @@ class LoginAPIView(GenericAPIView):
                 u = User.objects.get(email=data['email']).username
                 user = authenticate(request, username=u, password=data['password'])
                 login(request, user)
+
                 out['user'] = {
                     "id": user.id,
+                    "role_id": user.user_role,
                     "role": user.user_role_name,
                     "company_name": user.get_full_name(),
                     "company_cin": user.company_cin,
