@@ -1,7 +1,8 @@
 import os
+
 from django.conf import settings
-from django.template.loader import render_to_string
 from django.contrib.gis.db import models
+from django.template.loader import render_to_string
 
 from apps.user.models import Dealer, Executive
 
@@ -13,6 +14,7 @@ class Zone(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
 
 #
 # class Lead(models.Model):
@@ -122,7 +124,7 @@ class CheckPoint(models.Model):
         hours = time_diff // 60
         if hours:
             out += f"{hours} Hours, "
-        return out + f"{int(int(time_diff % 60) // 1) } minutes.  "
+        return out + f"{int(int(time_diff % 60) // 1)} minutes.  "
 
 
 class CrashReport(models.Model):
@@ -134,9 +136,7 @@ class CrashReport(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     class Meta:
-        ordering = ('-id', )
+        ordering = ('-id',)
 
     def __str__(self):
         return f'{self.created_at} > {self.device_name} > {self.other_information}'
-
-

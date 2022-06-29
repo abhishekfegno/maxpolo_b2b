@@ -3,46 +3,52 @@
 
 
 {%  block login_form %}
-<style>.errorlist {font-size: 0.8rem;} .footer{margin-top: 60px;}</style>
+<div class="row">
+    <div class="col-md-7">
+        <div class="login100-pic js-tilt text-center" data-tilt id="qr-code">
+            <img alt="IMG" src="{{ settings.STATIC_URL }}images/blog-image-2.jpg">
+            <img alt="IMG" src="{{ settings.STATIC_URL }}company_logo.png">
+        </div>
+    </div>
+    <div class="col-md-5">
+        <form class="login100-form validate-form" method="POST">{% csrf_token %}
+            <span class="login100-form-title">
+        Administration Panel
+        </span>
 
-<div class="login100-pic js-tilt" id="qr-code" data-tilt>
-    <img src="{{ STATIC_URL }}Login_v1/images/img-01.png" alt="IMG">
+            <div class="wrap-input100 validate-input" data-validate="Valid username is required: ft0000">
+                <input class="input100" name="username" placeholder="Username" type="text">
+                <div class="text-danger">{{ form.username.errors }}</div>
+
+                <span class="focus-input100"></span>
+                <span class="symbol-input100">
+        <i aria-hidden="true" class="fa fa-envelope"></i>
+        </span>
+            </div>
+            <div class="wrap-input100 validate-input" data-validate="Password is required">
+                <input class="input100" name="password" placeholder="Password" type="password">
+                <div class="text-danger">{{ form.password.errors }}</div>
+
+                <span class="focus-input100"></span>
+                <span class="symbol-input100">
+        <i aria-hidden="true" class="fa fa-lock"></i>
+        </span>
+            </div>
+            <div class="text-danger">{{ form.non_field_errors }}</div>
+
+            <div class="container-login100-form-btn">
+                <button class="login100-form-btn">
+                    Login
+                </button>
+            </div>
+            <div class="text-center p-t-136">
+                <span>2022 ©</span> <span class="">
+         MaxPolo B2B
+        </span>
+            </div>
+        </form>
+
+    </div>
 </div>
-<form class="login100-form validate-form" method="POST">{% csrf_token %}
-    <span class="login100-form-title">
-        Administration Login
-        </span>
-
-    <div class="wrap-input100 validate-input" data-validate="Valid username is required: ft0000">
-        <input class="input100" name="username" type="text"  placeholder="Username">
-        <div class="text-danger">{{ form.username.errors }}</div>
-
-        <span class="focus-input100"></span>
-        <span class="symbol-input100">
-        <i class="fa fa-envelope" aria-hidden="true"></i>
-        </span>
-    </div>
-    <div class="wrap-input100 validate-input" data-validate="Password is required">
-        <input class="input100" name="password" type="password" placeholder="Password">
-        <div class="text-danger">{{ form.password.errors }}</div>
-
-        <span class="focus-input100"></span>
-        <span class="symbol-input100">
-        <i class="fa fa-lock" aria-hidden="true"></i>
-        </span>
-    </div>
-    <div class="text-danger">{{ form.non_field_errors }}</div>
-
-    <div class="container-login100-form-btn">
-        <button class="login100-form-btn">
-            Login
-        </button>
-    </div>
-    <div class="text-center p-t-136">
-        <span>2022 ©</span> <span class="">
-         Soulmate
-        </span>
-    </div>
-</form>
 
 {% endblock %}

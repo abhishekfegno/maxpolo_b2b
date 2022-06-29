@@ -1,5 +1,4 @@
-
-from django.urls import path, include
+from django.urls import path
 
 from apps.catalogue.api.viewsets import ProductAPIView, CategoryAPIView
 

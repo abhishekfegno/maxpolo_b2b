@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import models
 from django_extensions.db.fields import AutoSlugField
 from treebeard.mp_tree import MP_Node
-from django.core.validators import FileExtensionValidator
+
 
 # Create your models here.
 
@@ -16,10 +16,7 @@ class Brand(models.Model):
         return self.name
 
 
-
-
 class Category(MP_Node):
-
     """
      To add Root: Category.add_root(name='Computer Hardware')
      To add Child: Category.objects.get(name='Computer Hardware').add_child(name='Memory')
@@ -65,4 +62,3 @@ class Product(models.Model):
         if self.image:
             return self.image.url
         return settings.MEDIA_URL + settings.DEFAULT_IMAGE
-

@@ -1,53 +1,62 @@
 {% load static %}
 <li>
-    <div class="t-activity__icon" title="{% if point.store.dealer_account_id %}Dealer{% else %}Lead{% endif %}" style="cursor:pointer">
-        <img class="img position-relative" style="top:-10px;"  src="{% if point.store.dealer_account_id %}{% static 'img/icons/dealer.svg' %}{% else %}{% static 'img/icons/lead.svg' %}{% endif %}" width="32px" height="32px" alt="{{ point.lead_type }} - {{ point.id }} Icon">
+    <div class="t-activity__icon" style="cursor:pointer"
+         title="{% if point.store.dealer_account_id %}Dealer{% else %}Lead{% endif %}">
+        <img alt="{{ point.lead_type }} - {{ point.id }} Icon" class="img position-relative"
+             height="32px"
+             src="{% if point.store.dealer_account_id %}{% static 'img/icons/dealer.svg' %}{% else %}{% static 'img/icons/lead.svg' %}{% endif %}" style="top:-10px;" width="32px">
     </div>
     <div class="t-activity__card">
         <div class="row mb-2">
             <div class="col-md-6">
                 <div class="row  pr-3">
                     <div class="col-12">
-                        <h2 class="mt-2">{{ point.store.name }} <span class="text-primary">{% if not point.check_out_at %}( Currently Here ){% endif  %}</span></h2>
+                        <h2 class="mt-2">{{ point.store.name }} <span class="text-primary">{% if not point.check_out_at %}( Currently Here ){% endif  %}</span>
+                        </h2>
                     </div>
                     {% if point %}
                     <div class="col-8 mt-2">
                         <i class="ni ni-square-pin"></i> {{ point.store.place|default:"Store Location Unknown" }} |
                         {% if first_device_id and point.device_id != first_device_id %}
-                        <button class="btn btn-danger btn-sm " data-container="body" data-toggle="popover"
-                                data-color="danger" data-placement="top" data-content="Suspicious Login Detected! This Check in is found from some new Device!">
-                            <i class="fa fa-mobile-alt"></i> {{ point.device_name }}</button>
+                        <button class="btn btn-danger btn-sm " data-color="danger" data-container="body"
+                                data-content="Suspicious Login Detected! This Check in is found from some new Device!" data-placement="top"
+                                data-toggle="popover">
+                            <i class="fa fa-mobile-alt"></i> {{ point.device_name }}
+                        </button>
                         {% else %}
                         <span><i class="fa fa-mobile-alt"></i> {{ point.device_name }}</span>
                         {% endif %}
                         <p class="mt-2">
-                            <i class="ni ni-shop"></i>  {{ point.location_text|default:"Unknown Location" }}
-                        </p>
+                            <i class="ni ni-shop"></i> {{ point.location_text|default:"Unknown Location" }} </p>
                     </div>
                     {% endif %}
                     {% if point.location %}
                     <div class="col-4 ">
                         <button class="btn btn-primary btn-sm float-right text-white px-3 mt-2"
-                                onclick="loadInMap({{ point.location.x }}, {{ point.location.y }})"
-                                data-toggle="modal" data-target="#exampleModal"> <i class="ni ni-world-2"></i> Map</button>
+                                data-target="#exampleModal" data-toggle="modal"
+                                onclick="loadInMap({{ point.location.x }}, {{ point.location.y }})"><i class="ni ni-world-2"></i> Map
+                        </button>
                     </div>
                     {% endif %}
                 </div>
                 <div class="row my-2  pr-3">
-                    <div class="col-md-6">{{ point.check_in_at|date:"h:i A" }}</div>   <div class="col-md-6"><span class="float-right">{{ point.check_out_at|date:"h:i A" }}</span></div>
+                    <div class="col-md-6">{{ point.check_in_at|date:"h:i A" }}</div>
+                    <div class="col-md-6"><span class="float-right">{{ point.check_out_at|date:"h:i A" }}</span></div>
                     <div class="col-md-6"><span class="text-sm text-muted"> Check IN </span></div>
-                    <div class="col-md-6"><span class="text-sm text-muted float-right"> {% if point.check_out_at %} Check OUT {% else %} (at meeting) {% endif %} </span></div>
+                    <div class="col-md-6"><span class="text-sm text-muted float-right"> {% if point.check_out_at %} Check OUT {% else %} (at meeting) {% endif %} </span>
+                    </div>
                     <div class="col-12">
                         <div class="row position-relative" style="top:-25px;">
                             <div class="col-2"></div>
-                            <div class="col-8  border-primary text-center text-muted" style="border-style: dashed none none;border-width: thin;"> {{ point.time_diff }}</div>
+                            <div class="col-8  border-primary text-center text-muted"
+                                 style="border-style: dashed none none;border-width: thin;"> {{ point.time_diff }}
+                            </div>
                             <div class="col-2"></div>
                         </div>
                     </div>
                 </div>
                 <div class="row  pr-3">
-                    <div class="col-12">
-                    </div>
+                    <div class="col-12"></div>
                 </div>
             </div>
             <div class="col-md-6 ">
@@ -56,7 +65,7 @@
                         {% if point.file %}
                         <h4>AUDIO: </h4>
                         <audio controls preload="metadata" style="outline:none">
-                            <source src="{{ point.file.url }}" >
+                            <source src="{{ point.file.url }}">
                             Your browser does not support the audio element.
                         </audio>
                         <!--                                                                            <a title="Download Audio" download href="{{ point.file.url }}" ><i class="ni ni-cloud-download-95 display-2"></i></a>-->
@@ -67,8 +76,7 @@
                              onclick="this.getAttribute('data-load-status') == 'on' && this.setAttribute('data-load-mode', (this.getAttribute('data-load-mode') == 'min')?'max':'min')"
                              onload="alert(this)">
                             <p class="text-content">
-                                {{ point.description }}
-                            </p>
+                                {{ point.description }} </p>
                         </div>
                         {% endif %}
                     </div>

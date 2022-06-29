@@ -13,6 +13,7 @@ from lib.utils import list_api_formatter
 class CategoryAPIView(ListAPIView):
     queryset = Category.objects.all().prefetch_related('pdf')
     serializer_class = CategorySerializer
+
     # filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     # filterset_fields = ('', '')
     # search_fields = ('', '')

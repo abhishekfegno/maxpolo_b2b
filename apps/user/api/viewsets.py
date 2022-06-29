@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator, EmptyPage
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.generics import ListAPIView, GenericAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, GenericAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -20,7 +20,6 @@ from apps.user.api.serializers import LoginSerializer, ProfileAPISerializer, Com
 from apps.user.models import User, Complaint, Banners, Dealer
 from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter
-from django.contrib.auth import logout
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -63,9 +62,6 @@ class DealerListView(ListAPIView):
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_fields = ['username']
     ordering_fields = ['username']
-
-
-
 
 
 class ProfileAPIView(GenericAPIView):

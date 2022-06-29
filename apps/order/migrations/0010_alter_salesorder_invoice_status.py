@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('order', '0009_alter_salesorder_id_alter_salesorderline_id'),
     ]
@@ -13,6 +12,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='salesorder',
             name='invoice_status',
-            field=models.CharField(choices=[('new', 'New'), ('credit', 'Credit'), ('payment partial', 'Payment Partial'), ('payment done', 'Payment Done')], default='new', max_length=20),
+            field=models.CharField(
+                choices=[('new', 'New'), ('credit', 'Credit'), ('payment partial', 'Payment Partial'),
+                         ('payment done', 'Payment Done')], default='new', max_length=20),
         ),
     ]

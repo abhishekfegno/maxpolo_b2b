@@ -1,17 +1,10 @@
 {% extends 'paper/base.html' %}
-{% load view_breadcrumbs %}
 
-{% block page_title %}
-MAXPolo
-{% endblock %}
+{% block page_title %}MAXPolo{% endblock %}
 
-{% block user_sidebar %}
-{% include 'paper/utils/user_menu.html' %}
-{% endblock %}
+{% block user_sidebar %}{% include 'paper/utils/user_menu.html' %}{% endblock %}
 
-{% block sidebar_wrapper %}
-        {% include 'paper/utils/common_menu.html' %}
-{% endblock %}
+{% block sidebar_wrapper %}{% include 'paper/utils/common_menu.html' %}{% endblock %}
 
 <!--{% block notifications %}-->
 <!--<a class="dropdown-item" href="#">Action</a>-->
@@ -19,17 +12,13 @@ MAXPolo
 <!--<a class="dropdown-item" href="#">Something else here</a>-->
 <!--{% endblock %}-->
 
-{% block title %}Dashboard | MAXpolo {% endblock %}
-{% block breadcrumbs %}
+{% block title %}Dashboard | MAXpolo {% endblock %}{% block breadcrumbs %}
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ current_url }}</li>
-  </ol>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+        <li aria-current="page" class="breadcrumb-item active">{{ current_url }}</li>
+    </ol>
 </nav>
 
-{% endblock %}
-{% block content_body %}
-<h3 class="description">Your content here</h3>
-{% endblock %}
+{% endblock %}{% block content_body %}<h3 class="description">Your content here</h3>{% endblock %}
 

@@ -2,31 +2,34 @@
 {% load static %}
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <link rel="apple-touch-icon" sizes="76x76" href="{{ settings.STATIC_URL }}paper/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="images/fegno.png">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <title>
-    {% block page_title %}{% endblock %}
-  </title>
-  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
-  <!--     Fonts and icons     -->
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-  <!-- CSS Files -->
-  <link href="{{ settings.STATIC_URL }}paper/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="{{ settings.STATIC_URL }}paper/css/paper-dashboard.css?v=2.0.1" rel="stylesheet"/>
-  <!-- select2 resources -->
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" integrity="sha512-kq3FES+RuuGoBW3a9R2ELYKRywUEQv0wvPTItv3DSGqjpbNtGWVdvT8qwdKkqvPzT93jp8tSF4+oN4IeTEIlQA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.7/dist/sweetalert2.all.min.js" ></script>
+    <meta charset="utf-8"/>
+    <link href="{{ settings.STATIC_URL }}paper/img/apple-icon.png" rel="apple-touch-icon" sizes="76x76">
+    <link href="images/fegno.png" rel="icon" type="image/png">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+    <title>
+        {% block page_title %}{% endblock %} </title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+          name='viewport'/>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <!-- CSS Files -->
+    <link href="{{ settings.STATIC_URL }}paper/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="{{ settings.STATIC_URL }}paper/css/paper-dashboard.css?v=2.0.1" rel="stylesheet"/>
+    <!-- select2 resources -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <link crossorigin="anonymous"
+          href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css"
+          integrity="sha512-kq3FES+RuuGoBW3a9R2ELYKRywUEQv0wvPTItv3DSGqjpbNtGWVdvT8qwdKkqvPzT93jp8tSF4+oN4IeTEIlQA=="
+          referrerpolicy="no-referrer" rel="stylesheet"/>
+    <script defer src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.7/dist/sweetalert2.all.min.js"></script>
 
-  <!-- end select2 resources -->
-  {% block css %}
-  <!-- CSS Just for demo purpose, don't include it in your project -->
-  <link href="{{ settings.STATIC_URL }}/paper/demo/demo.css" rel="stylesheet" />
-  <style>
+    <!-- end select2 resources -->
+    {% block css %}
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link href="{{ settings.STATIC_URL }}/paper/demo/demo.css" rel="stylesheet"/>
+    <style>
       .sidebar .nav li > a, .off-canvas-sidebar .nav li > a{ color: white!important }
       .sidebar[data-color="white"] .nav li a i {color: white !important}
 
@@ -37,90 +40,90 @@
     .form-check input[type=checkbox]{ opacity:1 !important; visibility:visible;}
     .sidebar-menu {list-style-type: unset;padding-inline-start: 0;}
     .sidebar-menu  .header { display: none} .body{ font-size:0.9rem; } .title,h1,h2,h3,h4,h5,h6{ font-size: 1.3rem;}
-    .main-panel {min-height: 100vh}
+    .main-panel {min-height: 100vh;  background-color: #fbfbfb;}
     .footer { background-attachment: fixed; position: relative; line-height: 20px; }
     .main-panel > .footer {  border-top: 1px solid rgba(0, 0, 0, 0.1); }
-    .main-panel > .content {
-      padding: 30px 15px 0 15px;
-      min-height: calc(100vh - 123px);
-    }
+    .main-panel > .content {padding: 15px 15px 0 15px;min-height: calc(100vh - 123px);}
+    .main-panel .navbar.navbar-white{ background: linear-gradient(135deg, #c850c0, #c850c0) !important; }
+
 
    /**  .collapse, .collapsing {padding-left: 20px;} */
     .collapse .nav, .collapsing .nav{border-left: 2px dotted #979797}
-  </style>
-  {% block extra_css %}
-  {% endblock %}
-  {% endblock %}
+    .breadcrump { background-color: #c3c9cf !important; }
+    .breadcrump * {color: #fff !important }
+    .selected-row{ background: linear-gradient(-135deg, #c850c0, #4158d0) !important;  }
+    .selected-row * {color:#fff}
+    </style>
+    {% block extra_css %}
+    {% endblock %}
+    {% endblock %}
 </head>
 
 <body class="">
-<div class="wrapper " >
-  <div class="sidebar "  data-color="white" data-active-color="danger">
-    <div class="logo">
-      <!--<a href="#" class="simple-text logo-mini">
-         <div class="logo-image-small">
-            <img src="{{ settings.STATIC_URL }}images/fegno.png">
+<div class="wrapper ">
+    <div class="sidebar " data-active-color="danger" data-color="white">
+        <div class="logo">
+            <!--<a href="#" class="simple-text logo-mini">
+               <div class="logo-image-small">
+                  <img src="{{ settings.STATIC_URL }}images/fegno.png">
+              </div>
+              &lt;!&ndash; <p>CT</p> &ndash;&gt;
+            </a>-->
+            <a class="simple-text logo-small" href="{% url 'index' %}" style="padding:0 20px ">
+                <!--          Your Logo-->
+                <img class="img " src="{{ settings.LOGO }}" width="100%">
+            </a>
         </div>
-        &lt;!&ndash; <p>CT</p> &ndash;&gt;
-      </a>-->
-      <a href="{% url 'index' %}" class="simple-text logo-small" style="padding:0 20px ">
-        <!--          Your Logo-->
-        <div class="logo-image-small">
-            <img src="{{ logo }}">
-
+        <div class="sidebar-wrapper" style="width:100%;">
+            {% block user_sidebar %}
+            {% endblock %}
+            {% block sidebar_wrapper %}
+            <ul class="nav">
+                <li class="active ">
+                    <a href="javascript:;">
+                        <i class="nc-icon nc-bank"></i>
+                        <p>First Item</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <i class="nc-icon nc-diamond"></i>
+                        <p>Second Item</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <i class="nc-icon nc-pin-3"></i>
+                        <p>Third Item</p>
+                    </a>
+                </li>
+            </ul>
+            {% endblock %}
         </div>
-      </a>
     </div>
-    <div class="sidebar-wrapper" style="width:100%;">
-      {% block user_sidebar %}
-      {% endblock %}
-      {% block sidebar_wrapper %}
-      <ul class="nav">
-        <li class="active ">
-          <a href="javascript:;">
-            <i class="nc-icon nc-bank"></i>
-            <p>First Item</p>
-          </a>
-        </li>
-        <li>
-          <a href="javascript:;">
-            <i class="nc-icon nc-diamond"></i>
-            <p>Second Item</p>
-          </a>
-        </li>
-        <li>
-          <a href="javascript:;">
-            <i class="nc-icon nc-pin-3"></i>
-            <p>Third Item</p>
-          </a>
-        </li>
-      </ul>
-      {% endblock %}
-    </div>
-  </div>
-  <div class="main-panel" >
-    {% block navbar %}
-    {% include 'paper/utils/navbar_header.html' %}
-    {% endblock %}
+    <div class="main-panel">
+        {% block navbar %}
+        {% include 'paper/utils/navbar_header.html' %}
+        {% endblock %}
 
-    <div class="content" >
-    {% block breadcrumbs %}
-    {% endblock%}
-      {% block content %}
-      <div class="row">
-        <div class="col-md-12">
-          <h3></h3>
-          {% block content_body %}
-          <h3 class="description">Your content here</h3>
+        <div class="content">
+            {% block breadcrumbs %}
+            {% endblock%}
+            {% block content %}
+            <div class="row">
+                <div class="col-md-12">
+                    <h3></h3>
+                    {% block content_body %}
+                    <h3 class="description">Your content here</h3>
 
 
-          {% endblock %}
+                    {% endblock %}
+                </div>
+            </div>
+            {% endblock %}
+            <!--       {% include 'paper/utils/footer.html' %}-->
         </div>
-      </div>
-      {% endblock %}
-<!--       {% include 'paper/utils/footer.html' %}-->
     </div>
-  </div>
 </div>
 {% block javascript %}
 <!--   Core JS Files   -->
@@ -168,7 +171,9 @@
         $('select').filter(function(){
           return ! ($(this).hasClass('exclude-select2') || $(this).hasClass('swal2-select'))
         }).select2();
+        $('#listing-table-search-form input.form-control').addClass('form-control-sm')
     });
+
 
 </script>
 

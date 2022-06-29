@@ -1,26 +1,32 @@
-{% extends 'paper/layout.html' %}
-{% load crispy_forms_tags %}
-{% block content%}
+{% extends 'paper/layout.html' %}{% load crispy_forms_tags %}{% block content%}
 {% include 'paper/htmx.html' %}
 <div class='row'>
-    {% include 'paper/catalogue/product_filter.html'%}
 
-    <div class='col-6'>
+    <div class='col-7'>
         <div class='card'>
             <div class='card-body'>
-                <h3>{{ order_type }} List</h3>
-                <a style="float:right;" href="{% url 'get_excel_report_order' slug=order_type %}" class="btn btn-primary">Download Excel</a>
 
+                <div>
+                    {% if filter.qs %}
+                    <a class="btn btn-primary btn-sm" href="{% url 'get_excel_report_order' slug=order_type %}"
+                       style="float:right;">Download Excel</a>
+                    {% endif %}
+                    <h5 class=""> {{ order_type }} List </h5>
+
+                </div>
+                <div>
+                    {% include 'paper/catalogue/product_filter.html'%}
+                </div>
+                <p class="text-muted"> Here you can find all the quotations raised by your dealers or even some administrator created behalf of them. </p>
                 <div class="table-responsive">
-                    <table class="table table-hover table-sm">
-                        <thead class="">
-                        <tr class="">
+                    <table class="table  table-hover table-sm">
+                        <thead class="thead-dark">
+                        <tr class="table-header">
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
                             <th scope="col">Ordered_on</th>
                             <th scope="col">Created_by</th>
                         </tr>
-
                         </thead>
                         <tbody>
                         {% for object in filter %}
@@ -30,7 +36,8 @@
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.order_id }}</a></div>
+                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.order_id
+                                    }}</a></div>
                             </td>
                             <td>
                                 <div class="">{{ object.created_at }}</div>
@@ -40,6 +47,10 @@
                             </td>
 
                         </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="100%" class="text-center text-muted"> No Active Quotations left in the book. Check back later </td>
+                        </tr>
                         {% endfor %}
                         </tbody>
                     </table>
@@ -48,7 +59,7 @@
             {% include 'paper/pagination.html' %}
         </div>
     </div>
-    <div class='col-6'>
+    <div class='col-5'>
         <div class='card'>
             <div class='card-body'>
                 <h3>Create {{ order_type }}</h3>
@@ -62,17 +73,20 @@
                 <form method="POST">
                     {% csrf_token %}
                     {{ orderform | crispy }}
-                    <button type="button" class="btn btn-primary" hx-get="{% url 'get_orderline_form' %}" hx-target="#lineform" hx-swap="beforeend">Add product</button>
+                    <hr>
+                    <code>You can use the ADD PRODUCT button below to add a new item into the order.</code>
                     <div id="lineform"></div>
-                    <input type="hidden" hx-post="{% url 'salesorder-list' %}">
-                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
+                    <button class="btn btn-sm btn-success" hx-get="{% url 'get_orderline_form' %}" hx-swap="beforeend"
+                            hx-target="#lineform" type="button">Add product
+                    </button>
+                    <input hx-post="{% url 'salesorder-list' %}" type="hidden">
+                    <button class='btn btn btn-danger' style="float:right;" type='submit'> Place Order</button>
                 </form>
             </div>
         </div>
     </div>
 
-</div>
-{% include 'paper/swal.html' %}
+</div>{% include 'paper/swal.html' %}
 
 <script type="tex/script">
 function showForm(e){
@@ -96,5 +110,5 @@ function showForm(e){
 
     // Now I want to clone it and put it somewhere.
     $(cloneContactForm()).appendTo('.order-form');
-</script>
-{% endblock %}
+
+</script>{% endblock %}

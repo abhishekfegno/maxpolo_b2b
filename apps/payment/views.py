@@ -1,10 +1,8 @@
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
-
+from django.shortcuts import redirect
 # Create your views here.
-from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DeleteView, UpdateView, ListView

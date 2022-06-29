@@ -13,8 +13,8 @@
                 <ul class="pagination justify-content-end mb-0">
                     {% if page_obj.number > 10 %}
                     <!-- VERY FIRST -->
-                    <li class="first  page-item" >
-                        <a class="page-link"  href="{% params 'page' 1 request.GET.urlencode %}">
+                    <li class="first  page-item">
+                        <a class="page-link" href="{% params 'page' 1 request.GET.urlencode %}">
                             <i class="fa fa-angle-left-angle-double-left"></i> <<
                             <span class="sr-only"><<</span>
                         </a>
@@ -24,42 +24,45 @@
 
                     {% if page_obj.has_previous %}
                     <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
-                        <a class="page-link" href="{% params 'page' page_obj.previous_page_number request.GET.urlencode %}" tabindex="-1">
+                        <a class="page-link"
+                           href="{% params 'page' page_obj.previous_page_number request.GET.urlencode %}" tabindex="-1">
                             <i class="fa fa-angle-left"></i>
                             <span class="sr-only">Previous</span>
                         </a>
                     </li>
                     {% endif %}
-                    {% if  page_obj.number|add:"-6" > 0 %}
-                    <li class="hellip page-item" >
-                        <a href="javascript:;" class="page-link">
+                    {% if page_obj.number|add:"-6" > 0 %}
+                    <li class="hellip page-item">
+                        <a class="page-link" href="javascript:;">
                             <i class="la">&hellip;</i>
                         </a>
                     </li>
                     {% endif %}
 
                     {% for loop_page_number in page_obj.paginator.page_range %}
-                      {% if loop_page_number > page_obj.number|add:'-6' and loop_page_number < page_obj.number|add:'6' %}
-                            {% if page_obj.number == loop_page_number %}
-                            <li class="page-item active">
-                                <a class="page-link" href="{% params 'page' loop_page_number request.GET.urlencode %}">{{ loop_page_number }}</a>
-                            </li>
-                            {% else %}
-                            <li class="page-item">
-                                <a class="page-link" href="{% params 'page' loop_page_number request.GET.urlencode %}">{{ loop_page_number }} <span class="sr-only">(current)</span></a>
-                            </li>
-                            {% endif %}
-                        {% endif %}
+                    {% if loop_page_number > page_obj.number|add:'-6' and loop_page_number < page_obj.number|add:'6' %}
+                    {% if page_obj.number == loop_page_number %}
+                    <li class="page-item active">
+                        <a class="page-link" href="{% params 'page' loop_page_number request.GET.urlencode %}">{{
+                            loop_page_number }}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="{% params 'page' loop_page_number request.GET.urlencode %}">{{
+                            loop_page_number }} <span class="sr-only">(current)</span></a>
+                    </li>
+                    {% endif %}
+                    {% endif %}
                     {% endfor %}
-                      <!-- ... -->
-                      {% if page_obj.paginator.num_pages > page_obj.number|add:'6' %}
-                          <li class="hellip page-item">
-                              <a href="javascript:;" class="page-link">
-                                  <i class="la">&hellip;</i>
-                              </a>
-                          </li>
-                      {% endif %}
-                      <!-- *...* -->
+                    <!-- ... -->
+                    {% if page_obj.paginator.num_pages > page_obj.number|add:'6' %}
+                    <li class="hellip page-item">
+                        <a class="page-link" href="javascript:;">
+                            <i class="la">&hellip;</i>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <!-- *...* -->
 
 
                     {% if page_obj.has_next %}
@@ -71,17 +74,17 @@
                     </li>
                     {% endif %}
                     {% if page_obj.number <= page_obj.paginator.num_pages|add:"-8" %}
-                      <!-- VERY LAST -->
-                      <li class="page-item last " >
-                          <a href="{% params 'page' page_obj.paginator.num_pages request.GET.urlencode %}" class="page-link">
-                              <i class="fa fa-angle-double-right"></i>
-                          </a>
-                      </li>
+                    <!-- VERY LAST -->
+                    <li class="page-item last ">
+                        <a class="page-link"
+                           href="{% params 'page' page_obj.paginator.num_pages request.GET.urlencode %}">
+                            <i class="fa fa-angle-double-right"></i>
+                        </a>
+                    </li>
                     {% endif %}
                 </ul>
             </nav>
         </div>
     </div>
-</div>
-{% endif %}
+</div>{% endif %}
 

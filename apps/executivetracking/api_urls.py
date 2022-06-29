@@ -5,6 +5,7 @@ from django.urls import path
 from django.utils import datetime_safe
 from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
 
 from apps.executivetracking.api import *
 from apps.executivetracking.serializers import CheckPointReadSerializer
@@ -32,7 +33,7 @@ def district_list(request):
         }, status=200)
     branch = account and account.branch
     return Response({
-        'results':  District.objects.filter(branch=branch).values('id', 'name', 'short_code').order_by('name')
+        # 'results': District.objects.filter(branch=branch).values('id', 'name', 'short_code').order_by('name')
     }, status=200)
 
 
@@ -79,7 +80,8 @@ def admin_summary(request, **kwargs):
             date = datetime_safe.datetime.strptime(date, "%d-%m-%Y").date()
         except:
             date = datetime_safe.date.today()
-            kwargs['errors'].append({'invalid_date': f"Invalid date format. Date must be in format '{date.strftime('d-%m-%Y')}'"})
+            kwargs['errors'].append(
+                {'invalid_date': f"Invalid date format. Date must be in format '{date.strftime('d-%m-%Y')}'"})
     if object:
         check_in_day = CheckInDay.objects.filter(
             **{'check_in_at__range': (
@@ -119,7 +121,7 @@ def admin_summary(request, **kwargs):
     kwargs['selected_date'] = date.strftime("%d-%m-%Y")
 
     return Response({
-        'results':  kwargs
+        'results': kwargs
     }, status=200)
 
 
@@ -136,7 +138,3 @@ urlpatterns = [
     path('crash-reporting/', CrashReportCreate.as_view(), name="crash-reporting"),
 
 ]
-
-
-
-

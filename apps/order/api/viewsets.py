@@ -6,7 +6,6 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from apps.catalogue.api.serializers import ProductSerializer
 from apps.catalogue.models import Product
 from apps.order.api.serializers import OrderSerializer, OrderDetailSerializer
 from apps.order.models import SalesOrder, SalesOrderLine

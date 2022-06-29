@@ -1,12 +1,81 @@
-{% extends 'paper/layout.html' %}
-{% load crispy_forms_tags %}
+{% extends 'paper/layout.html' %}{% load static crispy_forms_tags %}
+
 {% block content%}
 <div class='row'>
-    <div class='col-6'>
+    <div class='col-md-7'>
+        <div class='card'>
+            <div class='card-body'>
+                {% if object.pk %}
+                <a href="{% url 'branch-list' %}" class="pull-right"> <img src="{% static 'icons/close.svg' %}" width="25" alt="close" /> </a>
+                <h3 class="heading-3 pt-3">Update "{{ object }}"</h3>
+                <p class="text-muted"> Here you can update the current {{ role|lower }}. </p>
+                {% else %}
+                <h3 class="heading-3 pt-3">Add {{ role }}</h3>
+                <p class="text-muted"> Here you can add your {{ role|lower }}s. </p>
+                {% endif %}
+                <form enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{ form.first_name|as_crispy_field }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form.last_name|as_crispy_field }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form.branch|as_crispy_field }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{ form.username|as_crispy_field }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form.password1|as_crispy_field }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form.password2|as_crispy_field }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{ form.mobile|as_crispy_field }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form.email|as_crispy_field }}
+                                </div>
+                                <div class="col-md-4">
+                                    {% if form.dealers %}
+                                        {{ form.dealers|as_crispy_field }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% if form.errors %}
+                    <h5>{{ form.errors }}</h5>
+                    {% endif %}
+                    <button class='btn btn-success' style="float:right;" type='submit'> Save </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class='col-md-5'>
         <div class='card'>
             <div class='card-body'>
                 <h3>{{ role }} List</h3>
-
+                <p class="text-muted">
+                    You can view the list of {{ role|lower }}s here..
+                </p>
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
                         <thead class="">
@@ -14,27 +83,30 @@
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
                             <th scope="col">Mobile</th>
+                            <th scope="col">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for object in object_list %}
-                        <tr>
-                            <!--                    <td scope="row"> </td>-->
+                        {% for object_item in object_list %}
+                        <tr class="{% if object.pk == object_item.pk %}selected-row {% endif %}">
                             <td>
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object.get_full_name }}</div>
+                                <div class="">{{ object_item.get_full_name|default:object_item.username|default:"-" }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object.mobile }}</div>
-                            </td>
-
-                            <td>
-                                <div class=""><a href="{% url 'user-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
+                                <div class="">{{ object_item.mobile }}</div>
                             </td>
                             <td>
-                                <div class=""><a href="javascript:void(0)" onclick="swalFunction(this, '{% url 'user-delete' pk=object.pk %}')" class="delBrand btn btn-danger">Delete</a></div>
+                                <div class="">
+                                    {% if object.pk is None %}
+                                    <a class="btn btn-primary btn-sm" href="{% url 'user-update' pk=object_item.pk %}">Edit</a>
+                                    {% else %}
+                                    <a class="delBrand btn btn-danger  btn-sm"
+                                       href="javascript:void(0)"
+                                       onclick="swalFunction(this, '{% url 'user-delete' pk=object_item.pk %}')">Delete</a></div>
+                                    {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -45,26 +117,9 @@
 
             </div>
         </div>
-
-    </div>
-   <div class='col-6'>
-        <div class='card'>
-            <div class='card-body'>
-                <h3>Create {{ role }}</h3>
-                {% if form.errors %}
-                <h5>{{ form.errors }}</h5>
-                {% endif %}
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form | crispy }}
-                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
-                </form>
-            </div>
-        </div>
     </div>
 
 
-</div>
-{% include 'paper/swal.html' %}
+</div>{% include 'paper/swal.html' %}
 
 {% endblock %}

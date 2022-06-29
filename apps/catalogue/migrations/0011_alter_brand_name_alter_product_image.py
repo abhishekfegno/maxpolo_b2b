@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('catalogue', '0010_product_image'),
     ]
@@ -18,6 +17,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='product',
             name='image',
-            field=models.ImageField(blank=True, default='public/default/image_not_found.jpg', null=True, upload_to='product/'),
+            field=models.ImageField(blank=True, default='public/default/image_not_found.jpg', null=True,
+                                    upload_to='product/'),
         ),
     ]

@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('user', '0007_user_address_city_user_address_state_and_more'),
     ]
@@ -13,6 +12,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='banners',
             name='photo',
-            field=models.ImageField(blank=True, default='public/default/image_not_found.jpg', null=True, upload_to='banners/'),
+            field=models.ImageField(blank=True, default='public/default/image_not_found.jpg', null=True,
+                                    upload_to='banners/'),
         ),
     ]

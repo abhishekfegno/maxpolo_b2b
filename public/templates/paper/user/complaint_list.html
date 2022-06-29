@@ -1,13 +1,12 @@
-{% extends 'paper/layout.html' %}
-{% load crispy_forms_tags %}
-{% block content%}
+{% extends 'paper/layout.html' %}{% load crispy_forms_tags %}{% block content%}
 <div class='row'>
     {% include 'paper/catalogue/product_filter.html' %}
     <div class='col-12'>
         <div class='card'>
             <div class='card-body'>
                 <h3>Complaints List</h3>
-                    <a style="float:right;" href="{% url 'get_excel_report_complaint' %}" class="btn btn-primary">Download Excel</a>
+                <a class="btn btn-primary" href="{% url 'get_excel_report_complaint' %}" style="float:right;">Download
+                    Excel</a>
 
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
@@ -32,10 +31,10 @@
                                 <div class="">{{ object.status }}</div>
                             </td>
                             <td>
-                                <div class=""><a href="{% url 'complaint-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
+                                <div class=""><a class="btn btn-primary"
+                                                 href="{% url 'complaint-update' pk=object.pk %}">Edit</a></div>
                             </td>
-                            <td>
-                            </td>
+                            <td></td>
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -48,7 +47,6 @@
         </div>
 
     </div>
-
 
 
 </div>

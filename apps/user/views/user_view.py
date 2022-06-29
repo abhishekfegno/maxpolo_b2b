@@ -1,17 +1,15 @@
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView, TemplateView
+from django.views.generic import UpdateView, DeleteView, ListView, TemplateView
 from django.views.generic.edit import FormMixin
 from rest_framework.authtoken.models import Token
-from view_breadcrumbs import DetailBreadcrumbMixin, ListBreadcrumbMixin
-from django.utils.translation import gettext_lazy as _
 
 from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm
-from apps.user.models import Banners, User, Role, Dealer, Executive
+from apps.user.models import Banners, User, Dealer, Executive
 from lib.token_handler import token_expire_handler, is_token_expired
-
 
 
 class IndexView(TemplateView):
@@ -22,11 +20,10 @@ class IndexView(TemplateView):
 
 
 class UserDetailView(UpdateView):
-
     queryset = User.objects.all()
-    template_name = 'paper/user/user_form.html'
+    form_class = UserCreationForm
+    template_name = 'paper/user/user_list.html'
     model = User
-    form_class = DealerForm
     success_url = '/user/list/'
 
     def post(self, request, *args, **kwargs):
@@ -41,27 +38,27 @@ class UserDetailView(UpdateView):
         return redirect('user-list', role=role)
 
 
-class UserListView(FormMixin, ListView, ListBreadcrumbMixin):
+class UserListView(FormMixin, ListView):
     queryset = User.objects.all()
+    form_class = UserCreationForm
     template_name = 'paper/user/user_list.html'
     home_label = _("User list")
     model = User
-    form_class = DealerForm
 
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset()
-        if self.kwargs.get('role') == 32:
+        if self.kwargs.get('role') == 'dealer':
             queryset = Dealer.objects.all()
-        if self.kwargs.get('role') == 16:
+        if self.kwargs.get('role') == 'executive':
             queryset = Executive.objects.all()
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.kwargs.get('role') == 32:
+        if self.kwargs.get('role') == 'dealer':
             context['form'] = DealerForm
             context['role'] = 'Dealer'
-        if self.kwargs.get('role') == 16:
+        if self.kwargs.get('role') == 'executive':
             context['form'] = ExecutiveForm
             context['role'] = 'Executive'
         return context
@@ -69,7 +66,6 @@ class UserListView(FormMixin, ListView, ListBreadcrumbMixin):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         role = self.kwargs.get('role')
-        # import pdb;pdb.set_trace()
         if form.is_valid():
             user = form.save(commit=False)
             user.user_role = role
@@ -90,7 +86,7 @@ class UserDeleteView(DeleteView):
 
 def password_reset(request, token):
     errors = ""
-    form = ResetPasswordForm(request.POST)\
+    form = ResetPasswordForm(request.POST)
 
     if request.method == 'POST':
         try:

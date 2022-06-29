@@ -42,5 +42,4 @@ class PaymentFilter(FilterSet):
 class ComplaintFilter(FilterSet):
     class Meta:
         model = Complaint
-        fields = ('status', )
-
+        fields = ('status',)

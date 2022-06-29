@@ -12,7 +12,6 @@ class OrderReport(resources.ModelResource):
         attribute='dealer',
         widget=ForeignKeyWidget(Dealer, 'username'))
 
-
     class Meta:
         model = SalesOrder
         export_order = ('id', 'order_id', 'dealer', 'created_at')

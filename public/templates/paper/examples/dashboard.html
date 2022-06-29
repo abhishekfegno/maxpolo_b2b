@@ -1,6 +1,4 @@
-{% extends 'paper/layout.html' %}
-{% load static crispy_forms_tags humanize %}
-{% block page_title %} Dashboard {% endblock %}
+{% extends 'paper/layout.html' %}{% load static crispy_forms_tags humanize %}{% block page_title %} Dashboard {% endblock %}
 
 {% block title %}Dashboard  << {% endblock %}
 
@@ -9,11 +7,12 @@
 {% endblock %}
 
 {% block extra_javascript %}
-  <script>
+<script>
     $(document).ready(function() {
       // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
       demo.initChartsPages();
     });
-  </script>
+
+</script>
 
 {% endblock %}

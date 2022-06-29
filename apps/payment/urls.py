@@ -1,8 +1,7 @@
 # New file created 
-from django.urls import path, include
+from django.urls import path
 
 from .views import *
-
 
 urlpatterns = [
     path('transaction/list', TransactionListView.as_view(), name='transaction-list'),
@@ -12,5 +11,3 @@ urlpatterns = [
     path('payment/excel/export/', get_excel_report_payment, name='get_excel_report_payment'),
 
 ]
-
-

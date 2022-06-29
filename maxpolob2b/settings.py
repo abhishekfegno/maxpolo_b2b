@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,7 +19,6 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -30,7 +30,6 @@ SECRET_KEY = 'django-insecure-b0u)v=*cyp-+kpl-=04+uf@=z@k!^d$mo9f&gvf7$%xf$bqa04
 DEBUG = True
 
 ALLOWED_HOSTS = ['maxpolob2b.dev.fegno.com', 'www.maxpolob2b.dev.fegno.com', 'localhost']
-
 
 # Application definition
 
@@ -63,10 +62,6 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'import_export',
     'rest_framework_gis',
-    
-    'view_breadcrumbs',
-    # 'django_bootstrap_breadcrumbs'
-
 
 ]
 
@@ -79,7 +74,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 
 ]
 INTERNAL_IPS = [
@@ -117,7 +111,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'apps.context_processors.settings',
-
             ],
             'libraries': {
                 'templatetags': 'apps.templatetags',
@@ -143,7 +136,6 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.OrderingFilter',
     ],
 
-
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
@@ -151,11 +143,8 @@ REST_FRAMEWORK = {
     # 'DEFAULT_PAGINATION_CLASS': 'lib.utils.PageNumberPagination',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
 
-
-
 }
 WSGI_APPLICATION = 'maxpolob2b.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -178,7 +167,6 @@ DATABASES = {
 }
 AUTH_USER_MODEL = 'user.User'
 
-
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Password validation
@@ -199,7 +187,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -211,18 +198,14 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-BREADCRUMBS_TEMPLATE = "view_breadcrumbs/breadcrumbs.html"
-
-
 
 TOKEN_EXPIRED_AFTER_SECONDS = 300
 
 LOGIN_REDIRECT_URL = 'index'
 LOGIN_URL = 'login'
-LOGOUT_REDIECT_URL = 'login'
+LOGOUT_REDIRECT_URL = 'login'
 LOGOUT_URL = 'login'
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
@@ -231,15 +214,21 @@ EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 STATIC_URL = '/assets/'
 MEDIA_URL = '/src/'
 
+
+
 DEFAULT_IMAGE = 'default/image_not_found.jpg'
+
+PLACEHOLDER_PROFILE_DEFAULT_IMAGE = 'images/Placeholder-Image.png'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'public/staticfiles/')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'public/src/')
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'public/static')]
 
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGO = f'{STATIC_URL}company_logo.png'
+

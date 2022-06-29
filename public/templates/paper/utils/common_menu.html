@@ -10,8 +10,8 @@
         {% block nav_links %}
 
         <li class="li ">
-            <a data-toggle="collapse" href="#navbar-quotations" class="collapsed" aria-expanded="false"
-               aria-controls="navbar-quotations">
+            <a aria-controls="navbar-quotations" aria-expanded="false" class="collapsed" data-toggle="collapse"
+               href="#navbar-quotations">
                 <i class="ni ni-archive-2"></i>
                 <p>Quotations <b class="caret"></b></p>
             </a>
@@ -26,7 +26,7 @@
                     </li>
                     <li>
                         <a href="{% url 'salesorder-list' %}">
-                            <i class="fa fa-sign-out" aria-hidden="true"></i><span>Sales Orders</span>
+                            <i aria-hidden="true" class="fa fa-sign-out"></i><span>Sales Orders</span>
                         </a>
                     </li>
                     <li>
@@ -34,7 +34,8 @@
                             <i class="nc-icon nc-credit-card"></i>
                             <span>Invoice</span>
                         </a>
-                    </li> <li>
+                    </li>
+                    <li>
                         <a href="{% url 'cancelled_order' %}">
                             <i class="nc-icon nc-credit-card"></i>
                             <span>Cancelled</span>
@@ -43,7 +44,7 @@
 
                     <li>
                         <a href="{% url 'transaction-list' %}">
-                            <i class="fa fa-book" aria-hidden="true"></i><span>Payment</span>
+                            <i aria-hidden="true" class="fa fa-book"></i><span>Payment</span>
                         </a>
                     </li>
 
@@ -52,8 +53,8 @@
         </li>
 
         <li class="li ">
-            <a data-toggle="collapse" href="#navbar-catalogue" class="collapsed" aria-expanded="false"
-               aria-controls="navbar-catalogue">
+            <a aria-controls="navbar-catalogue" aria-expanded="false" class="collapsed" data-toggle="collapse"
+               href="#navbar-catalogue">
                 <i class="ni ni-archive-2"></i>
                 <p>Catalogue <b class="caret"></b></p>
             </a>
@@ -89,8 +90,8 @@
         </li>
 
         <li class="li ">
-            <a data-toggle="collapse" href="#navbar-tracking" class="collapsed" aria-expanded="false"
-               aria-controls="navbar-tracking">
+            <a aria-controls="navbar-tracking" aria-expanded="false" class="collapsed" data-toggle="collapse"
+               href="#navbar-tracking">
                 <i class="ni ni-archive-2"></i>
                 <p>Tracking <b class="caret"></b></p>
             </a>
@@ -113,8 +114,8 @@
             </a>
         </li>
         <li class="li ">
-            <a data-toggle="collapse" href="#navbar-user-roles" class="collapsed" aria-expanded="false"
-               aria-controls="navbar-user-roles">
+            <a aria-controls="navbar-user-roles" aria-expanded="false" class="collapsed" data-toggle="collapse"
+               href="#navbar-user-roles">
                 <i class="ni ni-archive-2"></i>
                 <p> User Roles <b class="caret"></b></p>
             </a>
@@ -123,18 +124,18 @@
                     <!--    {% if not request.user.is_manager %}-->
                     <li>
                         <a href="{% url 'branch-list' %}">
-                            <i class="fa fa-book" aria-hidden="true"></i><span class="sidebar-normal">Branch</span>
+                            <i aria-hidden="true" class="fa fa-book"></i><span class="sidebar-normal">Branch</span>
                         </a>
                     </li>
                     <!--    {% endif %}-->
                     <li>
-                        <a href="{% url 'user-list' role=16 %}">
-                            <i class="fa fa-book" aria-hidden="true"></i><span class="sidebar-normal">Executives</span>
+                        <a href="{% url 'user-list' role='executive' %}">
+                            <i aria-hidden="true" class="fa fa-book"></i><span class="sidebar-normal">Executives</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'user-list' role=32 %}">
-                            <i class="fa fa-book" aria-hidden="true"></i><span class="sidebar-normal">Dealers</span>
+                        <a href="{% url 'user-list' role='dealer' %}">
+                            <i aria-hidden="true" class="fa fa-book"></i><span class="sidebar-normal">Dealers</span>
                         </a>
                     </li>
 
@@ -144,8 +145,8 @@
 
 
         <li class="li ">
-            <a data-toggle="collapse" href="#navbar-configuration" class="collapsed" aria-expanded="false"
-               aria-controls="navbar-configuration">
+            <a aria-controls="navbar-configuration" aria-expanded="false" class="collapsed" data-toggle="collapse"
+               href="#navbar-configuration">
                 <i class="ni ni-archive-2"></i>
                 <p> Configurations <b class="caret"></b></p>
             </a>
@@ -153,12 +154,12 @@
                 <ul class="nav">
                     <li>
                         <a href="{% url 'banners-list' %}">
-                            <i class="fa fa-book" aria-hidden="true"></i><span>Advertisements</span>
+                            <i aria-hidden="true" class="fa fa-book"></i><span>Advertisements</span>
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'district-list' %}">
-                            <i class="fa fa-book" aria-hidden="true"></i><span>Zones</span>
+                            <i aria-hidden="true" class="fa fa-book"></i><span>Zones</span>
                         </a>
                     </li>
 

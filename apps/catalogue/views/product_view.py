@@ -3,10 +3,9 @@ from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
-from django.views.generic.edit import ProcessFormView, ModelFormMixin, FormMixin
+from django.views.generic import UpdateView, DeleteView, ListView
+from django.views.generic.edit import FormMixin
 from django_filters.rest_framework import DjangoFilterBackend
-from django_filters.views import FilterView
 
 from apps.catalogue.forms.product_form import ProductForm
 from apps.catalogue.models import Product
@@ -14,53 +13,51 @@ from lib.filters import ProductFilter
 
 
 class ProductDetailView(UpdateView):
-	queryset = Product.objects.all()
-	template_name = 'paper/catalogue/product_form.html'
-	model = Product
-	form_class = ProductForm
-	success_url = '/catalogue/product/list/'
+    queryset = Product.objects.all()
+    template_name = 'paper/catalogue/product_form.html'
+    model = Product
+    form_class = ProductForm
+    success_url = '/catalogue/product/list/'
 
 
 class ProductListView(FormMixin, ListView):
-	queryset = Product.objects.all().select_related('brand', 'category')
-	template_name = 'paper/catalogue/product_list.html'
-	model = Product
-	form_class = ProductForm
-	filtering_backends = (DjangoFilterBackend, )
-	filtering_class = ProductFilter
-	filterset_fields = ('name', 'product_code', 'brand')
-	success_url = '/catalogue/product/list/'
+    queryset = Product.objects.all().select_related('brand', 'category')
+    template_name = 'paper/catalogue/product_list.html'
+    model = Product
+    form_class = ProductForm
+    filtering_backends = (DjangoFilterBackend,)
+    filtering_class = ProductFilter
+    filterset_fields = ('name', 'product_code', 'brand')
+    success_url = '/catalogue/product/list/'
 
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		page_number = self.request.GET.get('page', 1)
-		page_size = self.request.GET.get('page_size', 10)
-		queryset = ProductFilter(self.request.GET, queryset=self.get_queryset())
-		context['filter_form'] = ProductFilter(self.request.GET, queryset=self.get_queryset()).form
-		# import pdb;pdb.set_trace()
-		paginator = Paginator(queryset.qs, page_size)
-		try:
-			page_number = paginator.validate_number(page_number)
-		except EmptyPage:
-			page_number = paginator.num_pages
-		filter = paginator.get_page(page_number)
-		context['filter'] = filter
-		return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page_number = self.request.GET.get('page', 1)
+        page_size = self.request.GET.get('page_size', 10)
+        queryset = ProductFilter(self.request.GET, queryset=self.get_queryset())
+        context['filter_form'] = ProductFilter(self.request.GET, queryset=self.get_queryset()).form
+        # import pdb;pdb.set_trace()
+        paginator = Paginator(queryset.qs, page_size)
+        try:
+            page_number = paginator.validate_number(page_number)
+        except EmptyPage:
+            page_number = paginator.num_pages
+        filter = paginator.get_page(page_number)
+        context['filter'] = filter
+        return context
 
-	def post(self, request, *args, **kwargs):
-		form = self.form_class(request.POST, request.FILES)
-		if form.is_valid():
-			form.save()
-		else:
-			print(form.errors)
-		return redirect('product-list')
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+        else:
+            print(form.errors)
+        return redirect('product-list')
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ProductDeleteView(DeleteView):
-	queryset = Product.objects.all()
-	template_name = 'paper/catalogue/product_list.html'
-	model = Product
-	success_url = '/catalogue/product/list/'
-
-
+    queryset = Product.objects.all()
+    template_name = 'paper/catalogue/product_list.html'
+    model = Product
+    success_url = '/catalogue/product/list/'

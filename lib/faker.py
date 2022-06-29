@@ -8,7 +8,6 @@ class FakeImage:
     def __init__(self, instance=None):
         # self.gender = 'M'
         if instance:
-
             self.photo = instance.photo.url
 
     @property
@@ -26,4 +25,3 @@ class FakeImage:
     @property
     def path(self):
         return os.path.join(settings.BASE_DIR, 'public', 'assets', self.name)
-

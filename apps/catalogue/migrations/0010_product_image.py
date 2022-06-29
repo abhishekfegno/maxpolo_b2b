@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('catalogue', '0009_alter_brand_id_alter_category_id_alter_pdf_id_and_more'),
     ]
