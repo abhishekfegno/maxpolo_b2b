@@ -129,6 +129,11 @@
                     </li>
                     <!--    {% endif %}-->
                     <li>
+                        <a href="{% url 'user-list' role='admin' %}">
+                            <i aria-hidden="true" class="fa fa-book"></i><span class="sidebar-normal">Admin</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{% url 'user-list' role='executive' %}">
                             <i aria-hidden="true" class="fa fa-book"></i><span class="sidebar-normal">Executives</span>
                         </a>
