@@ -43,18 +43,11 @@
                         <div class="row">
                             {% for field in form %}
                             <div class="col">
-
                                 {{ field.label }}
                                 {{ field }}
-                                <!--                                <label class="switch" >-->
-                                <!--                                  <input type="checkbox" name="{{field.name}}" class="required checkbox form-control" id="id_{{field.name}}"{% if field.value %}checked{% endif %}>-->
-                                <!--                                  <span class="slider round"></span>-->
-                                <!--                                </label>-->
                             </div>
                             {% endfor%}
-
                         </div>
-
                         <button type='submit' class='btn btn-md btn-success' style="float:right;"> Save </button>
                     </form>
                 </fieldset>

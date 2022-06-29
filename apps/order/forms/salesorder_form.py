@@ -11,6 +11,10 @@ class QuotationForm(forms.ModelForm):
 		fields = ('dealer',)
 
 
+class QuotationLineFormset():
+	pass
+
+
 class QuotationLineForm(forms.ModelForm):
 
 	class Meta:
