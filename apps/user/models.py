@@ -67,10 +67,10 @@ class User(AbstractUser):
 
     @property
     def user_role_name(self):
-        if self.user_role == '16':
-            return "Executive"
         if self.user_role == '32':
             return "Dealer"
+        if self.user_role == '16':
+            return "Executive"
         if self.user_role == '1':
             return "Admin"
 
