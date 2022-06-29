@@ -1,4 +1,4 @@
-{% extends 'paper/layout.html' %}{% load static crispy_forms_tags %}{% block content%}
+{% extends 'paper/layout.html' %}{% load static humanize crispy_forms_tags %}{% block content%}
 <style>
     #timeline { list-style: none!important }
     #timeline .status,#timeline .timestamp{padding:0 40px;display:flex;}
@@ -35,21 +35,23 @@
                 {% csrf_token %}
                 <input type="hidden" hidden name="is_confirmed" value="1" >
                 <input type="hidden" hidden name="is_cancelled" value=0 class="form-control">
-                <input type="button" onclick="confirm_submit(event)" class="btn btn-info btn-inline" value="Confirm Order">
+                <input type="hidden" hidden name="confirmed_date" value="{% now 'm/d/Y' %}" class="form-control" >
+                <input type="button" onclick="confirm_submit(event)" class="btn btn-success btn-inline" value="Confirm Order">
             </form>
             <form action="{% url 'quotation-update' pk=order.id %}" class="form-inline"  method="post">
                 {% csrf_token %}
                 <input type="hidden" hidden name="is_confirmed" value=0 class="form-control">
                 <input type="hidden" hidden name="is_cancelled" value="1">
+                <input type="hidden" hidden name="confirmed_date" value="{% now 'm/d/Y' %}" class="form-control" >
                 <input type="button" onclick="confirm_submit(event)" class="btn btn-secondary btn-inline" value="Cancel">
             </form>
-
         </div>
-        {% elif order.order_type == 'invoice' %}
+        {% elif order.is_invoice %}
         <div class="float-right ">
             <a href="#" class="btn btn-info "> Capture Invoice </a>
         </div>
         {% else %}
+
         {% endif %}
     </div>
 
@@ -66,7 +68,7 @@
                                 <p> Order Placed </p>
                             </div>
                         </li>
-                        <li class="li {% if order.is_confirmed %}complete{% endif %}">
+                        <li class="li {% if order.is_invoice or order.is_confirmed %}complete{% endif %}">
                             <div class="timestamp">
                                 <span class="date">{{ order.confirmed_date|date|default:"TBD" }}<span>
                             </div>
@@ -112,8 +114,8 @@
                     </div>
                     <div class='card-body'>
                         <div class="table-responsive">
-                            <table class="table table-hover table-sm">
-                                <thead class="thead-light">
+                            <table class="table table-sm table-hover table-sm">
+                                <thead class="thead-dark">
                                 <tr class="">
                                     <th scope="col">ID</th>
                                     <th scope="col">Product Name</th>
@@ -142,9 +144,10 @@
                                     </td>
                                     <td>
                                         <div class="">
+
                                             {% if object.pk == order_line_item.pk %}
                                             <a class="btn text-white btn-primary btn-sm"> Back to list </a>
-                                            {% else %}
+                                            {% elif not order.is_confirmed and not order.is_cancelled  %}
                                             <a href="{% url 'get_orderline-update' order_id=order.pk pk=object.pk %}" class="btn text-white btn-success btn-sm">
                                                 <img src="{% static 'icons/edit.svg' %}" alt="" width="17">
                                             </a>
@@ -153,6 +156,13 @@
                                         </div>
                                     </td>
                                 </tr>
+                                {% if object.is_invoice %}
+                                <tr>
+                                    <td></td>
+                                    <td>Invoice Amount</td>
+                                    <td>{{ order.invoice_amount }}/td>
+                                </tr>
+                                {% endif %}
                                 {% endfor %}
                                 <tr>
                                     <td></td>
@@ -169,10 +179,7 @@
 
             </div>
             <div class="col-md-4">
-                <pre>order.is_confirmed : {{ order.is_confirmed}}</pre>
-                <pre>order.is_cancelled : {{ order.is_cancelled}}</pre>
-
-                {% if not order.is_confirmed %}
+                {% if not order.is_confirmed and not order.is_invoice %}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
@@ -186,12 +193,14 @@
                                         {% csrf_token %}
                                         <input type="hidden" hidden name="is_confirmed" value=true class="form-control">
                                         <input type="hidden" hidden name="is_cancelled" value=false class="form-control">
-                                        <input type="button" class="btn btn-info" onclick="confirm_submit(event)"  value="Confirm Order">
+                                        <input type="hidden" hidden name="confirmed_date" value="{% now 'm/d/Y' %}" class="form-control" >
+                                        <input type="button" class="btn btn-success" onclick="confirm_submit(event)"  value="Confirm Order">
                                     </form>
                                     <form action="{% url 'quotation-update' pk=order.id %}" method="post">
                                         {% csrf_token %}
                                         <input type="hidden" hidden name="is_confirmed" value=false class="form-control">
                                         <input type="hidden" hidden name="is_cancelled" value=true class="form-control">
+                                        <input type="hidden" hidden name="confirmed_date" value="{% now 'm/d/Y' %}" class="form-control" >
                                         <input type="button" class="btn btn-secondary" onclick="confirm_submit(event)" value="Cancel">
                                     </form>
                                 </div>
@@ -200,7 +209,7 @@
                     </div>
                 </div>
 
-                {% elif order.is_confirmed and not order.is_invoiced %}
+                {% elif order.is_confirmed and not order.is_invoice %}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
@@ -208,11 +217,58 @@
                                 <h3 class="heading-3"> Invoice this Order </h3>
                             </div>
                             <div class="card-body">
-                                {% for line in order.dealer.address %}
-                                {% if line %}
-                                <p>{{ line }}</p>
+                                <p class="text-muted">Provide with your Invoice Amount and Invoice Number to raise an invoice against the Order. </p>
+                                <form action="{% url 'quotation-update' pk=order.id %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" hidden name="is_confirmed" value=true class="form-control">
+                                    <input type="hidden" hidden name="is_cancelled" value=false class="form-control">
+                                    <input type="hidden" hidden name="is_invoice" value=true class="form-control">
+                                    <input type="hidden" hidden name="invoice_status" value="credit" class="form-control">
+                                    <label>
+                                        Amount
+                                        <input type="number"  name="invoice_amount" value="credit" class="form-control" onchange="document.querySelector('[name=\'invoice_remaining_amount\']').value = event.target.value ;">
+                                    </label>
+                                    <label>
+                                        #Invoice Number
+                                        <input type="text"  name="invoice_id" value="" class="form-control" >
+                                    </label>
+                                    <input type="hidden" hidden name="invoice_remaining_amount" value="credit" class="form-control" >
+                                    <input type="hidden" hidden name="invoice_date" value="{% now 'm/d/Y' %}" class="form-control" >
+                                    <br>
+                                    <input type="button" class="btn  btn-danger" onclick="confirm_submit(event)" value="Raise Invoice">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="heading-3"> Invoice Details </h3>
+                            </div>
+                            <div class="card-body">
+                                {% if object.invoice_remaining_amount > 0 %}
+                                <div class="row">
+                                    <div class="col-2">
+                                        <img src="{% static 'icons/mobi/alert.svg' %}" alt="">
+                                    </div>
+                                    <div class="col-10">
+                                        <span>Your bills collectively sum up to  <span class="text-danger">Rs. {{ net_txn_remaining|intcomma }}</span> is pending as credit.</span>
+                                        <p> Net Amount : {{ object.invoice_amount|intcomma }}</p>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="row">
+                                    <div class="col-2">
+                                        <img src="{% static 'icons/mobi/tick.png' %}" alt="">
+                                    </div>
+                                    <div class="col-10">
+                                        Your bills collectively sum up to  <span class="text-danger">Rs. {{ object.invoice_amount|intcomma }}</span> is Completely Paid.
+                                    </div>
+                                </div>
                                 {% endif %}
-                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -233,6 +289,45 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>Transactions</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hovered">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Transaction</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for txn in  order.transaction_set.all %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ txn.id }}</td>
+                            <td>{{ txn.amount }}</td>
+                            <td>{{ txn.created_at|date }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="100%">
+                                There are no transactions accross this bill.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
                 </div>
             </div>
         </div>

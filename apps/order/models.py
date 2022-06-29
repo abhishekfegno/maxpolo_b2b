@@ -56,6 +56,11 @@ class SalesOrder(models.Model):
     def total_line_quantity(self):
         return self.line.all().aggregate(total_quantity=Sum('quantity')).values()
 
+    def save(self, **kwargs):
+        if self.is_confirmed and self.is_cancelled:
+            self.is_cancelled = False
+        super(SalesOrder, self).save(**kwargs)
+
 
 class SalesOrderLine(models.Model):
     order = models.ForeignKey('order.SalesOrder', on_delete=models.SET_NULL, related_name='line', null=True, blank=True)
