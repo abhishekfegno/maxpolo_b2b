@@ -35,7 +35,7 @@
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.order_id }}</a></div>
+                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.id_as_text }}</a></div>
                             </td>
                             <td>
                                 <div class="">{{ object.created_at }}</div>
@@ -113,3 +113,6 @@ function showForm(e){
 
 
 </script>{% endblock %}
+
+
+

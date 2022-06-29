@@ -26,18 +26,34 @@
     <div class="col-md-6">
         <h3>
             <img src="{% static 'icons/order.png' %}" alt="..." height="40">
-            ORDER / #{{ order.id_as_text }} </h3>
+            ORDER / #{{ order.order_id }} </h3>
     </div>
     <div class="col-md-6">
         {% if order.order_type == 'quotation' %}
-        <div class="float-right ">
-            <a href="{% url 'quotation_status' id=order.id status='confirm' %}" class="btn btn-info "> Confirm Order </a>
-            <a href="{% url 'quotation_status' id=order.id status='cancel' %}" class="btn btn-secondary"> Cancel Order </a>
+
+        <div class="float-right " style="display:flex;">
+            <form action="{% url 'quotation_status' pk=order.id %}" class="form-inline" method="post">
+                {% csrf_token %}
+                <input type="hidden" hidden name="is_confirmed" value="1" >
+                <input type="hidden" hidden name="is_cancelled" value=0 class="form-control">
+                <input type="button" onclick="confirm_submit(event)" class="btn btn-info btn-inline" value="Confirm Order">
+            </form>
+            <form action="{% url 'quotation_status' pk=order.id %}" class="form-inline"  method="post">
+                {% csrf_token %}
+                <input type="hidden" hidden name="is_confirmed" value=0 class="form-control">
+                <input type="hidden" hidden name="is_cancelled" value="1">
+                <input type="button" onclick="confirm_submit(event)" class="btn btn-secondary btn-inline" value="Cancel">
+            </form>
+
         </div>
         {% elif order.order_type == 'salesorder' %}
-        <div class="float-right ">
-            <a href="{% url 'quotation_status' id=order.id status='invoice' %}" class="btn btn-info "> Invoice Order </a>
-        </div>
+        <div class="float-right " style="display:flex;">
+            <form action="{% url 'quotation_status' pk=order.id %}" class="form-inline"  method="post">
+                {% csrf_token %}
+                <input type="hidden" hidden name="is_invoice" value=1 class="form-control">
+                <input type="button" onclick="confirm_submit(event)" class="btn btn-secondary btn-inline" value="Invoice Order">
+            </form>
+          </div>
         {% elif order.order_type == 'invoice' %}
         <div class="float-right ">
             <a href="#" class="btn btn-info "> Capture Invoice </a>
@@ -101,7 +117,7 @@
             <div class="col-md-8">
                 <div class='card'>
                     <div class="card-header">
-                        <h5>ORDER ITEMS</h5>
+                        <h5> ORDER ITEMS </h5>
                     </div>
                     <div class='card-body'>
                         <div class="table-responsive">
@@ -118,27 +134,25 @@
                                 {% for object in object_list %}
                                 <tr>
                                     <td>
-                                        <div class="">{{ forloop.counter }}</div>
+                                        {{ forloop.counter }}
                                     </td>
                                     <td>
-                                        <div class="">{{ object.product.name }}</div>
+                                        {{ object.product.name }}
                                     </td>
                                     <td>
-                                        {% if object.pk == order_line_item.pk %}
-                                        <div class="">{{ object.quantity }}</div>
+                                        {% if object.pk != order_line_item.pk %}
+                                        {{ object.quantity }}
                                         {% else %}
                                         <form action="" method="post">
                                             {% csrf_token %}
                                             <input type="number" class="form-control" name="quantity" value="{{ object.quantity }}">
                                         </form>
-                                            {{ form }}
                                         {% endif %}
                                     </td>
                                     <td>
                                         <div class="">
                                             {% if object.pk == order_line_item.pk %}
-                                                <a class="btn text-white btn-primary btn-sm"> Back to list </a>
-
+                                            <a class="btn text-white btn-primary btn-sm"> Back to list </a>
                                             {% else %}
                                             <a href="{% url 'get_orderline-update' order_id=order.pk pk=object.pk %}" class="btn text-white btn-success btn-sm">
                                                 <img src="{% static 'icons/edit.svg' %}" alt="" width="17">
@@ -164,6 +178,9 @@
 
             </div>
             <div class="col-md-4">
+                <pre>order.is_confirmed : {{ order.is_confirmed}}</pre>
+                <pre>order.is_cancelled : {{ order.is_cancelled}}</pre>
+
                 {% if not order.is_confirmed %}
                 <div class="row">
                     <div class="col-md-12">
@@ -173,7 +190,20 @@
                             </div>
                             <div class="card-body">
                                 You have not confirmed the order yet! Please Do so by Taping the confirm Button.
-
+                                <div style="display:flex;">
+                                    <form action="{% url 'quotation-update' pk=order.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" hidden name="is_confirmed" value=true class="form-control">
+                                        <input type="hidden" hidden name="is_cancelled" value=false class="form-control">
+                                        <input type="button" class="btn btn-info" onclick="confirm_submit(event)"  value="Confirm Order">
+                                    </form>
+                                    <form action="{% url 'quotation-update' pk=order.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" hidden name="is_confirmed" value=false class="form-control">
+                                        <input type="hidden" hidden name="is_cancelled" value=true class="form-control">
+                                        <input type="button" class="btn btn-secondary" onclick="confirm_submit(event)" value="Cancel">
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -184,7 +214,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="heading-3"> Billing Address </h3>
+                                <h3 class="heading-3"> Invoice this Order </h3>
                             </div>
                             <div class="card-body">
                                 {% for line in order.dealer.address %}
@@ -218,4 +248,31 @@
     </div>
 </div>
 
+<script>
+
+var confirm_submit = function (event){
+    event.preventDefault();
+    var _form = event.target.form;
+    swal({
+      title: "Confirm?",
+      text: "Are you sure?",
+      type: "warning",
+
+      confirmButtonText: "Confirm",
+      cancelButtonText: "Back"
+
+      }
+    ).then(
+      function (isConfirm) {
+        if (isConfirm) {
+          _form.submit();
+        }
+      },
+      function() {
+         console.log('BACK');
+      }
+    );
+
+}
+</script>
 {%endblock%}

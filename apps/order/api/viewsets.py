@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator, EmptyPage
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView, RetrieveAPIView
@@ -25,7 +25,7 @@ class OrderDetailAPIView(RetrieveAPIView):
     pagination_class = PageNumberPagination
 
 
-class OrderListAPIView(ListAPIView):
+class OrderListAPIView2(ListAPIView):
     """
     filters
         ?is_quotation=True
@@ -37,7 +37,6 @@ class OrderListAPIView(ListAPIView):
         "quantites":[1,2,3],
         "dealer":3
     }
-
     """
     queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
     serializer_class = OrderSerializer
@@ -81,3 +80,17 @@ class OrderListAPIView(ListAPIView):
         except Exception as e:
             result['errors'] = str(e)
         return Response(result, status=status.HTTP_200_OK)
+
+
+class OrderListAPIView(ListAPIView):
+    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
+    serializer_class = OrderSerializer
+    pagination_class = PageNumberPagination
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    permission_classes = (permissions.IsAuthenticated, )
+    filterset_fields = ['is_cancelled', 'is_confirmed', 'is_invoice', 'is_quotation']
+
+    def filter_queryset(self, queryset):
+        return queryset.filter(dealer=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
+
+
