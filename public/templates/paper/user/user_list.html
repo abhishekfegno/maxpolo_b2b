@@ -6,8 +6,6 @@
         <div class='card'>
             <div class='card-body'>
                 {% if object.pk %}
-                <a class="pull-right" href="{% url 'branch-list' %}"> <img alt="close"
-                                                                           src="{% static 'icons/close.svg' %}" width="25"/> </a>
                 <h3 class="heading-3 pt-3">Update "{{ object }}"</h3>
                 <p class="text-muted"> Here you can update the current {{ role|lower }}. </p>
                 {% else %}
@@ -29,6 +27,7 @@
                                     {{ form.branch|as_crispy_field }}
                                 </div>
                             </div>
+                            <hr>
                         </div>
 
                         <div class="col-md-12">
@@ -43,6 +42,7 @@
                                     {{ form.password2|as_crispy_field }}
                                 </div>
                             </div>
+                            <hr>
                         </div>
 
                         <div class="col-md-12">
@@ -59,12 +59,15 @@
                                     {% endif %}
                                 </div>
                             </div>
+                            <hr>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="text-danger">
+                                {{ form.non_field_errors }}
+                            </div>
                         </div>
 
                     </div>
-                    {% if form.errors %}
-                    <h5>{{ form.errors }}</h5>
-                    {% endif %}
                     <button class='btn btn-success' style="float:right;" type='submit'> Save</button>
                 </form>
             </div>
@@ -73,12 +76,15 @@
     <div class='col-md-5'>
         <div class='card'>
             <div class='card-body'>
+                {% if object.pk %}
+                <a class="pull-right btn btn-sm btn-info" href="{% url 'user-list' role=view.kwargs.role %}"> Back to list </a>
+                {% endif %}
                 <h3>{{ role }} List</h3>
                 <p class="text-muted">
                     You can view the list of {{ role|lower }}s here.. </p>
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
-                        <thead class="">
+                        <thead class="thead-dark">
                         <tr class="">
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
@@ -88,7 +94,7 @@
                         </thead>
                         <tbody>
                         {% for object_item in object_list %}
-                        <tr class="{% if object.pk == object_item.pk %}selected-row {% endif %}">
+                        <tr class="{% if object.pk == object_item.pk %}selected-row{% endif %}">
                             <td>
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
@@ -101,14 +107,18 @@
                             </td>
                             <td>
                                 <div class="">
-                                    {% if object.pk is None %}
-                                    <a class="btn btn-primary btn-sm" href="{% url 'user-update' pk=object_item.pk %}">Edit</a>
+                                    {% if object.pk != object_item.pk %}
+                                    <a class="btn btn-primary btn-sm" href="{% url 'user-update' role=view.kwargs.role pk=object_item.pk %}">Edit</a>
                                     {% else %}
                                     <a class="delBrand btn btn-danger  btn-sm" href="javascript:void(0)"
-                                       onclick="swalFunction(this, '{% url 'user-delete' pk=object_item.pk %}')">Delete</a>
-                                </div>
+                                       onclick="swalFunction(this, '{% url 'user-delete' role=view.kwargs.role pk=object_item.pk %}')">Delete</a>
                                 {% endif %}
+                                </div>
                             </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="100%"> Sorry, You Donot have any {{ role|lower }}s in the list </td>
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -119,8 +129,7 @@
             </div>
         </div>
     </div>
-
-
-</div>{% include 'paper/swal.html' %}
+</div>
+{% include 'paper/swal.html' %}
 
 {% endblock %}

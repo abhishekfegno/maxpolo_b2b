@@ -57,7 +57,7 @@ class User(AbstractUser):
     mobile = models.CharField(max_length=20)
     user_role = models.CharField(max_length=20, choices=Role.USER_ROLE_CHOICE, default=Role.EXECUTIVE, blank=True)
     branch = models.ForeignKey('infrastructure.Branch', on_delete=models.SET_NULL, null=True, blank=True)
-    dealers = models.ManyToManyField('self', null=True, blank=True)
+    executive = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='dealers')
 
     company_cin = models.CharField(max_length=50, null=True, blank=False)
     address_street = models.CharField(max_length=50, null=True, blank=False)
@@ -71,6 +71,8 @@ class User(AbstractUser):
             return "Executive"
         if self.user_role == '32':
             return "Dealer"
+        if self.user_role == '1':
+            return "Admin"
 
     def save(self, **kwargs):
         self.user_role = self.chosen_role
