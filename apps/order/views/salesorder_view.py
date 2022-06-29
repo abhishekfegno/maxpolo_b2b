@@ -233,11 +233,11 @@ class QuotationListView(FormMixin, ListView):
 
 					line = SalesOrderLine.objects.create(product=product, quantity=quantity, order=order)
 					print(f"line created {line} for order {order}")
+					print(f"order {order} created")
+					messages.add_message(request, messages.INFO, f"New Order {order} has been created")
 			except Exception as e:
 				print(str(e))
 				messages.add_message(request, messages.INFO, str(e))
-			print(f"order {order} created")
-			messages.add_message(request, messages.INFO, f"New Order {order} has been created")
 		else:
 			messages.add_message(request, messages.SUCCESS, form.errors)
 		return redirect('quotation-list')
