@@ -42,7 +42,7 @@ class EmailHandler(object):
             "subheadline": "New Advertisement have been created !!!"
             }
 
-        self.sent_email_now(recipient, message, subject)
+        self.sent_email_now(recipients, message, subject)
 
     def sent_mail_complaint(self, instance):
         recipient = []
