@@ -29,7 +29,7 @@ class PasswordResetSerializer(serializers.Serializer):
 class ComplaintSerialzer(serializers.ModelSerializer):
     class Meta:
         model = Complaint
-        fields = '__all__'
+        fields = ('id', 'title', 'ticket_id', 'description', 'status',  'is_public', 'created_at', 'order_id')
 
 
 class AdvertisementSerializer(serializers.ModelSerializer):
