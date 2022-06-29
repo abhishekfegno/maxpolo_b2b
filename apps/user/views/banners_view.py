@@ -4,8 +4,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from rest_framework.reverse import reverse
-from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
 
 from apps.user.forms.banners_form import BannersForm
 from apps.user.models import Banners

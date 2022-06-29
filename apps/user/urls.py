@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, register_converter
@@ -26,7 +25,6 @@ class ExecDealer(SlugConverter):
 
 
 register_converter(ExecDealer, 'role')
-
 
 urlpatterns = [
     # path('', login_required(TemplateView.as_view(template_name='paper/index.html')), name='index'),

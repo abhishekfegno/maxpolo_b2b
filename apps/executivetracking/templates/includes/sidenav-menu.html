@@ -13,8 +13,8 @@
         </a>
         {% else %}
         <a aria-controls="navbar-{{ menu.name|slugify }}" aria-expanded="{{ menu.submenu|menu_aria_expand:request }}"
-           class="nav-link {{ menu.url|link_class:request }}" data-toggle="collapse" href="#navbar-{{ menu.name|slugify }}"
-           role="button">
+           class="nav-link {{ menu.url|link_class:request }}" data-toggle="collapse"
+           href="#navbar-{{ menu.name|slugify }}" role="button">
             <i class="{{ menu.icon }}  text-muted"></i>
             <span class="nav-link-text text-muted">{{ menu.name }}</span>
         </a>

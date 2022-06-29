@@ -3,8 +3,6 @@ from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
-from django.views.generic.detail import SingleObjectTemplateResponseMixin
-from django.views.generic.edit import ModelFormMixin, ProcessFormView
 
 from apps.infrastructure.forms.branch_form import BranchForm
 from apps.infrastructure.models import Branch
@@ -35,5 +33,3 @@ class BranchDeleteView(DeleteView):
     template_name = 'templates/branch_delete.html'
     model = Branch
     success_url = '/infrastructure/branch/list/'
-
-

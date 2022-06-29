@@ -1,5 +1,5 @@
-from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _

@@ -6,7 +6,6 @@ from django.utils import datetime_safe
 from django.views.generic import DetailView, ListView, UpdateView, CreateView
 
 from apps.executivetracking.models import CheckPoint, Zone
-from apps.permissionmixin import PermissionMixin
 from apps.user.models import Executive, Role, User
 # Create your views here.
 from apps.viewset import ModelSelectorMixin
@@ -22,7 +21,7 @@ class FieldForceSelect(
     def get_queryset(self):
         qs = Executive.objects.all()
         has_account = hasattr(self.request.user, 'account')
-        if has_account and int(self.request.user.user_role) > Role.ADMIN :
+        if has_account and int(self.request.user.user_role) > Role.ADMIN:
             qs = qs.filter(branch=self.request.user.account.branch)
         if self.request.GET.get('place'):
             qs = qs.filter(place__iexact=self.request.GET.get('place'))

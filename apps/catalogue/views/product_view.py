@@ -26,7 +26,7 @@ class ProductListView(FormMixin, ListView):
     template_name = 'paper/catalogue/product_list.html'
     model = Product
     form_class = ProductForm
-    filtering_backends = (DjangoFilterBackend, )
+    filtering_backends = (DjangoFilterBackend,)
     filtering_class = ProductFilter
     filterset_fields = ('name', 'product_code', 'brand')
     success_url = '/catalogue/product/list/'

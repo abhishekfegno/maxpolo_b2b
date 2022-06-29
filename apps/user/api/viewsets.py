@@ -23,7 +23,6 @@ from apps.user.api.serializers import LoginSerializer, ProfileAPISerializer, Com
 from apps.user.models import User, Complaint, Banners, Dealer
 from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
-from django.contrib.auth import logout
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -169,8 +168,9 @@ class HomePageAPI(APIView):
     def get(self, request, *args, **kwargs):
         advertisements = AdvertisementSerializer(Banners.objects.all(), many=True, context={'request': request}).data
         pdf = ProductPDFSerializer(PDF.objects.select_related('category'), many=True, context={'request': request}).data
-        upcoming_payments = UpcomingPaymentSerializer(SalesOrder.objects.filter(is_invoice=True, invoice_status__in=['payment_partial', 'credit']),
-                                                                                many=True, context={'request': request}).data
+        upcoming_payments = UpcomingPaymentSerializer(
+            SalesOrder.objects.filter(is_invoice=True, invoice_status__in=['payment_partial', 'credit']),
+            many=True, context={'request': request}).data
         result = {
             "banners": advertisements,
             "new arrival": pdf,

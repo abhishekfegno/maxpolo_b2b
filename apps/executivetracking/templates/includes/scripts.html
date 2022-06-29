@@ -15,6 +15,7 @@
 <script>
 (function(){document.addEventListener('DOMContentLoaded', function(){(window.djdt && djdt.init())});})()
 
+
 </script>{% endif %}
 
 <!-- Specific JS goes HERE -->
@@ -31,6 +32,7 @@
 }
 
 @keyframes spin {0% { transform: rotate(0deg); }100% { transform: rotate(360deg); }}
+
 
 </style>
 <script>
@@ -89,6 +91,7 @@
   }
   document.querySelectorAll("select[name^='entries-']").forEach(function(node){ change_detector({target:node}); $(node).on('select2:select', change_detector )});
 
+
 </script>
 
 <script type="text/javascript">
@@ -97,6 +100,7 @@
         $('.select2.select2-container').removeAttr('style').addClass('w-100');
         $('[data-cloak]').removeAttr('data-cloak');
     });
+
 
 </script>
 
@@ -115,6 +119,7 @@
             return false;
         });
     });
+
 
 </script>
 

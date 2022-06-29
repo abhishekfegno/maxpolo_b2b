@@ -249,4 +249,3 @@ BREAD = {
     'complaint-list': [BREAD_HOME, ('Claims', reverse_lazy('complaint-list'))],
     'branch-list': [BREAD_HOME, ('Branch', reverse_lazy('branch-list'))],
 }
-

@@ -26,6 +26,7 @@
 .read-more[data-load-mode="min"][data-load-status="on"]:after {content: "Read More";color: #5e72e4;width: 100%;display:block;position:absolute;right:0;left: 0;bottom:0;background-image: linear-gradient(to top, #fff , #fffc , #fff0);text-align: center;padding-top: 48px;padding-bottom: 24px;}
 .read-more[data-load-mode="min"] p.text-content {position: relative;height: 120px;overflow: hidden;}.read-more{transition: height 250ms ease-out;}.read-more .max-text, .read-more .min-text {cursor: pointer; }.read-more[data-load-mode="min"] .text-content .max-text{ display: none; }
 
+
 </style><!-- Header -->{% include 'includes/layout-header.html' %}
 
 <!-- Page content -->
@@ -238,8 +239,8 @@
         </div>
     </div>
 
-    <div aria-hidden="true" aria-labelledby="exampleModalGlobal" class="modal fade bd-example-modal-lg" id="exampleModalGlobal"
-         role="dialog" tabindex="-1">
+    <div aria-hidden="true" aria-labelledby="exampleModalGlobal" class="modal fade bd-example-modal-lg"
+         id="exampleModalGlobal" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -300,6 +301,7 @@
     }
     loadGlobalMap()
 
+
 </script>
 
 <script type="text/javascript">
@@ -323,10 +325,12 @@ function filter_executives(input) {
   }
 }
 
+
 </script>
 
 <script>
    function read_more_loader(node){console.log(node); node.innerText.split(' ').length < 80 && node.setAttribute('data-load-status', 'off')}
    document.querySelectorAll('.read-more').forEach(read_more_loader);
+
 
 </script>{% endblock javascripts %}

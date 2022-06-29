@@ -6,7 +6,6 @@ from apps.user.models import Banners, Dealer, Executive
 
 
 class BannersForm(forms.ModelForm):
-
     class Meta:
         model = Banners
         fields = ('title', 'photo')
@@ -27,7 +26,6 @@ class ResetPasswordForm(forms.Form):
 
 
 class DealerForm(UserCreationForm):
-
     class Meta:
         model = Dealer
         fields = ('username', "password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email')
@@ -40,4 +38,5 @@ class ExecutiveForm(UserCreationForm):
 
     class Meta:
         model = Executive
-        fields = ('username', "password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email', 'dealers')
+        fields = (
+        'username', "password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email', 'dealers')

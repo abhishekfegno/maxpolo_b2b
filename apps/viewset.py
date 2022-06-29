@@ -10,7 +10,6 @@ from django_filters.constants import ALL_FIELDS
 from django_filters.views import FilterView
 
 from apps.infrastructure.models import Warehouse
-from apps.permissionmixin import PermissionMixin
 from apps.user.models import Dealer, Executive, Role
 
 
@@ -188,7 +187,7 @@ class ModelSelectorMixin(QuerysetFilterMixin,
                             f'"Partner Branch" cannot be same as {"your" if usr.user_role > usr.ADMIN else "Owner"} Branch')
 
                     if not attrs.get("summary") and attrs["transfer_type"] in (
-                    C.RETURN_IN, C.TRANSFER_IN, C.DAMAGE_OUT):
+                            C.RETURN_IN, C.TRANSFER_IN, C.DAMAGE_OUT):
                         raise ValidationError(f'"Summary" must be specified for {attrs["transfer_type"]} Entry!')
                 if self.context2.get('formset_object'):
                     self.context2.get('formset_object').is_valid()

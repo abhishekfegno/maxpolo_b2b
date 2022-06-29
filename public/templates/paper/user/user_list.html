@@ -6,7 +6,8 @@
         <div class='card'>
             <div class='card-body'>
                 {% if object.pk %}
-                <a href="{% url 'branch-list' %}" class="pull-right"> <img src="{% static 'icons/close.svg' %}" width="25" alt="close" /> </a>
+                <a class="pull-right" href="{% url 'branch-list' %}"> <img alt="close"
+                                                                           src="{% static 'icons/close.svg' %}" width="25"/> </a>
                 <h3 class="heading-3 pt-3">Update "{{ object }}"</h3>
                 <p class="text-muted"> Here you can update the current {{ role|lower }}. </p>
                 {% else %}
@@ -54,7 +55,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     {% if form.dealers %}
-                                        {{ form.dealers|as_crispy_field }}
+                                    {{ form.dealers|as_crispy_field }}
                                     {% endif %}
                                 </div>
                             </div>
@@ -64,7 +65,7 @@
                     {% if form.errors %}
                     <h5>{{ form.errors }}</h5>
                     {% endif %}
-                    <button class='btn btn-success' style="float:right;" type='submit'> Save </button>
+                    <button class='btn btn-success' style="float:right;" type='submit'> Save</button>
                 </form>
             </div>
         </div>
@@ -74,8 +75,7 @@
             <div class='card-body'>
                 <h3>{{ role }} List</h3>
                 <p class="text-muted">
-                    You can view the list of {{ role|lower }}s here..
-                </p>
+                    You can view the list of {{ role|lower }}s here.. </p>
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
                         <thead class="">
@@ -93,7 +93,8 @@
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object_item.get_full_name|default:object_item.username|default:"-" }}</div>
+                                <div class="">{{ object_item.get_full_name|default:object_item.username|default:"-" }}
+                                </div>
                             </td>
                             <td>
                                 <div class="">{{ object_item.mobile }}</div>
@@ -103,10 +104,10 @@
                                     {% if object.pk is None %}
                                     <a class="btn btn-primary btn-sm" href="{% url 'user-update' pk=object_item.pk %}">Edit</a>
                                     {% else %}
-                                    <a class="delBrand btn btn-danger  btn-sm"
-                                       href="javascript:void(0)"
-                                       onclick="swalFunction(this, '{% url 'user-delete' pk=object_item.pk %}')">Delete</a></div>
-                                    {% endif %}
+                                    <a class="delBrand btn btn-danger  btn-sm" href="javascript:void(0)"
+                                       onclick="swalFunction(this, '{% url 'user-delete' pk=object_item.pk %}')">Delete</a>
+                                </div>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}

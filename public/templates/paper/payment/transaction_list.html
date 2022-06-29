@@ -27,7 +27,8 @@
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class=""><a href="{% url 'invoice_detail_edit' order_id=object.order.id %}">{{object.order.invoice_id }}</a></div>
+                                <div class=""><a href="{% url 'invoice_detail_edit' order_id=object.order.id %}">{{object.order.invoice_id
+                                    }}</a></div>
                             </td>
                             <td>
                                 <div class="">{{ object.created_at }}</div>
@@ -45,8 +46,7 @@
                                 <div class="">
                                     <a class="btn btn-primary"
                                        href="{% url 'transaction-update' pk=object.pk %}">Edit</a>
-                                    <a class="delBrand btn btn-danger"
-                                       href="javascript:void(0)"
+                                    <a class="delBrand btn btn-danger" href="javascript:void(0)"
                                        onclick="swalFunction(this, '{% url 'transaction-delete' object.pk %}')">Delete</a>
                                 </div>
                             </td>

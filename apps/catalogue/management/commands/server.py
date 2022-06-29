@@ -6,4 +6,3 @@ class Command(BaseCommand):
 
     def handle(self):
         pass
-

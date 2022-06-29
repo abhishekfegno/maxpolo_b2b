@@ -1,10 +1,10 @@
 from django.urls import resolve
+
 from apps.user.models import SiteConfiguration
 
 
 def settings(request):
     data = {}
-    from django.conf import settings as django_settings
     logo = SiteConfiguration.objects.first()
 
     data['settings'] = settings

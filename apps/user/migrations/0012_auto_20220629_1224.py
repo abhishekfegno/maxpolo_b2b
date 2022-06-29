@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('user', '0011_alter_complaint_status'),
     ]
@@ -29,7 +28,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='dealers',
-            field=models.ManyToManyField(blank=True, null=True, related_name='_user_dealers_+', to=settings.AUTH_USER_MODEL),
+            field=models.ManyToManyField(blank=True, null=True, related_name='_user_dealers_+',
+                                         to=settings.AUTH_USER_MODEL),
         ),
         migrations.AlterField(
             model_name='user',

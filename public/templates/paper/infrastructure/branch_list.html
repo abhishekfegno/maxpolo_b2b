@@ -20,7 +20,7 @@
                         </thead>
                         <tbody>
                         {% for object_item in object_list %}
-                        <tr {% if object_item == object %}class="selected-row"{% endif %}>
+                        <tr %} %}class="selected-row" endif if object object_item== {% {%>
                             <td>
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
@@ -28,14 +28,16 @@
                                 <div class="">{{ object_item.name }}</div>
                             </td>
                             <td>
-                                <div class="btn-group mr-2" role="group" aria-label="Second group">
+                                <div aria-label="Second group" class="btn-group mr-2" role="group">
                                     {% if object_item == object %}
                                     <div class=""><a class="delBrand btn btn-danger  btn-inline btn-sm"
                                                      href="javacript:void(0)"
-                                                     onclick="swalFunction(this, '{% url 'branch-delete' pk=object_item.pk %}')">Delete</a></div>
+                                                     onclick="swalFunction(this, '{% url 'branch-delete' pk=object_item.pk %}')">Delete</a>
+                                    </div>
                                     {% else %}
                                     <div class="">
-                                        <a class="btn btn-primary btn-sm btn-inline" href="{% url 'branch-update' pk=object_item.pk %}">Update</a>
+                                        <a class="btn btn-primary btn-sm btn-inline"
+                                           href="{% url 'branch-update' pk=object_item.pk %}">Update</a>
                                     </div>
                                     {% endif %}
                                 </div>
@@ -55,12 +57,13 @@
         <div class='card'>
             <div class='card-body'>
                 {% if object.pk %}
-                    <a href="{% url 'branch-list' %}" class="pull-right"> <img src="{% static 'icons/close.svg' %}" width="25" alt="close" /> </a>
-                    <h3 class="heading-3 pt-3">Update "{{ object }}"</h3>
-                    <p class="text-muted"> Here you can update the current branch. </p>
+                <a class="pull-right" href="{% url 'branch-list' %}"> <img alt="close"
+                                                                           src="{% static 'icons/close.svg' %}" width="25"/> </a>
+                <h3 class="heading-3 pt-3">Update "{{ object }}"</h3>
+                <p class="text-muted"> Here you can update the current branch. </p>
                 {% else %}
-                    <h3 class="heading-3 pt-3">Add Branch</h3>
-                    <p class="text-muted"> Here you can add your branches. </p>
+                <h3 class="heading-3 pt-3">Add Branch</h3>
+                <p class="text-muted"> Here you can add your branches. </p>
                 {% endif %}
                 <form method="POST">
                     {% csrf_token %}

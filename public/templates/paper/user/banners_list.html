@@ -1,6 +1,4 @@
-{% extends 'paper/layout.html' %}
-{% load crispy_forms_tags %}
-{% load view_breadcrumbs %}
+{% extends 'paper/layout.html' %}{% load crispy_forms_tags %}{% load view_breadcrumbs %}
 
 
 {% block content%}
@@ -9,7 +7,7 @@
         <div class='card'>
             <div class='card-body'>
                 <h3>Create Advertisements</h3>
-                <form method="POST" enctype="multipart/form-data">
+                <form enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
                     {{ form | crispy }}
                     <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
@@ -51,9 +49,9 @@
                                 </div>
                             </td>
                             <td>
-                                <div class=""><a class="delBrand btn btn-danger"
-                                                 href="javascript:void(0)"
-                                                 onclick="swalFunction(this, '{% url 'banners-delete' pk=object.pk %}', '{% url 'banners-list' %}')">Delete</a></div>
+                                <div class=""><a class="delBrand btn btn-danger" href="javascript:void(0)"
+                                                 onclick="swalFunction(this, '{% url 'banners-delete' pk=object.pk %}', '{% url 'banners-list' %}')">Delete</a>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}

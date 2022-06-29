@@ -1,5 +1,4 @@
-{% extends 'paper/layout.html' %}{% load crispy_forms_tags %}{% block content%}
-{% include 'paper/htmx.html' %}
+{% extends 'paper/layout.html' %}{% load crispy_forms_tags %}{% block content%}{% include 'paper/htmx.html' %}
 <div class='row'>
 
     <div class='col-7'>
@@ -17,7 +16,8 @@
                 <div>
                     {% include 'paper/catalogue/product_filter.html'%}
                 </div>
-                <p class="text-muted"> Here you can find all the quotations raised by your dealers or even some administrator created behalf of them. </p>
+                <p class="text-muted"> Here you can find all the quotations raised by your dealers or even some
+                    administrator created behalf of them. </p>
                 <div class="table-responsive">
                     <table class="table  table-hover table-sm">
                         <thead class="thead-dark">
@@ -49,7 +49,9 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="100%" class="text-center text-muted"> No Active Quotations left in the book. Check back later </td>
+                            <td class="text-center text-muted" colspan="100%"> No Active Quotations left in the book.
+                                Check back later
+                            </td>
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -110,5 +112,6 @@ function showForm(e){
 
     // Now I want to clone it and put it somewhere.
     $(cloneContactForm()).appendTo('.order-form');
+
 
 </script>{% endblock %}

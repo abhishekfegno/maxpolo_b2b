@@ -2,9 +2,9 @@
 <li>
     <div class="t-activity__icon" style="cursor:pointer"
          title="{% if point.store.dealer_account_id %}Dealer{% else %}Lead{% endif %}">
-        <img alt="{{ point.lead_type }} - {{ point.id }} Icon" class="img position-relative"
-             height="32px"
-             src="{% if point.store.dealer_account_id %}{% static 'img/icons/dealer.svg' %}{% else %}{% static 'img/icons/lead.svg' %}{% endif %}" style="top:-10px;" width="32px">
+        <img alt="{{ point.lead_type }} - {{ point.id }} Icon" class="img position-relative" height="32px"
+             src="{% if point.store.dealer_account_id %}{% static 'img/icons/dealer.svg' %}{% else %}{% static 'img/icons/lead.svg' %}{% endif %}"
+             style="top:-10px;" width="32px">
     </div>
     <div class="t-activity__card">
         <div class="row mb-2">
@@ -19,8 +19,8 @@
                         <i class="ni ni-square-pin"></i> {{ point.store.place|default:"Store Location Unknown" }} |
                         {% if first_device_id and point.device_id != first_device_id %}
                         <button class="btn btn-danger btn-sm " data-color="danger" data-container="body"
-                                data-content="Suspicious Login Detected! This Check in is found from some new Device!" data-placement="top"
-                                data-toggle="popover">
+                                data-content="Suspicious Login Detected! This Check in is found from some new Device!"
+                                data-placement="top" data-toggle="popover">
                             <i class="fa fa-mobile-alt"></i> {{ point.device_name }}
                         </button>
                         {% else %}
@@ -34,7 +34,8 @@
                     <div class="col-4 ">
                         <button class="btn btn-primary btn-sm float-right text-white px-3 mt-2"
                                 data-target="#exampleModal" data-toggle="modal"
-                                onclick="loadInMap({{ point.location.x }}, {{ point.location.y }})"><i class="ni ni-world-2"></i> Map
+                                onclick="loadInMap({{ point.location.x }}, {{ point.location.y }})"><i
+                                class="ni ni-world-2"></i> Map
                         </button>
                     </div>
                     {% endif %}

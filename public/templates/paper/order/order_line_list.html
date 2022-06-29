@@ -14,11 +14,13 @@
                         <div class="numbers">
                             {% if order.order_type == invoice %}
                             <p class="card-category">InvoiceId</p>
-                            <p class="card-title">{{ order.invoice_id }}<p>
-                            {% else %}
+                            <p class="card-title">{{ order.invoice_id }}
+                            <p>
+                                {% else %}
                             <p class="card-category">OrderId</p>
-                            <p class="card-title">{{ order.order_id }}<p>
-                            {% endif %}
+                            <p class="card-title">{{ order.order_id }}
+                            <p>
+                                {% endif %}
                         </div>
                     </div>
                 </div>
@@ -45,12 +47,12 @@
                             </div>
                             {% endfor%}
                         </div>
-<<<<<<< HEAD
+                        <<<<<<< HEAD
 
                         <button class='btn btn-md btn-success' style="float:right;" type='submit'> Save</button>
-=======
-                        <button type='submit' class='btn btn-md btn-success' style="float:right;"> Save </button>
->>>>>>> f147910015f0ca12ef719278c45f9deef624d54c
+                        =======
+                        <button class='btn btn-md btn-success' style="float:right;" type='submit'> Save</button>
+                        >>>>>>> f147910015f0ca12ef719278c45f9deef624d54c
                     </form>
                 </fieldset>
             </div>
@@ -62,12 +64,12 @@
             <div class='card-body'>
                 <h3>Order Detail</h3>
                 <div class="col-lg-3 col-md-6 col-sm-6" style="float:right;">
-<<<<<<< HEAD
+                    <<<<<<< HEAD
                     <a class="delBrand btn btn-danger" href="javascript:void(0)"
                        onclick="swalFunction(this, '{% url del pk=object_list.last.pk %}')">Delete this Order</a>
-=======
-                    <a href="{% url del pk=order.pk %}" class="delBrand btn btn-danger">Delete this Order</a>
->>>>>>> f147910015f0ca12ef719278c45f9deef624d54c
+                    =======
+                    <a class="delBrand btn btn-danger" href="{% url del pk=order.pk %}">Delete this Order</a>
+                    >>>>>>> f147910015f0ca12ef719278c45f9deef624d54c
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
@@ -106,10 +108,8 @@
         </div>
 
     </div>
-<<<<<<< HEAD
-</div>{% include 'paper/swal.html' %}
-=======
-</div>
+    <<<<<<< HEAD
+</div>{% include 'paper/swal.html' %}=======</div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
 <script>
     function swalFunction(element, url){
@@ -146,6 +146,7 @@
         });
     }
      // end of swalFunction()
+
 
 </script>
 

@@ -21,7 +21,6 @@ class QuotationLineForm(forms.ModelForm):
 
 
 class QuotationUpdateForm(forms.ModelForm):
-
     # order_id = forms.CharField(required=False,
     # 	widget=forms.TextInput(attrs={'readonly': 'readonly'})
     # )

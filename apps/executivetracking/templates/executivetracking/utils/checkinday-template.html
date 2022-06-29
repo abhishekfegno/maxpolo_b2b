@@ -19,8 +19,8 @@
 
                         {% if first_device_id and point.device_id != first_device_id %}
                         <button class="btn btn-danger btn-sm " data-color="danger" data-container="body"
-                                data-content="Suspicious Login Detected! This Check in is found from some new Device!" data-placement="top"
-                                data-toggle="popover">
+                                data-content="Suspicious Login Detected! This Check in is found from some new Device!"
+                                data-placement="top" data-toggle="popover">
                             <i class="fa fa-mobile-alt"></i> {{ point.device_name|truncatechars:"12" }}
                         </button>
                         {% else %}
@@ -31,9 +31,9 @@
                     </div>
                     <div class="col-3 py-2">
                         {% if point.location %}
-                        <button class="btn btn-primary btn-sm px-3  float-right text-white"
-                                data-target="#exampleModal" data-toggle="modal"
-                                onclick="loadInMap({{ point.location.x }}, {{ point.location.y }})"><i class="ni ni-world-2"></i> Map
+                        <button class="btn btn-primary btn-sm px-3  float-right text-white" data-target="#exampleModal"
+                                data-toggle="modal" onclick="loadInMap({{ point.location.x }}, {{ point.location.y }})">
+                            <i class="ni ni-world-2"></i> Map
                         </button>
                         {% endif %}
                     </div>

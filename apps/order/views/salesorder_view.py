@@ -2,7 +2,6 @@
 from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
-from django.forms import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
@@ -50,7 +49,6 @@ def get_orderline(request, order_id):
             messages.add_message(request, messages.INFO, form.errors)
             print(form.errors)
     return render(request, 'paper/order/order_line_list.html', context=context)
-
 
 
 def invoice_detail_edit(request, order_id):
@@ -147,7 +145,6 @@ class SalesOrderListView(FormMixin, ListView):
         context['filter'] = filter
         return context
 
-
     def post(self, request, *args, **kwargs):
         form = QuotationForm(request.POST)
         if form.is_valid():
@@ -155,7 +152,8 @@ class SalesOrderListView(FormMixin, ListView):
             quantity = form.data.get('quantity')
             order = form.save()
             for product, quantity in zip(products, quantity):
-                line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity, order=order)
+                line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity,
+                                                     order=order)
                 print(f"line created {line} for order {order}")
         return redirect('salesorder-list')
 
@@ -182,12 +180,12 @@ class QuotationDetailView(UpdateView):
 
 
 class QuotationListView(FormMixin, ListView):
-
-    queryset = SalesOrder.objects.all().filter(is_quotation=True, is_cancelled=False, is_confirmed=False, is_invoice=False).select_related('dealer')
+    queryset = SalesOrder.objects.all().filter(is_quotation=True, is_cancelled=False, is_confirmed=False,
+                                               is_invoice=False).select_related('dealer')
     template_name = 'paper/order/quotation_list.html'
     model = SalesOrder
     form_class = QuotationForm
-    filtering_backends = (DjangoFilterBackend, )
+    filtering_backends = (DjangoFilterBackend,)
     filtering_class = OrderFilter
     filterset_fields = ('order_id',)
     success_url = '/order/quotation/list'
@@ -305,7 +303,8 @@ class InvoiceListView(FormMixin, ListView):
             quantity = form.data.get('quantity')
             order = form.save()
             for product, quantity in zip(products, quantity):
-                line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity, order=order)
+                line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity,
+                                                     order=order)
                 print(f"line created {line} for order {order}")
         return redirect('invoice-list')
 
@@ -316,6 +315,3 @@ class InvoiceDeleteView(DeleteView):
     template_name = 'paper/order/invoice_list.html'
     model = SalesOrder
     success_url = '/order/invoice/list'
-
-
-

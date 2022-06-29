@@ -39,7 +39,6 @@ class BrandListView(CreateView, ListView):
         return redirect('brand-list')
 
 
-
 @method_decorator(csrf_exempt, name='dispatch')
 class BrandDeleteView(DeleteView):
     queryset = Brand.objects.all()

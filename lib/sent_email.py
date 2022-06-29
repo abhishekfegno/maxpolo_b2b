@@ -86,7 +86,7 @@ class EmailHandler(object):
                 "api-key": self.api_key,
                 "content-type": "application/json",
                 "accept": "application/json"
-                },
+            },
             # text_content=message,
             subject=subject.get("subject"),
             # html_content=message

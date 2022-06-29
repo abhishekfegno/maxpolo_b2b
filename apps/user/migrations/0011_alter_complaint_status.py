@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('user', '0010_complaint_order_id_alter_complaint_ticket_id'),
     ]
@@ -13,6 +12,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='complaint',
             name='status',
-            field=models.CharField(choices=[('new', 'New'), ('under processing', 'Under Processing'), ('resolved', 'Resolved'), ('rejected', 'Rejected')], default='new', max_length=20),
+            field=models.CharField(
+                choices=[('new', 'New'), ('under processing', 'Under Processing'), ('resolved', 'Resolved'),
+                         ('rejected', 'Rejected')], default='new', max_length=20),
         ),
     ]
