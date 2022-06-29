@@ -38,7 +38,6 @@ class LoginAPIView(GenericAPIView):
                 u = User.objects.get(email=data['email']).username
                 user = authenticate(request, username=u, password=data['password'])
                 login(request, user)
-                print(user, request.user)
                 out['user'] = {
                     "id": user.id,
                     "role": user.user_role_name,
@@ -47,8 +46,7 @@ class LoginAPIView(GenericAPIView):
                     "address_street": user.address_street,
                     "address_city": user.address_city,
                     "address_state": user.address_state,
-                    "zone": user.zone.name,
-                    "mobile": user.mobile,
+                    "zone": None,
                     "mobile": user.mobile,
                 }
             except Exception as e:
