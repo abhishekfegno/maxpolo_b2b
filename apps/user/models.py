@@ -181,8 +181,9 @@ def sent_email_complaint(sender, created, instance, **kwargs):
         EmailHandler().sent_mail_complaint(instance)
 
 
-@receiver(post_save, sender=Complaint)
+@receiver(post_save, sender=Banners)
 def sent_email_banners(sender, created, instance, **kwargs):
+    recipients = [i for i in Dealer.objects.all().values('email', 'first_name')]
     if created:
-        EmailHandler().sent_mail_for_banners(instance)
+        EmailHandler().sent_mail_for_banners(recipients, instance)
 
