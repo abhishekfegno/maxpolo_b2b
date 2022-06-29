@@ -3,8 +3,8 @@ from django.core.paginator import Paginator, EmptyPage
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status
-from rest_framework.authentication import BasicAuthentication
+from rest_framework import status, permissions
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView, GenericAPIView
@@ -28,6 +28,8 @@ from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    permission_classes = (permissions.AllowAny, )
 
     def post(self, request, *args, **kwargs):
         out = {}
@@ -36,14 +38,24 @@ class LoginAPIView(GenericAPIView):
         if serializer.is_valid():
             try:
                 u = User.objects.get(email=data['email']).username
-                user = authenticate(request, username=u, password=data['password'])
+                user = authenticate(request, email=data['email'], password=data['password'])
                 login(request, user)
-                print(user, request.user)
+
                 out['user'] = {
+                    "id": user.id,
+                    "role_id": user.user_role,
                     "role": user.user_role_name,
-                    "company_name": user.username,
-                    "zone": user.zone,
-                    "id": user.id
+                    "company_name": user.get_full_name(),
+                    "company_cin": user.company_cin,
+                    "address_street": user.address_street,
+                    "address_city": user.address_city,
+                    "address_state": user.address_state,
+                    "branch": user.branch and user.branch.name,
+                    "executive": {
+                        'name': user.executive.name,
+                    } if user.executive else None,
+                    "zone": None,
+                    "mobile": user.mobile,
                 }
             except Exception as e:
                 out['errors'] = str(e)
@@ -54,7 +66,11 @@ class LoginAPIView(GenericAPIView):
         return Response(out, status=status.HTTP_200_OK)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class LogoutAPIView(GenericAPIView):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    permission_classes = (permissions.AllowAny, )
+
     def get(self, request, *args, **kwargs):
         logout(request)
         return Response(status=status.HTTP_200_OK)
@@ -66,12 +82,18 @@ class DealerListView(ListAPIView):
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_fields = ['username']
     ordering_fields = ['username']
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def get_queryset(self):
+        return Dealer.objects.all().filter(executive=self.request.user)
 
 
 class ProfileAPIView(GenericAPIView):
     queryset = User.objects.all().select_related('branch').prefetch_related('dealers')
     serializer_class = ProfileAPISerializer
-    permission_classes = [IsAuthenticated, ]
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         try:
@@ -134,6 +156,7 @@ class ComplaintListView(ListAPIView):
     ordering_fields = ()
     pagination_class = PageNumberPagination
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    permission_classes = (permissions.IsAuthenticated, )
 
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page_number', 1)
@@ -164,16 +187,32 @@ class ComplaintListView(ListAPIView):
 
 
 class HomePageAPI(APIView):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
+
+        dealer_id = request.GET.get('dealer', request.user.id)
         advertisements = AdvertisementSerializer(Banners.objects.all(), many=True, context={'request': request}).data
-        pdf = ProductPDFSerializer(PDF.objects.select_related('category'), many=True, context={'request': request}).data
+        pdf = ProductPDFSerializer(PDF.objects.select_related('category')[:6], many=True, context={'request': request}).data
         upcoming_payments = UpcomingPaymentSerializer(
-            SalesOrder.objects.filter(is_invoice=True, invoice_status__in=['payment_partial', 'credit']),
+            SalesOrder.objects.filter(
+                is_invoice=True, dealer_id=dealer_id, invoice_status__in=['payment_partial', 'credit']),
             many=True, context={'request': request}).data
+        dealer = Dealer.objects.all().filter(pk=dealer_id).first()
         result = {
             "banners": advertisements,
             "new arrival": pdf,
-            "payment": upcoming_payments
+            "payment": upcoming_payments,
+            "dealer": {
+                "id": dealer.id,
+                "role": dealer.user_role_name,
+                "company_name": dealer.get_full_name(),
+                "company_cin": dealer.company_cin,
+                "address_street": dealer.address_street,
+                "address_city": dealer.address_city,
+                "address_state": dealer.address_state,
+                "mobile": dealer.mobile,
+            } if dealer else None
         }
         return Response(result)
