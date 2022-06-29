@@ -237,9 +237,9 @@ class QuotationListView(FormMixin, ListView):
 				print(str(e))
 				messages.add_message(request, messages.INFO, str(e))
 			print(f"order {order} created")
-
+			messages.add_message(request, messages.INFO, f"New Order {order} has been created")
 		else:
-			messages.add_message(request, messages.INFO, form.errors)
+			messages.add_message(request, messages.SUCCESS, form.errors)
 		return redirect('quotation-list')
 
 
