@@ -53,6 +53,7 @@ class ExecutiveManager(UserManager):
 
 
 class User(AbstractUser):
+    chosen_role = Role.DEFAULT
     mobile = models.CharField(max_length=20)
     user_role = models.CharField(max_length=20, choices=Role.USER_ROLE_CHOICE, default=Role.EXECUTIVE, blank=True)
     branch = models.ForeignKey('infrastructure.Branch', on_delete=models.SET_NULL, null=True, blank=True)
@@ -70,6 +71,10 @@ class User(AbstractUser):
             return "Executive"
         if self.user_role == '32':
             return "Dealer"
+
+    def save(self, **kwargs):
+        self.user_role = self.chosen_role
+        super(User, self).save(**kwargs)
 
     def __str__(self):
         return self.username
@@ -104,7 +109,7 @@ class Complaint(models.Model):
         ('resolved', 'Resolved'),
         ('rejected', 'Rejected'),
     )
-    ticket_id = models.CharField(max_length=10, null=True, blank=True)
+    # ticket_id = models.CharField(max_length=10, null=True, blank=True)
     title = models.CharField(max_length=100, null=True, blank=False)
     description = models.CharField(max_length=200)
     status = models.CharField(max_length=20, choices=STATUS, default='new')
@@ -117,8 +122,11 @@ class Complaint(models.Model):
     def __str__(self):
         return self.description
 
+    @property
+    def ticket_id(self):
+        return 'TKT' + f'{self.pk}'.zfill(6)
+
     def save(self, *args, **kwargs):
-        self.ticket_id = 'TKT' + f'{self.pk}'.zfill(6)
         return super().save(*args, **kwargs)
 
 

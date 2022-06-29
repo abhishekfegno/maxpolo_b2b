@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from apps.user.models import Banners, Dealer, Executive
+from apps.user.models import Banners, Dealer, Executive, Role, User
 
 
 class BannersForm(forms.ModelForm):
@@ -25,10 +25,24 @@ class ResetPasswordForm(forms.Form):
         fields = ('new_password', 'confirm_password')
 
 
+class AdminForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('username', "password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email')
+
+    def save(self, commit=True):
+        self.instance.user_role = Role.ADMIN
+        super(AdminForm, self).save(commit=commit)
+
+
 class DealerForm(UserCreationForm):
     class Meta:
         model = Dealer
         fields = ('username', "password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email')
+
+    def save(self, commit=True):
+        self.instance.user_role = Role.DEALER
+        super(DealerForm, self).save(commit=commit)
 
 
 class ExecutiveForm(UserCreationForm):
@@ -38,5 +52,8 @@ class ExecutiveForm(UserCreationForm):
 
     class Meta:
         model = Executive
-        fields = (
-        'username', "password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email', 'dealers')
+        fields = ('username', "password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email', 'dealers')
+
+    def save(self, commit=True):
+        self.instance.user_role = Role.EXECUTIVE
+        super(ExecutiveForm, self).save(commit=commit)
