@@ -54,6 +54,7 @@ class LoginAPIView(GenericAPIView):
             "mobile": user.mobile,
         }
         return Response(out)
+
     def post(self, request, *args, **kwargs):
         out = {}
         data = request.data

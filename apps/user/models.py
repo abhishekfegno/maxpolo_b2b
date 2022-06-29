@@ -53,7 +53,6 @@ class ExecutiveManager(UserManager):
 
 
 class User(AbstractUser):
-    chosen_role = Role.DEFAULT
     mobile = models.CharField(max_length=20)
     user_role = models.IntegerField(max_length=20, choices=Role.USER_ROLE_CHOICE, default=Role.EXECUTIVE, blank=True)
     branch = models.ForeignKey('infrastructure.Branch', on_delete=models.SET_NULL, null=True, blank=True)
@@ -79,7 +78,8 @@ class User(AbstractUser):
             return "Admin"
 
     def save(self, **kwargs):
-        self.user_role = self.chosen_role
+        if not self.user_role:
+            self.user_role = getattr(self, 'chosen_role', Role.DEFAULT)
         super(User, self).save(**kwargs)
 
     def __str__(self):
