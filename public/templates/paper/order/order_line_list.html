@@ -31,8 +31,12 @@
     <div class="col-md-6">
         {% if order.order_type == 'quotation' %}
         <div class="float-right ">
-            <a href="#" class="btn btn-info "> Confirm Order </a>
-            <a href="#" class="btn btn-secondary"> Cancel Order </a>
+            <a href="{% url 'quotation_status' id=order.id status='confirm' %}" class="btn btn-info "> Confirm Order </a>
+            <a href="{% url 'quotation_status' id=order.id status='cancel' %}" class="btn btn-secondary"> Cancel Order </a>
+        </div>
+        {% elif order.order_type == 'salesorder' %}
+        <div class="float-right ">
+            <a href="{% url 'quotation_status' id=order.id status='invoice' %}" class="btn btn-info "> Invoice Order </a>
         </div>
         {% elif order.order_type == 'invoice' %}
         <div class="float-right ">
