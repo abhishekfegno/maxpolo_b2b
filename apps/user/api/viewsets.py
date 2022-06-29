@@ -28,7 +28,32 @@ from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    permission_classes = (permissions.AllowAny, )
 
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return Response({}, status=400)
+
+        user = request.user
+        out = {}
+        out['user'] = {
+            "id": user.id,
+            "role_id": user.user_role,
+            "role": user.user_role_name,
+            "company_name": user.get_full_name(),
+            "company_cin": user.company_cin,
+            "address_street": user.address_street,
+            "address_city": user.address_city,
+            "address_state": user.address_state,
+            "branch": user.branch and user.branch.name,
+            "executive": {
+                'name': user.executive.name,
+            } if user.executive else None,
+            "zone": None,
+            "mobile": user.mobile,
+        }
+        return Response(out)
     def post(self, request, *args, **kwargs):
         out = {}
         data = request.data
