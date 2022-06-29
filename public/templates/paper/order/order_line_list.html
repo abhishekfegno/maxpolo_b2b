@@ -14,12 +14,12 @@
                     </div>
                     <div class="col-7 col-md-8">
                         <div class="numbers">
-                            {% if object_list.last.order.order_type == invoice %}
+                            {% if order.order_type == invoice %}
                             <p class="card-category">InvoiceId</p>
-                            <p class="card-title">{{ object_list.last.order.invoice_id }}<p>
+                            <p class="card-title">{{ order.invoice_id }}<p>
                             {% else %}
                             <p class="card-category">OrderId</p>
-                            <p class="card-title">{{ object_list.last.order.order_id }}<p>
+                            <p class="card-title">{{    order.order_id }}<p>
                             {% endif %}
                         </div>
                     </div>
@@ -60,7 +60,7 @@
             <div class='card-body'>
                 <h3>Order Detail</h3>
                 <div class="col-lg-3 col-md-6 col-sm-6" style="float:right;">
-                    <a href="{% url del pk=object_list.last.order.pk %}" class="delBrand btn btn-danger">Delete this Order</a>
+                    <a href="{% url del pk=order.pk %}" class="delBrand btn btn-danger">Delete this Order</a>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
