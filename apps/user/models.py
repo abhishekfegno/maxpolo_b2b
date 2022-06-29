@@ -66,6 +66,10 @@ class User(AbstractUser):
     zone = models.ForeignKey('executivetracking.Zone', on_delete=models.SET_NULL, null=True, blank=False)
 
     @property
+    def address(self):
+        return self.get_full_name(), self.company_cin, self.address_street, self.address_street, self.address_city
+
+    @property
     def user_role_name(self):
         if self.user_role == '32':
             return "Dealer"

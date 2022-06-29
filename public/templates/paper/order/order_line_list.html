@@ -1,155 +1,219 @@
-{% extends 'paper/layout.html' %}{% load crispy_forms_tags %}{% block content%}
+{% extends 'paper/layout.html' %}{% load static crispy_forms_tags %}{% block content%}
+<style>
+    #timeline { list-style: none!important }
+    #timeline .status,#timeline .timestamp{padding:0 40px;display:flex;}
+    #timeline .li,.status,#timeline .status:before{transition:.2s ease-in}
+    #timeline .status,.timeline,#timeline .timestamp{display:flex}
+    #timeline #toggleButton,#timeline .status:before,#timeline button{position:absolute}
 
+    #timeline .timeline{list-style-type:none;align-items:center;justify-content:center}
+    #timeline .timestamp{margin-bottom:20px;flex-direction:column;align-items:center;font-weight:100}
+    #timeline .status{justify-content:center;border-top:2px solid #d6dce0;position:relative}
+    #timeline .status h4{font-weight:600}.status:before{content:"";width:25px;height:25px;background-color:#fff;border-radius:25px;border:1px solid #ddd;top:-15px;left:42% }
+    #timeline .li.complete .status{border-top:2px solid #6bd098}
+    #timeline .li.complete .status:before{background-color:#6bd098;border:none;transition:.2s ease-in}
+    #timeline .li.complete .status *{color:#6bd098}
+    #timeline .status p { padding-top:20px; }
+    @media (min-device-width:320px) and (max-device-width:700px){
+        #timeline .li,#timeline .status:before{transition:.2s ease-in}
+        #timeline .timeline{list-style-type:none;display:block}
+        #timeline .li{display:flex;width:inherit}
+        #timeline .timestamp{width:100px}.status:before{left:-8%;top:30%}
+    }
+
+</style>
 <div class='row'>
     <div class="col-md-6">
-        <div class="card card-stats">
-            <div class="card-body ">
-                <div class="row">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center icon-warning">
-                            <!--                            <i class="nc-icon nc-globe text-warning"></i>-->
-                        </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers">
-                            {% if order.order_type == invoice %}
-                            <p class="card-category">InvoiceId</p>
-                            <p class="card-title">{{ order.invoice_id }}
-                            <p>
-                                {% else %}
-                            <p class="card-category">OrderId</p>
-                            <p class="card-title">{{ order.order_id }}
-                            <p>
-                                {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer ">
-                <hr>
-                <div class="stats"></div>
-            </div>
+        <h3>
+            <img src="{% static 'icons/order.png' %}" alt="..." height="40">
+            ORDER / #{{ order.id_as_text }} </h3>
+    </div>
+    <div class="col-md-6">
+        {% if order.order_type == 'quotation' %}
+        <div class="float-right ">
+            <a href="#" class="btn btn-info "> Confirm Order </a>
+            <a href="#" class="btn btn-secondary"> Cancel Order </a>
         </div>
+        {% elif order.order_type == 'invoice' %}
+        <div class="float-right ">
+            <a href="#" class="btn btn-info "> Capture Invoice </a>
+        </div>
+        {% else %}
+        {% endif %}
     </div>
 
-
-    <div class='col-md-6 '>
-        <div class='card'>
-            <div class='card-body'>
-                <fieldset class='form-group '>
-                    <form action='' method='post'>
-                        {% csrf_token %}
-                        <div class="row">
-                            {% for field in form %}
-                            <div class="col">
-                                {{ field.label }}
-                                {{ field }}
-                            </div>
-                            {% endfor%}
-                        </div>
-                        <<<<<<< HEAD
-
-                        <button class='btn btn-md btn-success' style="float:right;" type='submit'> Save</button>
-                        =======
-                        <button class='btn btn-md btn-success' style="float:right;" type='submit'> Save</button>
-                        >>>>>>> f147910015f0ca12ef719278c45f9deef624d54c
-                    </form>
-                </fieldset>
-            </div>
-        </div>
-    </div>
-
-    <div class='col-md-12'>
-        <div class='card'>
-            <div class='card-body'>
-                <h3>Order Detail</h3>
-                <div class="col-lg-3 col-md-6 col-sm-6" style="float:right;">
-                    <<<<<<< HEAD
-                    <a class="delBrand btn btn-danger" href="javascript:void(0)"
-                       onclick="swalFunction(this, '{% url del pk=object_list.last.pk %}')">Delete this Order</a>
-                    =======
-                    <a class="delBrand btn btn-danger" href="{% url del pk=order.pk %}">Delete this Order</a>
-                    >>>>>>> f147910015f0ca12ef719278c45f9deef624d54c
-                </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-hover table-sm">
-                        <thead class="">
-                        <tr class="">
-                            <th scope="col">ID</th>
-                            <th scope="col">Product Name</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Created on</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for object in object_list %}
-                        <tr>
-                            <td>
-                                <div class="">{{ forloop.counter }}</div>
-                            </td>
-                            <td>
-                                <div class="">{{ object.product.name }}</div>
-                            </td>
-                            <td>
-                                <div class="">{{ object.quantity }}</div>
-                            </td>
-                            <td>
-                                <div class="">{{ object.order.created_at }}</div>
-                            </td>
-
-                        </tr>
-                        {% endfor %}
-                        </tbody>
-
-                    </table>
+                    <ul class="timeline" id="timeline">
+                        <li class="li complete">
+                            <div class="timestamp">
+                                <span class="date">{{ order.created_at|date|default:"TBD" }}<span>
+                            </div>
+                            <div class="status">
+                                <p> Order Placed </p>
+                            </div>
+                        </li>
+                        <li class="li {% if order.is_confirmed %}complete{% endif %}">
+                            <div class="timestamp">
+                                <span class="date">{{ order.confirmed_date|date|default:"TBD" }}<span>
+                            </div>
+                            <div class="status">
+                                <p> Sale Order </p>
+                            </div>
+                        </li>
+                        <li class="li  {% if order.is_invoice %}complete{% endif %}">
+                            <div class="timestamp">
+                               <span class="date">{{ order.invoice_date|date|default:"TBD" }}<span>
+                            </div>
+                            <div class="status">
+                                <p> Invoiced </p>
+                            </div>
+                        </li>
+                        <li class="li">
+                            <div class="timestamp">
+                               <span class="date">{{ order.invoice_status|upper }}<span>
+                            </div>
+                            <div class="status">
+                                <p> Payment </p>
+                            </div>
+                        </li>
+                        <li class="li">
+                            <div class="timestamp">
+                              <span class="date">{% if order.invoice_status == 'payment_done' %}DONE!{% else %}-{% endif %}<span>
+                            </div>
+                            <div class="status">
+                                <p> Completed </p>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
 
             </div>
         </div>
-
     </div>
-    <<<<<<< HEAD
-</div>{% include 'paper/swal.html' %}=======</div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
-<script>
-    function swalFunction(element, url){
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-8">
+                <div class='card'>
+                    <div class="card-header">
+                        <h5>ORDER ITEMS</h5>
+                    </div>
+                    <div class='card-body'>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-sm">
+                                <thead class="thead-light">
+                                <tr class="">
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for object in object_list %}
+                                <tr>
+                                    <td>
+                                        <div class="">{{ forloop.counter }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="">{{ object.product.name }}</div>
+                                    </td>
+                                    <td>
+                                        {% if object.pk == order_line_item.pk %}
+                                        <div class="">{{ object.quantity }}</div>
+                                        {% else %}
+                                        <form action="" method="post">
+                                            {% csrf_token %}
+                                            <input type="number" class="form-control" name="quantity" value="{{ object.quantity }}">
+                                        </form>
+                                            {{ form }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="">
+                                            {% if object.pk == order_line_item.pk %}
+                                                <a class="btn text-white btn-primary btn-sm"> Back to list </a>
 
-    Swal.fire({
-          title: 'Are you sure?',
-          text: "You won't be able to revert this!",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            console.log(url)
-            $.ajax({
-                type:"POST",
-                url:url,
+                                            {% else %}
+                                            <a href="{% url 'get_orderline-update' order_id=order.pk pk=object.pk %}" class="btn text-white btn-success btn-sm">
+                                                <img src="{% static 'icons/edit.svg' %}" alt="" width="17">
+                                            </a>
+                                            <a class="btn text-white btn-danger btn-sm"> <img src="{% static 'icons/trash.svg' %}" alt="" width="17"> </a>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        Total of {{ net_total_items }} Items from {{ object_count }} Lines
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
+                    </div>
+                </div>
 
-            })
-            Swal.fire(
-              'Deleted!',
-              'Your file has been deleted.',
-              'success'
-            ).then(function(){
-                    $.ajax({
-                        type:"GET",
-                        url:"{% url 'quotation-list' %}",
-                    })
-            })
+            </div>
+            <div class="col-md-4">
+                {% if not order.is_confirmed %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="heading-3"> Confirm Order </h3>
+                            </div>
+                            <div class="card-body">
+                                You have not confirmed the order yet! Please Do so by Taping the confirm Button.
 
-            }
-        });
-    }
-     // end of swalFunction()
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-
-</script>
-
->>>>>>> f147910015f0ca12ef719278c45f9deef624d54c
+                {% elif order.is_confirmed and not order.is_invoiced %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="heading-3"> Billing Address </h3>
+                            </div>
+                            <div class="card-body">
+                                {% for line in order.dealer.address %}
+                                {% if line %}
+                                <p>{{ line }}</p>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="heading-3"> Billing Address </h3>
+                            </div>
+                            <div class="card-body">
+                                {% for line in order.dealer.address %}
+                                {% if line %}
+                                <p>{{ line }}</p>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {%endblock%}

@@ -2,8 +2,10 @@
 from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
+from django.db.models import Sum
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView, DeleteView, ListView
@@ -32,14 +34,21 @@ def form_submit(request, order):
     return form
 
 
-def get_orderline(request, order_id):
+def get_orderline(request, order_id, pk=None):
     context = {}
-    order = SalesOrder.objects.get(id=order_id)
+    order = get_object_or_404(SalesOrder.objects.all(), id=order_id)
     form = form_submit(request, order)
     context['del'] = order.order_type + '-delete'
     context['form'] = form
     context['order'] = order
+    context['object'] = order
     context['object_list'] = order.line.all()
+    if pk:
+        context['order_line_item'] = order.line.all().filter(pk=pk).first()
+    else:
+        context['order_line_item'] = None
+    context['object_count'] = order.line.all().count()
+    context['net_total_items'] = order.line.all().aggregate(nc=Sum('quantity'))['nc']
 
     if request.method == 'POST':
         if form.is_valid():
@@ -102,6 +111,13 @@ def cancelled_order(request):
     context['order_type'] = 'Cancelled'
     context["breadcrumbs"] = settings.BREAD.get('cancelled_order')
     return render(request, 'paper/order/cancelled_order_list.html', context=context)
+
+
+class SalesOrderDeleteView(DeleteView):
+    model = SalesOrderLine.objects.all()
+
+    def get_success_url(self):
+        return reverse('get_orderline', kwargs={'order_id': self.object.pk})
 
 
 class SalesOrderDetailView(UpdateView):

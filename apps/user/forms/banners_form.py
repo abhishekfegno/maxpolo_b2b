@@ -1,6 +1,6 @@
 # New file created 
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from apps.user.models import Banners, Dealer, Executive, Role, User
 
@@ -11,17 +11,17 @@ class BannersForm(forms.ModelForm):
         fields = ('title', 'photo')
 
 
-class ResetPasswordForm(forms.Form):
+class ResetPasswordForm(forms.ModelForm):
     new_password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)
 
-    # def clean(self):
-    # 	if self.new_password == self.confirm_password:
-    # 		return super().clean()
-    # 	else:
-    # 		raise ValidationError("The given passwords dont match !!")
+    def clean(self):
+        if self.cleaned_data['new_password'] != self.cleaned_data['confirm_password']:
+            raise forms.ValidationError("The given passwords dont match !!")
+        return self.cleaned_data
 
     class Meta:
+        model = User
         fields = ('new_password', 'confirm_password')
 
 
@@ -36,15 +36,13 @@ class AdminForm(UserCreationForm):
 
 
 class DealerForm(UserCreationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['dealers'].queryset = Executive.objects.all()
 
     class Meta:
         model = Dealer
         fields = (
-            'username', "password1", "password2", 'first_name', 'last_name',
-            'branch', 'mobile', 'email', 'executive')
+            "password1", "password2", 'first_name', 'last_name',
+            'branch', 'mobile', 'email', 'executive', 'company_cin', 'address_street', 'address_city',
+            'address_state', )
 
     def save(self, commit=True):
         self.instance.user_role = Role.DEALER
@@ -55,8 +53,46 @@ class ExecutiveForm(UserCreationForm):
 
     class Meta:
         model = Executive
-        fields = ('username', "password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email')
+        fields = ("password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email')
 
     def save(self, commit=True):
         self.instance.user_role = Role.EXECUTIVE
         super(ExecutiveForm, self).save(commit=commit)
+
+
+class DealerUpdateForm(UserChangeForm):
+
+    class Meta:
+        model = Dealer
+        fields = (
+            "password", 'first_name', 'last_name',
+            'branch', 'mobile', 'email', 'executive', 'company_cin', 'address_street', 'address_city',
+            'address_state', )
+
+    def save(self, commit=True):
+        self.instance.user_role = Role.DEALER
+        super(DealerUpdateForm, self).save(commit=commit)
+
+
+class ExecutiveUpdateForm(UserChangeForm):
+
+    class Meta:
+        model = Executive
+        fields = ("password", 'first_name', 'last_name', 'branch', 'mobile', 'email')
+
+    def save(self, commit=True):
+        self.instance.user_role = Role.EXECUTIVE
+        super(ExecutiveUpdateForm, self).save(commit=commit)
+
+
+class AdminUpdateForm(UserChangeForm):
+
+    class Meta:
+        model = User
+        fields = ("password", 'first_name', 'last_name', 'branch', 'mobile', 'email')
+
+    def save(self, commit=True):
+        self.instance.user_role = Role.ADMIN
+        super(AdminUpdateForm, self).save(commit=commit)
+
+
