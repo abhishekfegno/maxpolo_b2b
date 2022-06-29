@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('order', '0004_salesorder_confirmed_date_salesorder_created_at_and_more'),
     ]

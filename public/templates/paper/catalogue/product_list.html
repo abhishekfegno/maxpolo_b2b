@@ -1,8 +1,23 @@
-{% extends 'paper/layout.html' %}
-{% load crispy_forms_tags %}
-{% block content%}
+{% extends 'paper/layout.html' %}{% load crispy_forms_tags %}{% block content%}
 <div class='row'>
-    {% include 'paper/catalogue/product_filter.html'%}
+    {% load crispy_forms_tags %}
+        <div class='col-12'>
+            <hr>
+            <form class="" id="listing-table-search-form" method="GET">
+                <div class="row">
+                    {% for field in filter_form %}
+                    <div class="col-md-3">
+                        {{ field | as_crispy_field }}
+                    </div>
+                    {% endfor %}
+<!--                    <div class="col-md-3">-->
+                        <input class='btn btn-success pull-right' style="float:right; margin-top:24px;" type="submit"value='Search'>
+<!--                    </div>-->
+                </div>
+            </form>
+            <hr>
+        </div>
+
     <div class='col-6'>
         <div class='card'>
             <div class='card-body'>
@@ -29,7 +44,7 @@
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class=""><img style="width:100px;height:100px" src="{{ object.photo_url }}"></div>
+                                <div class=""><img src="{{ object.photo_url }}" style="width:100px;height:100px"></div>
                             </td>
                             <td>
                                 <div class="">{{ object.name }}</div>
@@ -44,10 +59,13 @@
                                 <div class="">{{ object.category.name }}</div>
                             </td>
                             <td>
-                                <div class=""><a href="{% url 'product-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
+                                <div class=""><a class="btn btn-primary" href="{% url 'product-update' pk=object.pk %}">Edit</a>
+                                </div>
                             </td>
                             <td>
-                                <div class=""><a href="javascript:void(0)" class="btn btn-danger" onclick="swalFunction(this, '{% url 'product-delete' pk=object.pk %}')">Delete</a></div>
+                                <div class=""><a class="btn btn-danger" href="javascript:void(0)"
+                                                 onclick="swalFunction(this, '{% url 'product-delete' pk=object.pk %}')">Delete</a>
+                                </div>
                             </td>
 
                         </tr>
@@ -64,15 +82,14 @@
         <div class='card'>
             <div class='card-body'>
                 <h3>Add Product</h3>
-                <form method="POST" enctype="multipart/form-data">
+                <form enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
                     {{ form | crispy }}
-                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
+                    <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
                 </form>
             </div>
         </div>
     </div>
-</div>
-{% include 'paper/swal.html' %}
+</div>{% include 'paper/swal.html' %}
 
 {% endblock %}

@@ -21,6 +21,3 @@ class PermissionMixin(UserPassesTestMixin):
         if int(self.request.user.user_role) > self.access_to:
             return False
         return True
-
-
-

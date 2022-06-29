@@ -1,30 +1,17 @@
-from datetime import datetime
-
-from django.contrib.auth import login
-from django.contrib.auth.decorators import user_passes_test
-from django.db.models import Q
-from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import mixins, status
 from rest_framework.authentication import BasicAuthentication, TokenAuthentication
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.generics import CreateAPIView, ListAPIView, ListCreateAPIView, RetrieveUpdateAPIView
-from rest_framework.permissions import IsAuthenticated, BasePermission
-from rest_framework.response import Response
+from rest_framework.generics import CreateAPIView, ListCreateAPIView, RetrieveUpdateAPIView
+from rest_framework.permissions import BasePermission
 
 from apps.executivetracking.models import CheckPoint, CrashReport
-from apps.executivetracking.choices import DISTRICTS
+from apps.executivetracking.serializers import CheckPointSerializer, CrashReportSerializer
+from apps.user.models import Role
+from lib.utils import CsrfExemptSessionAuthentication
+
 
 # Lead, CheckInDay, District,
-
-from apps.executivetracking.serializers import CheckPointSerializer, CrashReportSerializer
 # LeadSerializer, CheckInDaySerializer, \
-
-
-from apps.catalogue.models import Product
-from apps.user.models import Role
-
-from lib.utils import CsrfExemptSessionAuthentication
 
 
 class IsAuthenticatedExecutive(BasePermission):

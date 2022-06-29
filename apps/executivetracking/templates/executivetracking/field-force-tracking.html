@@ -1,13 +1,13 @@
 {% extends 'paper/index.html' %}
 
-{% load static  %}
-{% block title %} Field Force Tracking {% endblock title %}
+{% load static  %}{% block title %} Field Force Tracking {% endblock title %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
-<link rel="stylesheet" href="{% static 'js/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.min.css' %}" />
-{% endblock %}
-{% block content %}
+<link crossorigin="" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      rel="stylesheet"/>
+<link href="{% static 'js/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.min.css' %}"
+      rel="stylesheet"/>{% endblock %}{% block content %}
 <style type="text/css">.field-tracking{display:-webkit-box;display:-ms-flexbox;display:flex;width:100%;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;min-height:80vh;border-top:solid 1px #eee}
 .field-tracking .contacts-list{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-ms-flex:auto;flex:auto;width:300px;background-color:#fbfbfb;max-width:300px;min-width:300px;border-bottom-left-radius:8px;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}
 .field-tracking .contacts-list__search{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-ms-flex:auto;flex:auto;max-height:50px;height:50px}.field-tracking .contacts-list__list{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-ms-flex:auto;flex:auto;position:relative}
@@ -17,7 +17,7 @@
 .field-tracking .contacts-list__contents:Fv:-webkit-scrollbar-thumb{border-radius:0;background:0 0}.field-tracking .contacts-list__contents::-webkit-scrollbar-thumb:window-inactive{background:0 0;opacity:0}
 .field-tracking .contacts-list__contents:hover::-webkit-scrollbar-thumb{border-radius:0;background:rgba(187,187,187,.8)}.field-tracking .contacts-list__contents:hover::-webkit-scrollbar-thumb:window-inactive{background:rgba(187,187,187,.8);opacity:0}
 .field-tracking .contact{display:block;width:100%;position:relative;margin-bottom:10px;cursor:pointer;padding:8px 0;min-height:50px}.field-tracking .contact:active:not(.large),.field-tracking .contact:focus:not(.large),.field-tracking .contact:hover:not(.large){background:#f1f1f1}
-.field-tracking .contact__avatar{display:block;width:50px;height:50px;border-radius:50%;position:absolute;left:10px}.field-tracking .contact__avatar img{width:100%;height:100%;border-radius:inherit}.field-tracking .contact__info{padding-left:70px}.field-tracking .contact__name{color:#000;font-weight:500;font-size:16px}
+.field-tracking .contact__avatar{display:block;width:50px;height:50px;border-radius:50%;position:absolute;left:10px}.field-tracking .contact__avatar img{width:35px;height:35px;border-radius:inherit}.field-tracking .contact__info{padding-left:70px}.field-tracking .contact__name{color:#000;font-weight:500;font-size:16px}
 .field-tracking .contact__location{color:#999}.field-tracking .contact__location.active{color:#6772e5}.field-tracking .contact.large .contact__avatar{width:60px;height:60px}.field-tracking .contact.large .contact__info{padding-left:80px}.field-tracking .contact.large .contact__name{font-size:23px;font-weight:500}
 .field-tracking .no-results__title{font-weight:400;color:#141414}.field-tracking .no-results__content{font-size:13px}.field-tracking .tracking-content-main{width:100%;overflow:hidden}.field-tracking .tracking-content-main .header-wrapper{border-bottom:solid 1px #efefef}
 .field-tracking .t-activity__contents{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-ms-flex:auto;flex:auto}.field-tracking .t-activity__card{padding:8px;width:100%;border-radius:3px;margin-right:20px;border-bottom:1px solid #c0c0c055}.field-tracking .t-activity__icon{font-size:50px;color:#6772e5; margin-right:21px;}
@@ -27,9 +27,9 @@
 .contact.active{ background-color:#eee;}.hidden{display:none} #modal-body-for-global-map{height:600px;}
 .read-more[data-load-mode="min"][data-load-status="on"]:after {content: "Read More";color: #5e72e4;width: 100%;display:block;position:absolute;right:0;left: 0;bottom:0;background-image: linear-gradient(to top, #fff , #fffc , #fff0);text-align: center;padding-top: 48px;padding-bottom: 24px;}
 .read-more[data-load-mode="min"] p.text-content {position: relative;height: 120px;overflow: hidden;}.read-more{transition: height 250ms ease-out;}.read-more .max-text, .read-more .min-text {cursor: pointer; }.read-more[data-load-mode="min"] .text-content .max-text{ display: none; }
-</style>
-<!-- Header -->
-{% include 'includes/layout-header.html' %}
+
+
+</style><!-- Header -->{% include 'includes/layout-header.html' %}
 
 <!-- Page content -->
 <div class="container-fluid mt--9" xmlns="http://www.w3.org/1999/html">
@@ -49,9 +49,9 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                         </div>
-                                        <input class="form-control datepicker" placeholder="Select date" type="text"
-                                               name="date" value="{{ selected_date }}"
-                                               onchange="this.form.submit()" data-date-format="dd-mm-yyyy">
+                                        <input class="form-control datepicker" data-date-format="dd-mm-yyyy" name="date"
+                                               onchange="this.form.submit()" placeholder="Select date" type="text"
+                                               value="{{ selected_date }}">
                                     </div>
                                 </div>
                             </form>
@@ -63,8 +63,8 @@
                 <div class="field-tracking">
                     <div class="contacts-list">
                         <div class="contacts-list__search">
-                            <div class="contacts-list__input-wrapper" >
-                                <input type="text" oninput="filter_executives(this)" placeholder="Search">
+                            <div class="contacts-list__input-wrapper">
+                                <input oninput="filter_executives(this)" placeholder="Search" type="text">
                                 <span class="contacts-list__search-icon">
                               <i class="fa fa-search"></i>
                             </span>
@@ -72,15 +72,14 @@
                         </div>
                         <div class="contacts-list__list">
                             <div class="contacts-list__contents">
-                                <div class="no-results hidden" >
+                                <div class="no-results hidden">
                                     <div class="row m-0 text-center py-5">
                                         <div class="col-12">
                                             <h3 class="no-results__title">No Results found</h3>
                                         </div>
                                         <div class="col-12">
                                             <p class="no-results__content">
-                                                Oops! Nothing match with the following page.
-                                            </p>
+                                                Oops! Nothing match with the following page. </p>
                                         </div>
                                     </div>
                                 </div>
@@ -91,14 +90,21 @@
                                         <a href="{% url 'field-force-tracking-detail' pk=executive.pk %}?date={{ selected_date }}">
                                             <div class="contact  {% if executive.id == object.id %}active{% endif %}">
                                                 <div class="contact__avatar">
-                                                    <img src="{{ MEDIA_URL }}{{ executive.profile_url }}" alt="{{ executive.name }}">
+                                                    {% if executive.profile_url %}
+                                                    <img alt="{{ executive.name }}"
+                                                         src="{{ MEDIA_URL }}{{ executive.profile_url }}">
+                                                    {% else %}
+                                                    <img alt="{{ executive.name }}"
+                                                         src="{{ settings.STATIC_URL }}{{ settings.PLACEHOLDER_PROFILE_DEFAULT_IMAGE }}">
+                                                    {% endif %}
                                                 </div>
                                                 <div class="contact__info">
                                                     <div class="contact__name text-truncate  {% if executive.id == object.id %}font-weight-500 text-primary{% endif %}">
                                                         {{ executive.name }}
                                                     </div>
                                                     <div class="contact__location text-truncate text-sm {% if executive.id == object.id %}active{% endif %}">
-                                                        {{ executive.branch.name }} <span class="text-muted">| ID:</span> {{ executive.system_id|default:"-" }}
+                                                        {{ executive.branch.name }} <span
+                                                            class="text-muted">| ID:</span> {{            executive.system_id|default:"-" }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -116,14 +122,20 @@
                                 <div class="col-8">
                                     <div class="contact large ">
                                         <div class="contact__avatar">
-                                            <img src="{{ MEDIA_URL }}{{ object.profile_url }}" alt="{{ object.name }} Profile Picture">
+                                            {% if object.profile_url %}
+                                            <img alt="{{ object.name }} Profile Picture "
+                                                 src="{{ MEDIA_URL }}{{ object.profile_url }}">
+                                            {% else %}
+                                            <img alt="{{ object.name }}"
+                                                 src="{{ settings.STATIC_URL }}{{ settings.PLACEHOLDER_PROFILE_DEFAULT_IMAGE }}">
+                                            {% endif %}
                                         </div>
                                         <div class="contact__info">
                                             <div class="contact__name text-truncate">
                                                 {{ object.name }}
                                             </div>
                                             <div class="contact__location text-truncate">
-                                                {{ executive.branch.name }} <span class="text-muted">| ID:</span> {{ executive.system_id|default:"-" }}
+                                                {{ executive.branch.name }} <span class="text-muted">| ID:</span> {{   executive.system_id|default:"-" }}
                                             </div>
                                         </div>
                                     </div>
@@ -145,9 +157,9 @@
                                             <div class="t-activity">
                                                 <div class="t-activity__contents">
                                                     <ul class="t-activity__list">
-                                                         {% for point in checkin_set %}
-                                                            {% include point.template_name %}
-                                                          {% endfor %}
+                                                        {% for point in checkin_set %}
+                                                        {% include point.template_name %}
+                                                        {% endfor %}
                                                     </ul>
                                                 </div>
                                             </div>
@@ -163,8 +175,7 @@
                             <div class="row header-wrapper">
                                 <div class="col-12">
                                     <div class="contact large ">
-                                        <div class="contact__avatar">
-                                        </div>
+                                        <div class="contact__avatar"></div>
                                         <div class="contact__info">
                                             <div class="contact__name text-truncate">
                                                 Select an Executive to proceed!
@@ -182,12 +193,13 @@
         {% include 'includes/scroll-to-top.html' %}
 
     </div>
-    <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="exampleModal"
+         role="dialog" tabindex="-1">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">View Location in Map</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -201,12 +213,13 @@
         </div>
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="exampleModalGlobal" tabindex="-1" role="dialog" aria-labelledby="exampleModalGlobal" aria-hidden="true">
+    <div aria-hidden="true" aria-labelledby="exampleModalGlobal" class="modal fade bd-example-modal-lg"
+         id="exampleModalGlobal" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalGlobalLabel">GodsView</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -225,8 +238,7 @@
 {% endblock content %}
 
 
-{% block javascripts %}
-{{ block.super }}
+{% block javascripts %}{{ block.super }}
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
 <script type="text/javascript">
@@ -260,6 +272,8 @@
         L.control.layers(baseLayers, overlays).addTo(map);
     }
     loadGlobalMap()
+
+
 </script>
 
 <script type="text/javascript">
@@ -282,10 +296,13 @@ function filter_executives(input) {
     }
   }
 }
+
+
 </script>
 
 <script>
    function read_more_loader(node){console.log(node); node.innerText.split(' ').length < 80 && node.setAttribute('data-load-status', 'off')}
    document.querySelectorAll('.read-more').forEach(read_more_loader);
-</script>
-{% endblock javascripts %}
+
+
+</script>{% endblock javascripts %}

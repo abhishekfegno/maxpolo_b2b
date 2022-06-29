@@ -1,23 +1,9 @@
-{% extends 'paper/layout.html' %}
-{% load crispy_forms_tags %}
-{% load view_breadcrumbs %}
+{% extends 'paper/layout.html' %}{% load crispy_forms_tags  %}
 
 
 {% block content%}
 <div class='row'>
-    <div class='col-12'>
-        <div class='card'>
-            <div class='card-body'>
-                <h3>Create Advertisements</h3>
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form | crispy }}
-                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class='col-12'>
+    <div class='col-6'>
         <div class='card'>
             <div class='card-body'>
                 <h3>Advertisements List</h3>
@@ -44,13 +30,16 @@
                                 <div class="">{{ object.title }}</div>
                             </td>
                             <td>
-                                <div class=""><img style="width:100px;height:100px" src="{{ object.photo_url }}"></div>
+                                <div class=""><img src="{{ object.photo_url }}" style="width:100px;height:100px"></div>
                             </td>
                             <td>
-                                <div class=""><a href="{% url 'banners-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
+                                <div class=""><a class="btn btn-primary" href="{% url 'banners-update' pk=object.pk %}">Edit</a>
+                                </div>
                             </td>
                             <td>
-                                <div class=""><a href="javascript:void(0)" onclick="swalFunction(this, '{% url 'banners-delete' pk=object.pk %}', '{% url 'banners-list' %}')" class="delBrand btn btn-danger">Delete</a></div>
+                                <div class=""><a class="delBrand btn btn-danger" href="javascript:void(0)"
+                                                 onclick="swalFunction(this, '{% url 'banners-delete' pk=object.pk %}', '{% url 'banners-list' %}')">Delete</a>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -63,10 +52,20 @@
         </div>
 
     </div>
+    <div class='col-6'>
+        <div class='card'>
+            <div class='card-body'>
+                <h3>Create Advertisements</h3>
+                <form enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
-
-</div>
-{% include 'paper/swal.html' %}
+</div>{% include 'paper/swal.html' %}
 
 {% endblock %}

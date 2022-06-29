@@ -1,6 +1,4 @@
-{% extends 'paper/layout.html' %}
-{% load crispy_forms_tags %}
-{% block content%}
+{% extends 'paper/layout.html' %}{% load crispy_forms_tags %}{% block content%}
 <div class='row'>
 
     <div class='col-6'>
@@ -39,10 +37,13 @@
                                 <div class="">{{ object.name }}</div>
                             </td>
                             <td>
-                                <div class=""><a href="{% url 'brand-update' pk=object.pk %}" class="btn btn-primary">Edit</a></div>
+                                <div class=""><a class="btn btn-primary" href="{% url 'brand-update' pk=object.pk %}">Edit</a>
+                                </div>
                             </td>
                             <td>
-                                <div class=""><a href="javascript:void(0)" onclick="swalFunction(this, '{% url 'brand-delete' pk=object.pk %}' )" class="delBrand btn btn-danger">Delete</a></div>
+                                <div class=""><a class="delBrand btn btn-danger" href="javascript:void(0)"
+                                                 onclick="swalFunction(this, '{% url 'brand-delete' pk=object.pk %}' )">Delete</a>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -62,14 +63,13 @@
                 <form method="POST">
                     {% csrf_token %}
                     {{ form | crispy }}
-                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
+                    <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
                 </form>
             </div>
         </div>
     </div>
 
 
-</div>
-{% include 'paper/swal.html' %}
+</div>{% include 'paper/swal.html' %}
 
 {% endblock %}

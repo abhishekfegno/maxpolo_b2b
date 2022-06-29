@@ -1,5 +1,4 @@
-{% load attribute %}
-{% if filter  %}
+{% load attribute %}{% if filter  %}
 <div class="col border-top mt-4">
     <div class="row align-items-center">
         <form class="w-100">
@@ -13,7 +12,7 @@
                         {% endfor %}
                         <div class="col-md-1">
                             <div class="pt-3" style="display:hidden">
-                                <input type="submit" value="Filter" class="btn btn-warning mt-3"/>
+                                <input class="btn btn-warning mt-3" type="submit" value="Filter"/>
                             </div>
                         </div>
                     </div>
@@ -21,13 +20,12 @@
 
                 {% for name in request.GET %}
                 {% if 'filter-' not in name or 'dealer_' not in name %}
-                    {% if request.GET|hasattribute:name %}
-                        <input type="hidden" name="{{ name|safe }}" value="{{ request.GET|hasattribute:name }}" />
-                    {% endif %}
+                {% if request.GET|hasattribute:name %}
+                <input name="{{ name|safe }}" type="hidden" value="{{ request.GET|hasattribute:name }}"/>
+                {% endif %}
                 {% endif %}
                 {% endfor %}
             </div>
         </form>
     </div>
-</div>
-{% endif %}
+</div>{% endif %}

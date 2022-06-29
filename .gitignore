@@ -5,7 +5,7 @@ public/media/*
 public/assets/*
 public/src/*
 public/staticfiles/*
-
+event.py
 *.swp
 
 # Created by https://www.toptal.com/developers/gitignore/api/django,pycharm+all,python

@@ -1,6 +1,4 @@
-{% extends 'paper/layout.html' %}
-{% load crispy_forms_tags %}
-{% block content%}
+{% extends 'paper/layout.html' %}{% load crispy_forms_tags %}{% block content%}
 <style>
 .wtree li{list-style-type:none;margin:10px 0 10px 10px;position:relative}.wtree li:before{content:"";position:absolute;top:-10px;left:-20px;border-left:1px solid #ddd;border-bottom:1px solid #ddd;width:20px;height:15px}
 .wtree li:after{position:absolute;content:"";top:5px;left:-20px;border-left:1px solid #ddd;border-top:1px solid #ddd;width:20px;height:100%}.wtree li:last-child:after{display:none}
@@ -9,47 +7,57 @@
 .wtree li span:focus+ul li:after,.wtree li span:focus+ul li:before,.wtree li span:hover+ul li:after,.wtree li span:hover+ul li:before{border-color:#aaa}
 .wtree .editing,.wtree:hover .editing  { background-color: #666 }
 a[href]{color: #00f}.wtree .editing a[href] {color: #fff}.wtree .editing:hover a[href] {color: #000}
+
+
 </style>
 <div class='row'>
     <div class='col-8'>
         <div class='card'>
             <div class='card-body'>
-                <h3  class="title">Category List</h3>
-                    <ul class="wtree">
-                        {% for cat1 in object_list %}
-                        <li>
-                            <span class="tree_label {% if object.pk == cat1.pk %}editing{% endif %}" for="categ{{ cat1.id }}"><a href="{% url 'category-update' pk=cat1.pk %}">{{ cat1.name }}</a></span>
-                            <ul>
-                                {% for cat2 in cat1.get_children %}
-                                <li>
-                                    <span class="tree_label {% if object.pk == cat2.pk %}editing{% endif %}" for="categ{{ cat2.id }}"><a href="{% url 'category-update' pk=cat2.pk %}">{{ cat2.name }}</a></span>
+                <h3 class="title">Category List</h3>
+                <ul class="wtree">
+                    {% for cat1 in object_list %}
+                    <li>
+                        <span class="tree_label {% if object.pk == cat1.pk %}editing{% endif %}"
+                              for="categ{{ cat1.id }}"><a
+                                href="{% url 'category-update' pk=cat1.pk %}">{{ cat1.name }}</a></span>
+                        <ul>
+                            {% for cat2 in cat1.get_children %}
+                            <li>
+                                <span class="tree_label {% if object.pk == cat2.pk %}editing{% endif %}"
+                                      for="categ{{ cat2.id }}"><a href="{% url 'category-update' pk=cat2.pk %}">{{ cat2.name }}</a></span>
+                                <ul>
+                                    {% for cat3 in cat2.get_children %}
+                                    <li>
+                                        <span class="tree_label {% if object.pk == cat3.pk %}editing{% endif %}"
+                                              for="categ{{ cat3.id }}"><a href="{% url 'category-update' pk=cat3.pk %}">{{ cat3.name }}</a></span>
                                         <ul>
-                                            {% for cat3 in cat2.get_children %}
+                                            {% for cat4 in cat3.get_children %}
                                             <li>
-                                                <span class="tree_label {% if object.pk == cat3.pk %}editing{% endif %}" for="categ{{ cat3.id }}"><a href="{% url 'category-update' pk=cat3.pk %}">{{ cat3.name }}</a></span>
-                                                    <ul>
-                                                        {% for cat4 in cat3.get_children %}
-                                                        <li>
-                                                            <span class="tree_label {% if object.pk == cat4.pk %}editing{% endif %}" for="categ{{ cat4.id }}"><a href="{% url 'category-update' pk=cat4.pk %}">{{ cat4.name }}</a></span>
-                                                                <ul>
-                                                                    {% for cat5 in cat4.get_children %}
-                                                                    <li>
-                                                                        <span class="tree_label {% if object.pk == cat5.pk %}editing{% endif %}" for="categ{{ cat5.id }}"><a href="{% url 'category-update' pk=cat5.pk %}">{{ cat5.name }}</a></span>
-                                                                    </li>
-                                                                    {% endfor %}
-                                                                </ul>
-                                                        </li>
-                                                        {% endfor %}
-                                                    </ul>
+                                                <span class="tree_label {% if object.pk == cat4.pk %}editing{% endif %}"
+                                                      for="categ{{ cat4.id }}"><a
+                                                        href="{% url 'category-update' pk=cat4.pk %}">{{ cat4.name }}</a></span>
+                                                <ul>
+                                                    {% for cat5 in cat4.get_children %}
+                                                    <li>
+                                                        <span class="tree_label {% if object.pk == cat5.pk %}editing{% endif %}"
+                                                              for="categ{{ cat5.id }}"><a
+                                                                href="{% url 'category-update' pk=cat5.pk %}">{{ cat5.name }}</a></span>
+                                                    </li>
+                                                    {% endfor %}
+                                                </ul>
                                             </li>
                                             {% endfor %}
                                         </ul>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>
@@ -57,17 +65,18 @@ a[href]{color: #00f}.wtree .editing a[href] {color: #fff}.wtree .editing:hover a
         <div class='card'>
             <div class='card-body'>
                 <h3>{% if not object.pk %}Add Category{% else %} Update {{ object.name }}{% endif %}
-                    {% if object.pk %}<a href="{% url 'category-list' %}" class="pull-right bg-secondary text-white rounded" style="width:30px;height:30px; text-align:center"> x </a>{% endif %} </h3>
+                    {% if object.pk %}<a class="pull-right bg-secondary text-white rounded"
+                                         href="{% url 'category-list' %}"
+                                         style="width:30px;height:30px; text-align:center"> x </a>{% endif %} </h3>
                 <form method="POST">
                     {% csrf_token %}
                     {{ form | crispy }}
-                    <button type='submit'  style="float:right;" class='btn btn-sm btn-success'> Save </button>
+                    <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
                 </form>
             </div>
         </div>
     </div>
 
-</div>
-{% include 'paper/swal.html' %}
+</div>{% include 'paper/swal.html' %}
 
 {% endblock %}

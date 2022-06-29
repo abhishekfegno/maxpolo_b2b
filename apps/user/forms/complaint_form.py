@@ -5,6 +5,6 @@ from apps.user.models import Complaint
 
 
 class ComplaintForm(forms.ModelForm):
-	class Meta:
-		model = Complaint
-		fields = ('status',)
+    class Meta:
+        model = Complaint
+        fields = ('status',)

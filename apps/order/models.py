@@ -2,9 +2,8 @@ from datetime import datetime
 
 from django.core.validators import MinValueValidator
 from django.db import models
-
 # Create your models here.
-from django.db.models import Count, Sum
+from django.db.models import Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -67,7 +66,7 @@ class SalesOrderLine(models.Model):
 @receiver(post_save, sender=SalesOrder)
 def create_order_ids(sender, instance, created, **kwargs):
     if created:
-        SalesOrder.objects.filter(pk=instance.pk).update(order_id='QN'+f'{instance.pk}'.zfill(6))
+        SalesOrder.objects.filter(pk=instance.pk).update(order_id='QN' + f'{instance.pk}'.zfill(6))
     if instance.is_confirmed:
         print("changing order_id")
         SalesOrder.objects.filter(pk=instance.pk).update(confirmed_date=datetime.now(), is_quotation=False,
@@ -75,7 +74,7 @@ def create_order_ids(sender, instance, created, **kwargs):
     if instance.is_invoice and instance.is_confirmed:
         print("changing invoice_id")
         SalesOrder.objects.filter(pk=instance.pk).update(invoice_date=datetime.now(), is_confirmed=False,
-                                                         invoice_id='INV'+f'{instance.pk}'.zfill(6))
+                                                         invoice_id='INV' + f'{instance.pk}'.zfill(6))
     # if instance.invoice_amount:
     #     print("credit status")
     #     SalesOrder.objects.filter(pk=instance.pk).update(invoice_status='credit')

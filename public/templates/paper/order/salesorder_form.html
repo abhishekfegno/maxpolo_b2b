@@ -1,6 +1,4 @@
-{% extends 'paper/index.html' %}
-{% load crispy_forms_tags %}
-{% block content%}
+{% extends 'paper/index.html' %}{% load crispy_forms_tags %}{% block content%}
 <style>
     .switch {
   position: relative;
@@ -63,6 +61,8 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+
 </style>
 
 <div class='row'>
@@ -70,7 +70,7 @@ input:checked + .slider:before {
         <div class='card'>
             <div class='card-body'>
                 <fieldset class='form-group '>
-                    <form action='' method='post' >
+                    <form action='' method='post'>
                         {% csrf_token %}
                         <div class="row">
                             <div class="col">
@@ -78,20 +78,20 @@ input:checked + .slider:before {
 
 
                                 {{ field.name }}
-                                <label class="switch" >
-                                  <input type="checkbox" name="{{field.name}}" class="required checkbox form-control" id="id_{{field.name}}"{% if field.value %}checked{% endif %}>
-                                  <span class="slider round"></span>
+                                <label class="switch">
+                                    <input %} %}checked{% class="required checkbox form-control" endif field.value
+                                           id="id_{{field.name}}" if name="{{field.name}}" type="checkbox" {%>
+                                    <span class="slider round"></span>
                                 </label>
                                 {% endfor%}
 
                             </div>
                         </div>
 
-                        <button type='submit' class='btn btn-md btn-success' style="float:right;"> Save </button>
+                        <button class='btn btn-md btn-success' style="float:right;" type='submit'> Save</button>
                     </form>
                 </fieldset>
             </div>
         </div>
     </div>
-</div>
-{% endblock %}
+</div>{% endblock %}

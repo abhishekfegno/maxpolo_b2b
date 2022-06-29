@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('user', '0003_banners_complaint_created_by_complaint_photo'),
     ]
@@ -33,7 +32,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='dealers',
-            field=models.ManyToManyField(blank=True, null=True, related_name='_user_dealers_+', to=settings.AUTH_USER_MODEL),
+            field=models.ManyToManyField(blank=True, null=True, related_name='_user_dealers_+',
+                                         to=settings.AUTH_USER_MODEL),
         ),
         migrations.AlterField(
             model_name='banners',
@@ -53,6 +53,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='user_role',
-            field=models.CharField(blank=True, choices=[(1, 'Admin'), (4, 'Warehouse Manager'), (2, 'Branch Manager'), (16, 'Executive'), (32, 'Dealer'), (8, 'Receptionist')], default=16, max_length=20),
+            field=models.CharField(blank=True, choices=[(1, 'Admin'), (4, 'Warehouse Manager'), (2, 'Branch Manager'),
+                                                        (16, 'Executive'), (32, 'Dealer'), (8, 'Receptionist')],
+                                   default=16, max_length=20),
         ),
     ]

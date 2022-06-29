@@ -1,18 +1,17 @@
 from django.conf import settings
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView, TemplateView
-from django.views.generic.edit import FormMixin
-from rest_framework.authtoken.models import Token
-from view_breadcrumbs import DetailBreadcrumbMixin, ListBreadcrumbMixin
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import UpdateView, DeleteView, ListView, TemplateView
+from django.views.generic.edit import FormMixin, ModelFormMixin, ProcessFormView
+from rest_framework.authtoken.models import Token
 
-from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm
-from apps.user.models import Banners, User, Role, Dealer, Executive
+from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm, AdminForm
+from apps.user.models import Banners, User, Dealer, Executive, Role
 from lib.token_handler import token_expire_handler, is_token_expired
-
 
 
 class IndexView(TemplateView):
@@ -23,11 +22,10 @@ class IndexView(TemplateView):
 
 
 class UserDetailView(UpdateView):
-
     queryset = User.objects.all()
-    template_name = 'paper/user/user_form.html'
+    form_class = UserCreationForm
+    template_name = 'paper/user/user_list.html'
     model = User
-    form_class = DealerForm
     success_url = '/user/list/'
 
     def post(self, request, *args, **kwargs):
@@ -42,7 +40,7 @@ class UserDetailView(UpdateView):
         return redirect('user-list', role=role)
 
 
-class UserListView(FormMixin, ListView, ListBreadcrumbMixin):
+class UserListView(ModelFormMixin, SuccessMessageMixin, ListView, ProcessFormView):
     queryset = User.objects.all()
     template_name = 'paper/user/user_list.html'
     home_label = _("User list")
@@ -52,35 +50,52 @@ class UserListView(FormMixin, ListView, ListBreadcrumbMixin):
         "breadcrumbs": settings.BREAD.get('user-list')
     }
 
+    def get_success_message(self, cleaned_data):
+        return f"{self.kwargs.get('role', '').capitalize()} has been Saved!"
+
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset()
-        if self.kwargs.get('role') == 32:
+        if self.kwargs.get('role') == 'dealer':
             queryset = Dealer.objects.all()
-        if self.kwargs.get('role') == 16:
+        if self.kwargs.get('role') == 'executive':
             queryset = Executive.objects.all()
+        if self.kwargs.get('role') == 'admin':
+            queryset = User.objects.all().filter(user_role=Role.ADMIN)
         return queryset
+
+    def get_form_class(self):
+        if self.kwargs.get('role') == 'dealer':
+            return DealerForm
+        if self.kwargs.get('role') == 'admin':
+            return AdminForm
+        if self.kwargs.get('role') == 'executive':
+            return ExecutiveForm
+        return UserCreationForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.kwargs.get('role') == 32:
-            context['form'] = DealerForm
-            context['role'] = 'Dealer'
-        if self.kwargs.get('role') == 16:
-            context['form'] = ExecutiveForm
-            context['role'] = 'Executive'
+        context['role'] = self.kwargs.get('role', '').capitalize()
         return context
 
+    def get_object(self, queryset=None):
+        if 'pk' in self.kwargs:
+            return super(UserListView, self).get_object(queryset)
+        return None
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super(UserListView, self).get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
         form = self.form_class(request.POST)
         role = self.kwargs.get('role')
-        # import pdb;pdb.set_trace()
         if form.is_valid():
             user = form.save(commit=False)
             user.user_role = role
             user.save()
         else:
             print(form.errors)
-            # role = form.data.get('user_role')
         return redirect('user-list', role=role)
 
 
@@ -94,7 +109,7 @@ class UserDeleteView(DeleteView):
 
 def password_reset(request, token):
     errors = ""
-    form = ResetPasswordForm(request.POST)\
+    form = ResetPasswordForm(request.POST)
 
     if request.method == 'POST':
         try:

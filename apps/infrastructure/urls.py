@@ -1,5 +1,5 @@
 # New file created 
-from django.urls import path, include
+from django.urls import path
 
 from apps.infrastructure.views.branch_view import *
 
@@ -9,4 +9,3 @@ urlpatterns = [
     path('branch/<int:pk>/delete/', BranchDeleteView.as_view(), name='branch-delete'),
 
 ]
-

@@ -1,18 +1,15 @@
-# New file created
 from django.conf import settings
 from django.contrib import messages
-from django.shortcuts import render, redirect
-from rest_framework.reverse import reverse
+from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, FormView, ListView
-from rest_framework.authtoken.models import Token
-from view_breadcrumbs import ListBreadcrumbMixin
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView
+from rest_framework.reverse import reverse
 
-from apps.user.forms.banners_form import BannersForm, ResetPasswordForm
-from apps.user.models import Banners, User
+from apps.user.forms.banners_form import BannersForm
+from apps.user.models import Banners
 from lib.sent_email import EmailHandler
-from lib.token_handler import token_expire_handler, is_token_expired
 
 
 class BannersDetailView(UpdateView):
@@ -34,11 +31,10 @@ class BannersListView(CreateView, ListView):
 	}
 
 	def post(self, request, *args, **kwargs):
-		url = reverse('banners-list', request=request, format=None)
+		# url = reverse('banners-list', request=request, format=None)
 		form = self.form_class(request.POST, request.FILES)
 		if form.is_valid():
 			instance = form.save()
-			EmailHandler().sent_mail_for_banners(instance, url)
 		else:
 			print(form.errors)
 			# import pdb;pdb.set_trace()
@@ -48,9 +44,8 @@ class BannersListView(CreateView, ListView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class BannersDeleteView(DeleteView):
-	queryset = Banners.objects.all()
-	template_name = 'paper/user/banners_delete.html'
-	model = Banners
-	success_url = '/banners/list/'
 
-
+    queryset = Banners.objects.all()
+    template_name = 'paper/user/banners_delete.html'
+    model = Banners
+    success_url = '/banners/list/'

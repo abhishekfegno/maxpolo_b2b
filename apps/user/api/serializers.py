@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from apps.catalogue.models import Product
 from apps.user.models import User, Complaint, Banners, Dealer
 
 

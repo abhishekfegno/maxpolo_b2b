@@ -1,25 +1,27 @@
-from django.core.paginator import Paginator
 import datetime
 
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.utils import datetime_safe
 from django.views.generic import DetailView, ListView, UpdateView, CreateView
 
 from apps.executivetracking.models import CheckPoint, Zone
-from apps.permissionmixin import PermissionMixin
 from apps.user.models import Executive, Role, User
-
 # Create your views here.
 from apps.viewset import ModelSelectorMixin
 
 
-class FieldForceSelect(PermissionMixin, ListView):
+class FieldForceSelect(
+    # PermissionMixin,
+    ListView
+):
     template_name = 'executivetracking/field-force-tracking.html'
     access_to = Role.BRANCH_MANAGER
 
     def get_queryset(self):
         qs = Executive.objects.all()
-        if int(self.request.user.user_role) > Role.ADMIN:
+        has_account = hasattr(self.request.user, 'account')
+        if has_account and int(self.request.user.user_role) > Role.ADMIN:
             qs = qs.filter(branch=self.request.user.account.branch)
         if self.request.GET.get('place'):
             qs = qs.filter(place__iexact=self.request.GET.get('place'))
@@ -32,14 +34,17 @@ class FieldForceSelect(PermissionMixin, ListView):
         return kwargs
 
 
-class FieldForceTracking(PermissionMixin, DetailView):
-
+class FieldForceTracking(
+    # PermissionMixin,
+    DetailView
+):
     template_name = 'executivetracking/field-force-tracking.html'
     access_to = Role.BRANCH_MANAGER
 
     def get_queryset(self):
         qs = Executive.objects.all()
-        if int(self.request.user.user_role) > Role.ADMIN:
+        has_account = hasattr(self.request.user, 'account')
+        if has_account and int(self.request.user.user_role) > Role.ADMIN:
             qs = qs.filter(branch=self.request.user.account.branch)
         return qs
 
@@ -97,7 +102,8 @@ class LeadListView(ModelSelectorMixin, ListView):
 
     def get_queryset(self):
         qs = Executive.objects.all()
-        if int(self.request.user.user_role) > Role.ADMIN:
+        has_account = hasattr(self.request.user, 'account')
+        if has_account and int(self.request.user.user_role) > Role.ADMIN:
             qs = qs.filter(branch=self.request.user.account.branch)
         return qs
 
@@ -125,7 +131,7 @@ class DistrictCreateView(ModelSelectorMixin, CreateView):
     model = Zone
     app_name = ''
     access_to = Role.BRANCH_MANAGER
-    fields = ("name",  )
+    fields = ("name",)
 
 
 class DistrictUpdateView(ModelSelectorMixin, UpdateView):
@@ -133,6 +139,4 @@ class DistrictUpdateView(ModelSelectorMixin, UpdateView):
     model = Zone
     app_name = ''
     access_to = Role.BRANCH_MANAGER
-    fields = ("name", )
-
-
+    fields = ("name",)

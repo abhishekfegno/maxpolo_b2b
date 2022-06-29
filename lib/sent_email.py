@@ -1,13 +1,12 @@
 from __future__ import print_function
 
 import os
-import time
-import sib_api_v3_sdk
-from django.conf import settings
-from sib_api_v3_sdk.rest import ApiException
 from pprint import pprint
 
-from apps.user.models import Dealer
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+
+# from apps.user.models import Dealer
 
 
 class EmailHandler(object):
@@ -23,28 +22,28 @@ class EmailHandler(object):
 
     # create an instance of the API class
 
-    def sent_mail_for_pdf(self, instance, url):
-        recipient = [i for i in Dealer.objects.all().values('email', 'first_name')]
-        recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
-        message = f"New products have been arrived.Please visit {url}"
-        subject = {
-            "subject": "New Product",
-            "subheadline": "New products have been arrived !!!"
-            }
-        self.sent_email_now(recipient, message, subject)
-
-
-    def sent_mail_for_banners(self, instance, url):
-        recipient = [i for i in Dealer.objects.all().values('email', 'first_name')]
-        recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
-
-        message = f"New Advertisement have been arrived.Please visit {url}"
-        subject = {
-            "subject": "New Advertisement",
-            "subheadline": "New Advertisement have been created !!!"
-            }
-
-        self.sent_email_now(recipient, message, subject)
+    # def sent_mail_for_pdf(self, instance, url):
+    #     recipient = [i for i in Dealer.objects.all().values('email', 'first_name')]
+    #     recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
+    #     message = f"New products have been arrived.Please visit {url}"
+    #     subject = {
+    #         "subject": "New Product",
+    #         "subheadline": "New products have been arrived !!!"
+    #         }
+    #     self.sent_email_now(recipient, message, subject)
+    #
+    #
+    # def sent_mail_for_banners(self, instance, url):
+    #     recipient = [i for i in Dealer.objects.all().values('email', 'first_name')]
+    #     recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
+    #
+    #     message = f"New Advertisement have been arrived.Please visit {url}"
+    #     subject = {
+    #         "subject": "New Advertisement",
+    #         "subheadline": "New Advertisement have been created !!!"
+    #         }
+    #
+    #     self.sent_email_now(recipient, message, subject)
 
     def sent_mail_complaint(self, instance):
         recipient = []
@@ -70,7 +69,6 @@ class EmailHandler(object):
         # import pdb;pdb.set_trace()
         self.sent_email_now(recipient, message, subject)
 
-
     def sent_email_now(self, recipient, message, subject):
         # print("KEY", self.api_key)
         receivers = [i for i in recipient]
@@ -81,13 +79,15 @@ class EmailHandler(object):
             to=receivers,
             sender={"name": "Fegno Technologies", "email": "abhishekfegno@gmail.com"},
             template_id=3,
-            params={"name": '', "subheadline": subject.get("subheadline"), "message": message},  # used to render inside email template
-            headers={"X-Mailin-custom": "custom_header_1:custom_value_1|custom_header_2:custom_value_2|custom_header_3:custom_value_3",
-                     "charset": "iso-8859-1",
-                     "api-key": self.api_key,
-                     "content-type": "application/json",
-                     "accept": "application/json"
-                     },
+            params={"name": '', "subheadline": subject.get("subheadline"), "message": message},
+            # used to render inside email template
+            headers={
+                "X-Mailin-custom": "custom_header_1:custom_value_1|custom_header_2:custom_value_2|custom_header_3:custom_value_3",
+                "charset": "iso-8859-1",
+                "api-key": self.api_key,
+                "content-type": "application/json",
+                "accept": "application/json"
+            },
             # text_content=message,
             subject=subject.get("subject"),
             # html_content=message
@@ -103,7 +103,6 @@ class EmailHandler(object):
 
     #
 
-
 # recipient = {"email": "raviabhishek445@gmail.com", "name": "Abhishek Ravi"}
 # # absolute uri with username
 # url = "URL"
@@ -114,5 +113,3 @@ class EmailHandler(object):
 # message1 = f'You can reset you password by visiting this link {url}'
 # e = EmailHandler()
 # e.sent_email_now(recipient, message1, subject)
-
-

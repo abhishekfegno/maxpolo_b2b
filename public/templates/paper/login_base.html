@@ -1,37 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>MAXPolo</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MAXPolo</title>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
 
-<link rel="icon" type="image/png" href="{{ settings.STATIC_URL }}images/fegno.png" />
+    <link href="{{ settings.STATIC_URL }}images/fegno.png" rel="icon" type="image/png"/>
 
-<link rel="stylesheet" type="text/css" href="{{ settings.STATIC_URL }}Login_v1/vendor/bootstrap/css/bootstrap.min.css">
+    <link href="{{ settings.STATIC_URL }}Login_v1/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+          type="text/css">
 
-<link rel="stylesheet" type="text/css" href="{{ settings.STATIC_URL }}Login_v1/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link href="{{ settings.STATIC_URL }}Login_v1/fonts/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          type="text/css">
 
-<link rel="stylesheet" type="text/css" href="{{ settings.STATIC_URL }}Login_v1/vendor/animate/animate.css">
+    <link href="{{ settings.STATIC_URL }}Login_v1/vendor/animate/animate.css" rel="stylesheet" type="text/css">
 
-<link rel="stylesheet" type="text/css" href="{{ settings.STATIC_URL }}Login_v1/vendor/css-hamburgers/hamburgers.min.css">
+    <link href="{{ settings.STATIC_URL }}Login_v1/vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet"
+          type="text/css">
 
-<link rel="stylesheet" type="text/css" href="{{ settings.STATIC_URL }}Login_v1/vendor/select2/select2.min.css">
+    <link href="{{ settings.STATIC_URL }}Login_v1/vendor/select2/select2.min.css" rel="stylesheet" type="text/css">
 
-<link rel="stylesheet" type="text/css" href="{{ settings.STATIC_URL }}Login_v1/css/util.css">
-<link rel="stylesheet" type="text/css" href="{{ settings.STATIC_URL }}Login_v1/css/main.css">
+    <link href="{{ settings.STATIC_URL }}Login_v1/css/util.css" rel="stylesheet" type="text/css">
+    <link href="{{ settings.STATIC_URL }}Login_v1/css/main.css" rel="stylesheet" type="text/css">
 
-<meta name="robots" content="noindex, follow">
+    <meta content="noindex, follow" name="robots">
+    <style></style>
+    <style>.errorlist {font-size: 0.8rem;} .footer{margin-top: 60px;} .login100-pic{width:100%}  </style>
+
 </head>
 <body>
 <div class="limiter">
-<div class="container-login100">
-<div class="wrap-login100">
-						{% block login_form %}
+    <div class="container-login100">
+        <div class="wrap-login100">
+            {% block login_form %}
 
 
-								{% endblock %}
-</div>
-</div>
+            {% endblock %}
+        </div>
+    </div>
 </div>
 
 <script src="{{ settings.STATIC_URL }}Login_v1/vendor/jquery/jquery-3.2.1.min.js"></script>
@@ -58,6 +64,7 @@
 <!--</script>-->
 
 <script src="{{ settings.STATIC_URL }}Login_v1/js/main.js"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"rayId":"69c84ff42cd8d994","token":"cd0b4b3a733644fc843ef0b185f98241","version":"2021.9.0","si":100}'></script>
+<script data-cf-beacon='{"rayId":"69c84ff42cd8d994","token":"cd0b4b3a733644fc843ef0b185f98241","version":"2021.9.0","si":100}'
+        defer src="https://static.cloudflareinsights.com/beacon.min.js"></script>
 </body>
 </html>
