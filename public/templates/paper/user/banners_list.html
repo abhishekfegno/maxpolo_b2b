@@ -1,17 +1,17 @@
-{% extends 'paper/layout.html' %}{% load crispy_forms_tags  %}
+{% extends 'paper/layout.html' %}{% load crispy_forms_tags %}
 
 
 {% block content%}
 <div class='row'>
-    <div class='col-6'>
+    <div class='col-7'>
         <div class='card'>
             <div class='card-body'>
                 <h3>Advertisements List</h3>
 
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
-                        <thead class="">
-                        <tr class="">
+                        <thead class="thead-dark">
+                        <tr class="table-header">
                             <th scope="col">ID</th>
                             <th scope="col">title</th>
                             <th scope="col">image</th>
@@ -42,6 +42,10 @@
                                 </div>
                             </td>
                         </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="text-center text-muted" colspan="100%"> No advertisements left in the book. You can add it here                            </td>
+                        </tr>
                         {% endfor %}
                         </tbody>
 
@@ -52,7 +56,7 @@
         </div>
 
     </div>
-    <div class='col-6'>
+    <div class='col-5'>
         <div class='card'>
             <div class='card-body'>
                 <h3>Create Advertisements</h3>

@@ -7,7 +7,6 @@ import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 
 # from apps.user.models import Dealer
-from apps.user.models import Dealer
 
 
 class EmailHandler(object):

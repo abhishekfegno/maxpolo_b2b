@@ -18,21 +18,22 @@
             <hr>
         </div>
 
-    <div class='col-6'>
+    <div class='col-7'>
         <div class='card'>
             <div class='card-body'>
                 <h3>Product List</h3>
-
+                <p class="text-muted"> Here you can find all the products available. </p>
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
-                        <thead class="">
-                        <tr class="">
+                        <thead class="thead-dark">
+                        <tr class="table-header">
                             <th scope="col">ID</th>
                             <th scope="col">Image</th>
                             <th scope="col">Name</th>
                             <th scope="col">Code</th>
                             <th scope="col">Brand</th>
                             <th scope="col">Category</th>
+                            <th scope="col">Actions</th>
                         </tr>
 
                         </thead>
@@ -59,15 +60,21 @@
                                 <div class="">{{ object.category.name }}</div>
                             </td>
                             <td>
-                                <div class=""><a class="btn btn-primary" href="{% url 'product-update' pk=object.pk %}">Edit</a>
+                                <div class="">
+                                    <a class="btn btn-primary" href="{% url 'product-update' pk=object.pk %}">Edit</a>
+                                    <a class="btn btn-danger" href="javascript:void(0)"onclick="swalFunction(this, '{% url 'product-delete' pk=object.pk %}')">Delete</a>
+
                                 </div>
                             </td>
                             <td>
-                                <div class=""><a class="btn btn-danger" href="javascript:void(0)"
-                                                 onclick="swalFunction(this, '{% url 'product-delete' pk=object.pk %}')">Delete</a>
-                                </div>
                             </td>
 
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="text-center text-muted" colspan="100%"> No Products left in the book.
+                                Check back later
+                            </td>
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -78,10 +85,14 @@
             {% include 'paper/pagination.html' %}
         </div>
     </div>
-    <div class='col-6'>
+    <div class='col-5'>
         <div class='card'>
             <div class='card-body'>
                 <h3>Add Product</h3>
+                        <tr>
+                            <td class="text-center text-muted" colspan="100%"> Add Product here .
+                            </td>
+                        </tr>
                 <form enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
                     {{ form | crispy }}

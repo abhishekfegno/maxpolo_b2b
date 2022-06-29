@@ -7,8 +7,8 @@
 
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
-                        <thead class="">
-                        <tr class="">
+                        <thead class="thead-dark">
+                        <tr class="table-header">
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
                             <th scope="col">File</th>
@@ -53,6 +53,12 @@
                             </td>
 
                         </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="text-center text-muted" colspan="100%"> No PDF left in the book.
+                                Check back later
+                            </td>
+                        </tr>
                         {% endfor %}
                         </tbody>
 
@@ -66,7 +72,9 @@
         <div class='card'>
             <div class='card-body'>
                 <h3>Add PDF</h3>
-
+                        <tr>
+                            <td class="text-center text-muted" colspan="100%">Add PDF corresponding to category here </td>
+                        </tr>
                 <form enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
                     {{ form | crispy }}
