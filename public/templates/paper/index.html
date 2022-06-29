@@ -8,48 +8,155 @@
 
 
 <div class="row">
-    <div class="col-md-3">
-        <div class="card ">
-            <div class="card-header ">
-                <h5 class="card-title">Orders</h5>
-                <p class="card-category">Total number</p>
-            </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
             <div class="card-body ">
-                <canvas class="ct-chart ct-perfect-fourth" height="300" id="chartDonut3" width="456"></canvas>
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                            <i class="nc-icon nc-globe text-warning"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Products</p>
+                            <p class="card-title">{{ products.count }}<p>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card-footer ">
-                <div class="legend">
-                    <i class="fa fa-circle text-danger"></i> Completed
-                </div>
                 <hr>
                 <div class="stats">
-                    <!--                <i class="fa fa-clock-o"></i> Updated 3 minutes ago-->
+                    <i class="fa fa-refresh"></i>
+                    Update Now
                 </div>
             </div>
         </div>
     </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                            <i class="nc-icon nc-money-coins text-success"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Orders</p>
+                            <p class="card-title">{{ orders.count }}<p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                    <i class="fa fa-calendar-o"></i>
+                    Last day
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                            <i class="nc-icon nc-vector text-danger"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Complaints</p>
+                            <p class="card-title">{{ complaints.count }}<p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                    <i class="fa fa-clock-o"></i>
+                    In the last hour
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                            <i class="nc-icon nc-favourite-28 text-primary"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Brand</p>
+                            <p class="card-title">{{ brands.count }}<p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                    <i class="fa fa-refresh"></i>
+                    Update now
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-3">
+    <div class="card ">
+        <div class="card-header ">
+            <h5 class="card-title">Orders</h5>
+            <p class="card-category">Total number</p>
+        </div>
+        <div class="card-body ">
+            <canvas class="ct-chart ct-perfect-fourth" height="300" id="chartDonut3" width="456"></canvas>
+        </div>
+        <div class="card-footer ">
+            <div class="legend">
+                <i class="fa fa-circle text-danger"></i> Completed
+            </div>
+            <hr>
+            <div class="stats">
+                <!--                <i class="fa fa-clock-o"></i> Updated 3 minutes ago-->
+            </div>
+        </div>
+    </div>
+</div>
 
-    <div class="col-md-4">
-        <div class="card ">
-            <div class="card-header ">
-                <h5 class="card-title">Orders</h5>
-                <!--                <p class="card-category">Last Campaign Performance</p>-->
+<div class="col-md-4">
+    <div class="card ">
+        <div class="card-header ">
+            <h5 class="card-title">Orders</h5>
+            <!--                <p class="card-category">Last Campaign Performance</p>-->
+        </div>
+        <div class="card-body ">
+            <canvas id="chartEmail"></canvas>
+        </div>
+        <div class="card-footer ">
+            <div class="legend">
+                <i class="fa fa-circle text-primary"></i> Opened
+                <i class="fa fa-circle text-warning"></i> Read
+                <i class="fa fa-circle text-danger"></i> Deleted
+                <i class="fa fa-circle text-gray"></i> Unopened
             </div>
-            <div class="card-body ">
-                <canvas id="chartEmail"></canvas>
-            </div>
-            <div class="card-footer ">
-                <div class="legend">
-                    <i class="fa fa-circle text-primary"></i> Opened
-                    <i class="fa fa-circle text-warning"></i> Read
-                    <i class="fa fa-circle text-danger"></i> Deleted
-                    <i class="fa fa-circle text-gray"></i> Unopened
-                </div>
-                <hr>
-                <div class="stats">
-                    <!--                    <i class="fa fa-calendar"></i> Number of emails sent-->
-                </div>
+            <hr>
+            <div class="stats">
+                <!--                    <i class="fa fa-calendar"></i> Number of emails sent-->
             </div>
         </div>
     </div>
-    {% endblock %}
+</div>
+
+</div>
+{% endblock %}

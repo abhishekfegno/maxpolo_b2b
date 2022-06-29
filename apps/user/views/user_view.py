@@ -9,15 +9,23 @@ from django.views.generic import UpdateView, DeleteView, ListView, TemplateView
 from django.views.generic.edit import FormMixin, ModelFormMixin, ProcessFormView
 from rest_framework.authtoken.models import Token
 
+from apps.catalogue.models import Product, Brand
+from apps.order.models import SalesOrder
 from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm, AdminForm
-from apps.user.models import Banners, User, Dealer, Executive, Role
+from apps.user.models import Banners, User, Dealer, Executive, Role, Complaint
 from lib.token_handler import token_expire_handler, is_token_expired
 
 
 class IndexView(TemplateView):
+    template_name = 'paper/index.html'
+
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
+        context['orders'] = SalesOrder.objects.all().select_related('dealer')
         context['advertisements'] = Banners.objects.all()
+        context['products'] = Product.objects.all().select_related('brand', 'category')
+        context['brands'] = Brand.objects.all()
+        context['complaints'] = Complaint.objects.all().select_related('created_by', 'order_id')
         return self.render_to_response(context)
 
 

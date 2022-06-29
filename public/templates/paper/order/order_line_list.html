@@ -47,12 +47,9 @@
                             </div>
                             {% endfor%}
                         </div>
-                        <<<<<<< HEAD
 
                         <button class='btn btn-md btn-success' style="float:right;" type='submit'> Save</button>
-                        =======
-                        <button class='btn btn-md btn-success' style="float:right;" type='submit'> Save</button>
-                        >>>>>>> f147910015f0ca12ef719278c45f9deef624d54c
+
                     </form>
                 </fieldset>
             </div>
@@ -64,12 +61,7 @@
             <div class='card-body'>
                 <h3>Order Detail</h3>
                 <div class="col-lg-3 col-md-6 col-sm-6" style="float:right;">
-                    <<<<<<< HEAD
-                    <a class="delBrand btn btn-danger" href="javascript:void(0)"
-                       onclick="swalFunction(this, '{% url del pk=object_list.last.pk %}')">Delete this Order</a>
-                    =======
                     <a class="delBrand btn btn-danger" href="{% url del pk=order.pk %}">Delete this Order</a>
-                    >>>>>>> f147910015f0ca12ef719278c45f9deef624d54c
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
@@ -100,56 +92,9 @@
                         </tr>
                         {% endfor %}
                         </tbody>
-
                     </table>
                 </div>
-
             </div>
         </div>
-
     </div>
-    <<<<<<< HEAD
-</div>{% include 'paper/swal.html' %}=======</div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
-<script>
-    function swalFunction(element, url){
-
-    Swal.fire({
-          title: 'Are you sure?',
-          text: "You won't be able to revert this!",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            console.log(url)
-            $.ajax({
-                type:"POST",
-                url:url,
-
-
-            })
-            Swal.fire(
-              'Deleted!',
-              'Your file has been deleted.',
-              'success'
-            ).then(function(){
-                    $.ajax({
-                        type:"GET",
-                        url:"{% url 'quotation-list' %}",
-                    })
-            })
-
-            }
-        });
-    }
-     // end of swalFunction()
-
-
-</script>
-
->>>>>>> f147910015f0ca12ef719278c45f9deef624d54c
-
 {%endblock%}

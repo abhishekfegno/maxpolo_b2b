@@ -220,25 +220,30 @@ class QuotationListView(FormMixin, ListView):
         # orderline_formset = inlineformset_factory(SalesOrder, SalesOrderLine, fields=('product', 'quantity'))
         if form.is_valid():
             products = form.data.getlist('product')
-            quantity = form.data.getlist('quantity')
-            print(products, quantity)
-            order = form.save()
+            quantities = form.data.getlist('quantity')
+            print(products, quantities)
             try:
-                for product, quantity in zip(products, quantity):
+                if not products or not quantities:
+                    raise QuantityInvalidException("Please select product")
+                order = form.save()
+                for product, quantity in zip(products, quantities):
                     product = Product.objects.get(id=product)
                     print(product)
+
                     if int(quantity) <= 0:
                         raise QuantityInvalidException("Invalid Quantity")
 
                     line = SalesOrderLine.objects.create(product=product, quantity=quantity, order=order)
                     print(f"line created {line} for order {order}")
                     print(f"order {order} created")
-                    messages.add_message(request, messages.INFO, f"New Order {order} has been created")
+                    messages.add_message(request, messages.SUCCESS, f"New Order {order} has been created")
+                order.save()
+
             except Exception as e:
                 print(str(e))
-                messages.add_message(request, messages.INFO, str(e))
+                messages.add_message(request, messages.ERROR, str(e))
         else:
-            messages.add_message(request, messages.SUCCESS, form.errors)
+            messages.add_message(request, messages.ERROR, form.errors)
         return redirect('quotation-list')
 
 
