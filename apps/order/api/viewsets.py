@@ -84,6 +84,24 @@ class OrderListAPIView2(ListAPIView):
 
 
 class OrderListAPIView(CreateModelMixin, ListAPIView):
+    """
+    GET:
+    /.../.../../?is_cancelled=1
+    /.../.../../?is_confirmed=1
+    /.../.../../?is_invoice=1
+    /.../.../../?is_quotation=1
+
+    POST:
+
+    {
+        "dealer" : <dealer_id>,
+        "lines": [{
+            "product": <product_id>,
+            "quantity": 8
+        }, {...}, {...}]
+    }
+
+    """
     queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
 
     def get_serializer_class(self):
