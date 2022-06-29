@@ -42,7 +42,9 @@ class DealerForm(UserCreationForm):
 
     class Meta:
         model = Dealer
-        fields = ('username', "password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email', 'executives')
+        fields = (
+            'username', "password1", "password2", 'first_name', 'last_name',
+            'branch', 'mobile', 'email', 'executive')
 
     def save(self, commit=True):
         self.instance.user_role = Role.DEALER

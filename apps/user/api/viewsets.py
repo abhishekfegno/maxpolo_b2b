@@ -48,6 +48,8 @@ class LoginAPIView(GenericAPIView):
                     "address_city": user.address_city,
                     "address_state": user.address_state,
                     "zone": user.zone.name,
+                    "mobile": user.mobile,
+                    "mobile": user.mobile,
                 }
             except Exception as e:
                 out['errors'] = str(e)
