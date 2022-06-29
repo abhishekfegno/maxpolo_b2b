@@ -5,7 +5,9 @@
 {% block breadcrumbs %}{% endblock %}
 
 {% endblock %}{% block content %}
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
 <div class="row">
     <div class="col-lg-3 col-md-6 col-sm-6">
@@ -71,8 +73,8 @@
                     </div>
                     <div class="col-7 col-md-8">
                         <div class="numbers">
-                            <p class="card-category">Complaints</p>
-                            <p class="card-title">{{ complaints.count }}<p>
+                            <p class="card-category">Sales Order</p>
+                            <p class="card-title">{{ salesorders.count }}<p>
                         </div>
                     </div>
                 </div>
@@ -97,8 +99,8 @@
                     </div>
                     <div class="col-7 col-md-8">
                         <div class="numbers">
-                            <p class="card-category">Brand</p>
-                            <p class="card-title">{{ brands.count }}<p>
+                            <p class="card-category">Invoice</p>
+                            <p class="card-title">{{ invoice.count }}<p>
                         </div>
                     </div>
                 </div>
@@ -113,26 +115,26 @@
         </div>
     </div>
 </div>
-<div class="col-md-3">
-    <div class="card ">
-        <div class="card-header ">
-            <h5 class="card-title">Orders</h5>
-            <p class="card-category">Total number</p>
-        </div>
-        <div class="card-body ">
-            <canvas class="ct-chart ct-perfect-fourth" height="300" id="chartDonut3" width="456"></canvas>
-        </div>
-        <div class="card-footer ">
-            <div class="legend">
-                <i class="fa fa-circle text-danger"></i> Completed
-            </div>
-            <hr>
-            <div class="stats">
-                <!--                <i class="fa fa-clock-o"></i> Updated 3 minutes ago-->
-            </div>
-        </div>
-    </div>
-</div>
+<!--<div class="col-md-3">-->
+<!--    <div class="card ">-->
+<!--        <div class="card-header ">-->
+<!--            <h5 class="card-title">Orders</h5>-->
+<!--            <p class="card-category">Total number</p>-->
+<!--        </div>-->
+<!--        <div class="card-body ">-->
+<!--            <canvas class="ct-chart ct-perfect-fourth" height="300" id="chartDonut3" width="456"></canvas>-->
+<!--        </div>-->
+<!--        <div class="card-footer ">-->
+<!--            <div class="legend">-->
+<!--                <i class="fa fa-circle text-danger"></i> Completed-->
+<!--            </div>-->
+<!--            <hr>-->
+<!--            <div class="stats">-->
+<!--                &lt;!&ndash;                <i class="fa fa-clock-o"></i> Updated 3 minutes ago&ndash;&gt;-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 
 <div class="col-md-4">
     <div class="card ">
@@ -141,7 +143,9 @@
             <!--                <p class="card-category">Last Campaign Performance</p>-->
         </div>
         <div class="card-body ">
-            <canvas id="chartEmail"></canvas>
+            <canvas id="myChart" width="400" height="100"></canvas>
+
+<!--            <canvas id="chartEmail"></canvas>-->
         </div>
         <div class="card-footer ">
             <div class="legend">
@@ -158,5 +162,47 @@
     </div>
 </div>
 
-</div>
+{%block scripts%}
+<script>
+// jquery function
+$(document).ready(function(){
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [{%for data in orders %}'{{data}}',{%endfor%}] //loop through queryset,
+                datasets: [{
+                    label: '# of users',
+                    data: [{%for data in invoice %}{{data}},{%endfor%}],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+});
+    });
+</script>
+{%endblock scripts%}
+
 {% endblock %}

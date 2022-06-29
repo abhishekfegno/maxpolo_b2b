@@ -22,7 +22,9 @@ class IndexView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        context['orders'] = SalesOrder.objects.all().select_related('dealer')
+        context['orders'] = SalesOrder.objects.filter(is_quotation=True).select_related('dealer')
+        context['salesorders'] = SalesOrder.objects.filter(is_confirmed=True).select_related('dealer')
+        context['invoice'] = SalesOrder.objects.filter(is_invoice=True).select_related('dealer')
         context['advertisements'] = Banners.objects.all()
         context['products'] = Product.objects.all().select_related('brand', 'category')
         context['brands'] = Brand.objects.all()
