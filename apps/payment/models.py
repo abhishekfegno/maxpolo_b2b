@@ -16,6 +16,11 @@ class AmountMissMatchException(Exception):
     pass
 
 
+class QuantityInvalidException(Exception):
+    pass
+
+
+
 class Transaction(models.Model):
     order = models.ForeignKey('order.SalesOrder', on_delete=models.SET_NULL, null=True, blank=False)
     amount = models.FloatField(default=0.0)

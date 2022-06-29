@@ -16,6 +16,7 @@ from apps.catalogue.models import Product
 from apps.order.forms.salesorder_form import QuotationForm, QuotationLineForm, QuotationUpdateForm, InvoiceUpdateForm, \
 	SalesOrderUpdateForm, InvoiceAmountForm
 from apps.order.models import SalesOrder, SalesOrderLine
+from apps.payment.models import QuantityInvalidException
 from lib.filters import OrderFilter
 from lib.importexport import OrderReport
 
@@ -39,6 +40,7 @@ def get_orderline(request, order_id):
 	form = form_submit(request, order)
 	context['del'] = order.order_type + '-delete'
 	context['form'] = form
+	context['order'] = order
 	context['object_list'] = order.line.all()
 
 	if request.method == 'POST':
@@ -222,18 +224,22 @@ class QuotationListView(FormMixin, ListView):
 			quantity = form.data.getlist('quantity')
 			print(products, quantity)
 			order = form.save()
-			print(f"order {order} created")
 			try:
 				for product, quantity in zip(products, quantity):
 					product = Product.objects.get(id=product)
 					print(product)
+					if int(quantity) <= 0:
+						raise QuantityInvalidException("Invalid Quantity")
+
 					line = SalesOrderLine.objects.create(product=product, quantity=quantity, order=order)
 					print(f"line created {line} for order {order}")
 			except Exception as e:
 				print(str(e))
 				messages.add_message(request, messages.INFO, str(e))
+			print(f"order {order} created")
+			messages.add_message(request, messages.INFO, f"New Order {order} has been created")
 		else:
-			messages.add_message(request, messages.INFO, form.errors)
+			messages.add_message(request, messages.SUCCESS, form.errors)
 		return redirect('quotation-list')
 
 
