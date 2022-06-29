@@ -50,7 +50,7 @@ class SalesOrder(models.Model):
 
     @property
     def id_as_text(self):
-        return f'ORD{str(self.order_id).zfill(6)}'
+        return f'ORD{str(self.pk).zfill(6)}'
 
     @property
     def total_line_quantity(self):

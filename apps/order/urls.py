@@ -22,4 +22,6 @@ urlpatterns = [
     path('order/excel/export/<str:slug>/', get_excel_report_order, name='get_excel_report_order'),
     path('cancelled/list/', cancelled_order, name='cancelled_order'),
 
+    # path('order/status-update/<int:id>/', get_orderline_form, name='order-status-update'),
+
 ]

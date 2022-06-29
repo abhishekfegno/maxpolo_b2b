@@ -8,7 +8,6 @@ from sib_api_v3_sdk.rest import ApiException
 
 # from apps.user.models import Dealer
 
-
 class EmailHandler(object):
     api_key = os.environ.get('SENDINBLUE_API_KEY')
 
@@ -23,6 +22,8 @@ class EmailHandler(object):
     # create an instance of the API class
 
     def sent_mail_for_pdf(self, recipients, instance, url):
+        from apps.user.models import Dealer
+
         recipient = [i for i in Dealer.objects.all().values('email', 'first_name')]
         recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
         message = f"New products have been arrived.Please visit {url}"
