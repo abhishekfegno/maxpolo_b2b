@@ -75,7 +75,7 @@ class PDFListView(CreateView, ListView):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             instance = form.save()
-            EmailHandler().sent_mail_for_pdf(instance, url)
+            # EmailHandler().sent_mail_for_pdf(instance, url)
         else:
             print(form.errors)
             messages.add_message(request, messages.INFO, form.errors.get('file')[0])

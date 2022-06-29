@@ -24,6 +24,11 @@ class IndexView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
+        orders = {}
+        orders['orders'] = SalesOrder.objects.filter(is_quotation=True).select_related('dealer').count()
+        orders['saleorder'] = SalesOrder.objects.filter(is_confirmed=True).select_related('dealer').count()
+        orders['invoice'] = SalesOrder.objects.filter(is_invoice=True).select_related('dealer').count()
+
         context['orders'] = SalesOrder.objects.filter(is_quotation=True).select_related('dealer')
         context['salesorders'] = SalesOrder.objects.filter(is_confirmed=True).select_related('dealer')
         context['invoice'] = SalesOrder.objects.filter(is_invoice=True).select_related('dealer')
@@ -31,6 +36,8 @@ class IndexView(TemplateView):
         context['products'] = Product.objects.all().select_related('brand', 'category')
         context['brands'] = Brand.objects.all()
         context['complaints'] = Complaint.objects.all().select_related('created_by', 'order_id')
+        context['pie_data'] = orders
+        print(orders)
         return self.render_to_response(context)
 
 
