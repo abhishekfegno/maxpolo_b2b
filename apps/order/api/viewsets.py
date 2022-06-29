@@ -25,7 +25,7 @@ class OrderDetailAPIView(RetrieveAPIView):
     pagination_class = PageNumberPagination
 
 
-class OrderListAPIView(ListAPIView):
+class OrderListAPIView2(ListAPIView):
     """
     filters
         ?is_quotation=True
@@ -37,7 +37,6 @@ class OrderListAPIView(ListAPIView):
         "quantites":[1,2,3],
         "dealer":3
     }
-
     """
     queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
     serializer_class = OrderSerializer
@@ -81,3 +80,16 @@ class OrderListAPIView(ListAPIView):
         except Exception as e:
             result['errors'] = str(e)
         return Response(result, status=status.HTTP_200_OK)
+
+
+class OrderListAPIView(ListAPIView):
+    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
+    serializer_class = OrderSerializer
+    pagination_class = PageNumberPagination
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    filterset_fields = ['is_cancelled', 'is_confirmed', 'is_invoice', 'is_quotation']
+
+    def get_queryset(self):
+        return self.queryset.filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
+
+
