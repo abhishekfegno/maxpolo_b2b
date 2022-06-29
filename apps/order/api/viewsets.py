@@ -91,6 +91,6 @@ class OrderListAPIView(ListAPIView):
     filterset_fields = ['is_cancelled', 'is_confirmed', 'is_invoice', 'is_quotation']
 
     def filter_queryset(self, queryset):
-        return queryset.filter(created_by=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
+        return queryset.filter(dealer=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
 
 
