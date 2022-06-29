@@ -2,11 +2,15 @@ import os
 
 from django.conf import settings
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django_extensions.db.fields import AutoSlugField
 from treebeard.mp_tree import MP_Node
 
 
 # Create your models here.
+from apps.user.models import Dealer
+from lib.sent_email import EmailHandler
 
 
 class Brand(models.Model):
@@ -63,3 +67,10 @@ class Product(models.Model):
         if self.image:
             return self.image.url
         return settings.MEDIA_URL + settings.DEFAULT_IMAGE
+
+
+@receiver(post_save, sender=PDF)
+def sent_email_pdf(sender, created, instance, **kwargs):
+    recipients = [i for i in Dealer.objects.all().values('email', 'first_name')]
+    if created:
+        EmailHandler().sent_mail_for_banners(recipients, instance)
