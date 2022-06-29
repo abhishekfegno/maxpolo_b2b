@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator, EmptyPage
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView, RetrieveAPIView
@@ -87,9 +87,10 @@ class OrderListAPIView(ListAPIView):
     serializer_class = OrderSerializer
     pagination_class = PageNumberPagination
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    permission_classes = (permissions.IsAuthenticated, )
     filterset_fields = ['is_cancelled', 'is_confirmed', 'is_invoice', 'is_quotation']
 
     def filter_queryset(self, queryset):
-        return queryset.filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
+        return queryset.filter(created_by=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
 
 
