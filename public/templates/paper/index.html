@@ -5,51 +5,204 @@
 {% block breadcrumbs %}{% endblock %}
 
 {% endblock %}{% block content %}
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
 <div class="row">
-    <div class="col-md-3">
-        <div class="card ">
-            <div class="card-header ">
-                <h5 class="card-title">Orders</h5>
-                <p class="card-category">Total number</p>
-            </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
             <div class="card-body ">
-                <canvas class="ct-chart ct-perfect-fourth" height="300" id="chartDonut3" width="456"></canvas>
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                            <i class="nc-icon nc-globe text-warning"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Products</p>
+                            <p class="card-title">{{ products.count }}<p>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card-footer ">
-                <div class="legend">
-                    <i class="fa fa-circle text-danger"></i> Completed
-                </div>
                 <hr>
                 <div class="stats">
-                    <!--                <i class="fa fa-clock-o"></i> Updated 3 minutes ago-->
+                    <i class="fa fa-refresh"></i>
+                    Update Now
                 </div>
             </div>
         </div>
     </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                            <i class="nc-icon nc-money-coins text-success"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Orders</p>
+                            <p class="card-title">{{ orders.count }}<p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                    <i class="fa fa-calendar-o"></i>
+                    Last day
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                            <i class="nc-icon nc-vector text-danger"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Sales Order</p>
+                            <p class="card-title">{{ salesorders.count }}<p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                    <i class="fa fa-clock-o"></i>
+                    In the last hour
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                            <i class="nc-icon nc-favourite-28 text-primary"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Invoice</p>
+                            <p class="card-title">{{ invoice.count }}<p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                    <i class="fa fa-refresh"></i>
+                    Update now
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div class="col-md-3">-->
+<!--    <div class="card ">-->
+<!--        <div class="card-header ">-->
+<!--            <h5 class="card-title">Orders</h5>-->
+<!--            <p class="card-category">Total number</p>-->
+<!--        </div>-->
+<!--        <div class="card-body ">-->
+<!--            <canvas class="ct-chart ct-perfect-fourth" height="300" id="chartDonut3" width="456"></canvas>-->
+<!--        </div>-->
+<!--        <div class="card-footer ">-->
+<!--            <div class="legend">-->
+<!--                <i class="fa fa-circle text-danger"></i> Completed-->
+<!--            </div>-->
+<!--            <hr>-->
+<!--            <div class="stats">-->
+<!--                &lt;!&ndash;                <i class="fa fa-clock-o"></i> Updated 3 minutes ago&ndash;&gt;-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 
-    <div class="col-md-4">
-        <div class="card ">
-            <div class="card-header ">
-                <h5 class="card-title">Orders</h5>
-                <!--                <p class="card-category">Last Campaign Performance</p>-->
+<div class="col-md-4">
+    <div class="card ">
+        <div class="card-header ">
+            <h5 class="card-title">Orders</h5>
+            <!--                <p class="card-category">Last Campaign Performance</p>-->
+        </div>
+        <div class="card-body ">
+            <canvas id="myChart" width="400" height="100"></canvas>
+
+<!--            <canvas id="chartEmail"></canvas>-->
+        </div>
+        <div class="card-footer ">
+            <div class="legend">
+                <i class="fa fa-circle text-primary"></i> Opened
+                <i class="fa fa-circle text-warning"></i> Read
+                <i class="fa fa-circle text-danger"></i> Deleted
+                <i class="fa fa-circle text-gray"></i> Unopened
             </div>
-            <div class="card-body ">
-                <canvas id="chartEmail"></canvas>
-            </div>
-            <div class="card-footer ">
-                <div class="legend">
-                    <i class="fa fa-circle text-primary"></i> Opened
-                    <i class="fa fa-circle text-warning"></i> Read
-                    <i class="fa fa-circle text-danger"></i> Deleted
-                    <i class="fa fa-circle text-gray"></i> Unopened
-                </div>
-                <hr>
-                <div class="stats">
-                    <!--                    <i class="fa fa-calendar"></i> Number of emails sent-->
-                </div>
+            <hr>
+            <div class="stats">
+                <!--                    <i class="fa fa-calendar"></i> Number of emails sent-->
             </div>
         </div>
     </div>
-    {% endblock %}
+</div>
+
+{%block scripts%}
+<script>
+// jquery function
+$(document).ready(function(){
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [{%for data in orders %}'{{data}}',{%endfor%}] //loop through queryset,
+                datasets: [{
+                    label: '# of users',
+                    data: [{%for data in invoice %}{{data}},{%endfor%}],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+});
+    });
+</script>
+{%endblock scripts%}
+
+{% endblock %}

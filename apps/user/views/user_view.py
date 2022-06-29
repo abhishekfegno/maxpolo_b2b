@@ -10,16 +10,31 @@ from django.views.generic import UpdateView, DeleteView, ListView, TemplateView
 from django.views.generic.edit import FormMixin, ModelFormMixin, ProcessFormView, FormView
 from rest_framework.authtoken.models import Token
 
+<<<<<<< HEAD
 from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm, AdminForm, DealerUpdateForm, \
     ExecutiveUpdateForm, AdminUpdateForm
 from apps.user.models import Banners, User, Dealer, Executive, Role
+=======
+from apps.catalogue.models import Product, Brand
+from apps.order.models import SalesOrder
+from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm, AdminForm
+from apps.user.models import Banners, User, Dealer, Executive, Role, Complaint
+>>>>>>> 1a7bd320844f46a234a681d2a05a0b9b8d29fdc0
 from lib.token_handler import token_expire_handler, is_token_expired
 
 
 class IndexView(TemplateView):
+    template_name = 'paper/index.html'
+
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
+        context['orders'] = SalesOrder.objects.filter(is_quotation=True).select_related('dealer')
+        context['salesorders'] = SalesOrder.objects.filter(is_confirmed=True).select_related('dealer')
+        context['invoice'] = SalesOrder.objects.filter(is_invoice=True).select_related('dealer')
         context['advertisements'] = Banners.objects.all()
+        context['products'] = Product.objects.all().select_related('brand', 'category')
+        context['brands'] = Brand.objects.all()
+        context['complaints'] = Complaint.objects.all().select_related('created_by', 'order_id')
         return self.render_to_response(context)
 
 
