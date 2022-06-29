@@ -5,7 +5,7 @@ from rest_framework.authentication import BasicAuthentication
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.mixins import CreateModelMixin
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.pagination import PageNumberPagination as CorePageNumberPagination
 from rest_framework.response import Response
 
 from apps.catalogue.models import Product
@@ -14,6 +14,10 @@ from apps.order.models import SalesOrder, SalesOrderLine
 from apps.user.models import Dealer
 from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
+
+
+class PageNumberPagination(CorePageNumberPagination):
+    page_size = 55
 
 
 class OrderDetailAPIView(RetrieveAPIView):
