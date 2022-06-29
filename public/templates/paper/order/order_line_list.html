@@ -26,19 +26,20 @@
     <div class="col-md-6">
         <h3>
             <img src="{% static 'icons/order.png' %}" alt="..." height="40">
-            ORDER / #{{ order.id_as_text }} </h3>
+            ORDER / #{{ order.order_id }} </h3>
     </div>
     <div class="col-md-6">
         {% if order.order_type == 'quotation' %}
+
         <div class="float-right " style="display:flex;">
-            <form action="{% url 'quotation-update' pk=order.id %}" class="form-inline" method="post">
+            <form action="{% url 'quotation_status' pk=order.id %}" class="form-inline" method="post">
                 {% csrf_token %}
                 <input type="hidden" hidden name="is_confirmed" value="1" >
                 <input type="hidden" hidden name="is_cancelled" value=0 class="form-control">
                 <input type="hidden" hidden name="confirmed_date" value="{% now 'm/d/Y' %}" class="form-control" >
                 <input type="button" onclick="confirm_submit(event)" class="btn btn-success btn-inline" value="Confirm Order">
             </form>
-            <form action="{% url 'quotation-update' pk=order.id %}" class="form-inline"  method="post">
+            <form action="{% url 'quotation_status' pk=order.id %}" class="form-inline"  method="post">
                 {% csrf_token %}
                 <input type="hidden" hidden name="is_confirmed" value=0 class="form-control">
                 <input type="hidden" hidden name="is_cancelled" value="1">
@@ -46,6 +47,14 @@
                 <input type="button" onclick="confirm_submit(event)" class="btn btn-secondary btn-inline" value="Cancel">
             </form>
         </div>
+        {% elif order.order_type == 'salesorder' %}
+        <div class="float-right " style="display:flex;">
+            <form action="{% url 'quotation_status' pk=order.id %}" class="form-inline"  method="post">
+                {% csrf_token %}
+                <input type="hidden" hidden name="is_invoice" value=1 class="form-control">
+                <input type="button" onclick="confirm_submit(event)" class="btn btn-secondary btn-inline" value="Invoice Order">
+            </form>
+          </div>
         {% elif order.is_invoice %}
         <div class="float-right ">
             <a href="#" class="btn btn-info "> Capture Invoice </a>

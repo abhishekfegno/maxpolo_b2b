@@ -24,14 +24,18 @@ class IndexView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
+        quotation = SalesOrder.objects.filter(is_quotation=True).select_related('dealer')
+        salesorder = SalesOrder.objects.filter(is_confirmed=True).select_related('dealer')
+        invoice = SalesOrder.objects.filter(is_invoice=True).select_related('dealer')
         orders = {}
-        orders['orders'] = SalesOrder.objects.filter(is_quotation=True).select_related('dealer').count()
-        orders['saleorder'] = SalesOrder.objects.filter(is_confirmed=True).select_related('dealer').count()
-        orders['invoice'] = SalesOrder.objects.filter(is_invoice=True).select_related('dealer').count()
+        orders['orders'] = quotation.count()
+        orders['saleorder'] = salesorder.count()
+        orders['invoice'] = invoice.count()
 
-        context['orders'] = SalesOrder.objects.filter(is_quotation=True).select_related('dealer')
-        context['salesorders'] = SalesOrder.objects.filter(is_confirmed=True).select_related('dealer')
-        context['invoice'] = SalesOrder.objects.filter(is_invoice=True).select_related('dealer')
+        context['orders'] = quotation
+        context['salesorders'] = salesorder
+        context['invoice'] = invoice
+
         context['advertisements'] = Banners.objects.all()
         context['products'] = Product.objects.all().select_related('brand', 'category')
         context['brands'] = Brand.objects.all()
