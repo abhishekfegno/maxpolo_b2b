@@ -30,7 +30,6 @@ class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     permission_classes = (permissions.AllowAny, )
-    http_method_names = ['GET', 'POST']
 
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
