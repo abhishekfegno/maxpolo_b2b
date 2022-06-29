@@ -46,6 +46,8 @@ class EmailHandler(object):
 
     def sent_mail_complaint(self, instance):
         recipient = []
+        if instance.created_by is None:
+            return
         recipient.append({'email': instance.created_by.email, 'first_name': instance.created_by.first_name})
         recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
         message = f"New Claim have been arrived."
