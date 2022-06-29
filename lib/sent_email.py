@@ -8,6 +8,7 @@ from sib_api_v3_sdk.rest import ApiException
 
 # from apps.user.models import Dealer
 
+
 class EmailHandler(object):
     api_key = os.environ.get('SENDINBLUE_API_KEY')
 
