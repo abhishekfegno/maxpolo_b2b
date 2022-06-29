@@ -67,6 +67,8 @@
         <div class='card'>
             <div class='card-body'>
                 <h3>Add Brand</h3>
+                                            <td class="text-center text-muted" colspan="100%">Add Brands here </td>
+
                 <form method="POST">
                     {% csrf_token %}
                     {{ form | crispy }}
