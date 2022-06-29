@@ -28,6 +28,8 @@ from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    permission_classes = (permissions.AllowAny, )
 
     def post(self, request, *args, **kwargs):
         out = {}
