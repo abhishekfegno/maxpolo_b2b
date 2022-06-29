@@ -10,16 +10,12 @@ from django.views.generic import UpdateView, DeleteView, ListView, TemplateView
 from django.views.generic.edit import FormMixin, ModelFormMixin, ProcessFormView, FormView
 from rest_framework.authtoken.models import Token
 
-<<<<<<< HEAD
-from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm, AdminForm, DealerUpdateForm, \
-    ExecutiveUpdateForm, AdminUpdateForm
-from apps.user.models import Banners, User, Dealer, Executive, Role
-=======
+
+from apps.user.forms.banners_form import DealerUpdateForm, ExecutiveUpdateForm, AdminUpdateForm
 from apps.catalogue.models import Product, Brand
 from apps.order.models import SalesOrder
 from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm, AdminForm
 from apps.user.models import Banners, User, Dealer, Executive, Role, Complaint
->>>>>>> 1a7bd320844f46a234a681d2a05a0b9b8d29fdc0
 from lib.token_handler import token_expire_handler, is_token_expired
 
 
