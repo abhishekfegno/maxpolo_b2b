@@ -89,7 +89,7 @@ class OrderListAPIView(ListAPIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     filterset_fields = ['is_cancelled', 'is_confirmed', 'is_invoice', 'is_quotation']
 
-    def get_queryset(self):
-        return self.queryset.filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
+    def filter_queryset(self, queryset):
+        return queryset.filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
 
 
