@@ -55,7 +55,7 @@ class ExecutiveManager(UserManager):
 class User(AbstractUser):
     chosen_role = Role.DEFAULT
     mobile = models.CharField(max_length=20)
-    user_role = models.CharField(max_length=20, choices=Role.USER_ROLE_CHOICE, default=Role.EXECUTIVE, blank=True)
+    user_role = models.IntegerField(max_length=20, choices=Role.USER_ROLE_CHOICE, default=Role.EXECUTIVE, blank=True)
     branch = models.ForeignKey('infrastructure.Branch', on_delete=models.SET_NULL, null=True, blank=True)
     executive = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='dealers')
 
@@ -71,11 +71,11 @@ class User(AbstractUser):
 
     @property
     def user_role_name(self):
-        if self.user_role == '32':
+        if self.user_role == 32:
             return "Dealer"
-        if self.user_role == '16':
+        if self.user_role == 16:
             return "Executive"
-        if self.user_role == '1':
+        if self.user_role == 1:
             return "Admin"
 
     def save(self, **kwargs):
