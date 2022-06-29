@@ -23,21 +23,6 @@
                                 <div class="col-md-4">
                                     {{ form.last_name|as_crispy_field }}
                                 </div>
-                                <div class="col-md-4">
-                                    {{ form.branch|as_crispy_field }}
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    {{ form.password1|as_crispy_field }}
-                                </div>
-                                <div class="col-md-4">
-                                    {{ form.password2|as_crispy_field }}
-                                </div>
                             </div>
                             <hr>
                         </div>
@@ -82,9 +67,15 @@
                                 {{ form.non_field_errors }}
                             </div>
                         </div>
-
+                        <div class="col-md-12">
+                            <button class='btn btn-success' style="float:right;" type='submit'> Save</button>
+                        </div>
                     </div>
-                    <button class='btn btn-success' style="float:right;" type='submit'> Save</button>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form.password|as_crispy_field }}
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -128,7 +119,7 @@
                                     {% else %}
                                     <a class="delBrand btn btn-danger  btn-sm" href="javascript:void(0)"
                                        onclick="swalFunction(this, '{% url 'user-delete' role=view.kwargs.role pk=object_item.pk %}')">Delete</a>
-                                {% endif %}
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>

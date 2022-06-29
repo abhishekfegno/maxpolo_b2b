@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -7,9 +7,11 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView, DeleteView, ListView, TemplateView
-from django.views.generic.edit import FormMixin, ModelFormMixin, ProcessFormView
+from django.views.generic.edit import FormMixin, ModelFormMixin, ProcessFormView, FormView
 from rest_framework.authtoken.models import Token
 
+
+from apps.user.forms.banners_form import DealerUpdateForm, ExecutiveUpdateForm, AdminUpdateForm
 from apps.catalogue.models import Product, Brand
 from apps.order.models import SalesOrder
 from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm, AdminForm
@@ -62,6 +64,11 @@ class UserListView(ModelFormMixin, SuccessMessageMixin, ListView, ProcessFormVie
     }
     success_url = ''
 
+    def get_template_names(self):
+        if self.object:
+            return 'paper/user/user_list_update.html'
+        return self.template_name
+
     def get_success_message(self, cleaned_data):
         return f"{self.kwargs.get('role', '').capitalize()} has been Saved!"
 
@@ -77,10 +84,16 @@ class UserListView(ModelFormMixin, SuccessMessageMixin, ListView, ProcessFormVie
 
     def get_form_class(self):
         if self.kwargs.get('role') == 'dealer':
+            if self.object:
+                return DealerUpdateForm
             return DealerForm
         if self.kwargs.get('role') == 'admin':
+            if self.object:
+                return AdminUpdateForm
             return AdminForm
         if self.kwargs.get('role') == 'executive':
+            if self.object:
+                return ExecutiveUpdateForm
             return ExecutiveForm
         return None
 
@@ -108,7 +121,36 @@ class UserListView(ModelFormMixin, SuccessMessageMixin, ListView, ProcessFormVie
         return reverse('user-list', kwargs=self.kwargs)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
+class UserPasswordView(UpdateView):
+    form_class = ResetPasswordForm
+    queryset = User.objects.all()
+    template_name = 'paper/user/user_password.html'
+    home_label = "User Password Change"
+    model = User
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('user-password')
+    }
+    pk_url_kwarg = 'pk'
+
+    def get_queryset(self, **kwargs):
+        queryset = super().get_queryset()
+        if self.kwargs.get('role') == 'dealer':
+            queryset = Dealer.objects.all()
+        if self.kwargs.get('role') == 'executive':
+            queryset = Executive.objects.all()
+        if self.kwargs.get('role') == 'admin':
+            queryset = User.objects.all().filter(user_role=Role.ADMIN)
+        return queryset
+
+    def form_valid(self, form):
+        self.object.set_password(form.cleaned_data['new_password'])
+        self.object.save()
+        return super(UserPasswordView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('user-update', kwargs=self.kwargs)
+
+
 class UserDeleteView(DeleteView):
     queryset = User.objects.all()
     template_name = 'paper/user/user_list.html'
