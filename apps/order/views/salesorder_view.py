@@ -26,6 +26,22 @@ def get_orderline_form(request):
     return render(request, 'paper/line_form_htmx.html', context={'form': form})
 
 
+def quotation_status(request, pk):
+    q = SalesOrder.objects.get(pk=pk)
+    if request.method == 'POST':
+        confirm = request.POST.get('is_confirmed')
+        cancel = request.POST.get('is_cancelled')
+        invoice = request.POST.get('is_invoice')
+        if confirm:
+            q.is_confirmed = True
+        elif cancel:
+            q.is_cancelled = True
+        elif invoice:
+            q.is_invoice = True
+    q.save()
+    return redirect('quotation-list')
+
+
 def form_submit(request, order):
     if order.order_type == 'quotation':
         form = QuotationUpdateForm(request.POST or None, instance=order)
