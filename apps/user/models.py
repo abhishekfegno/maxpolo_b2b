@@ -7,6 +7,7 @@ from solo.models import SingletonModel
 
 # Create your models here.
 from lib.faker import FakeImage
+from lib.sent_email import EmailHandler
 
 
 class Role:
@@ -162,7 +163,13 @@ class SiteConfiguration(SingletonModel):
 
 
 
-# @receiver(post_save,sender=Complaint)
-# def sent_complaint(sender, created, instance, **kwargs)
-#     if created:
-#         instance.
+@receiver(post_save, sender=Complaint)
+def sent_email_complaint(sender, created, instance, **kwargs):
+    if created:
+        EmailHandler().sent_mail_for_banners(instance)
+
+
+@receiver(post_save, sender=Complaint)
+def sent_email_banners(sender, created, instance, **kwargs):
+    if created:
+        EmailHandler().sent_mail_for_banners(instance)

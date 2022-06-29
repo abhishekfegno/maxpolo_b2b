@@ -34,11 +34,10 @@ class BannersListView(CreateView, ListView):
 	}
 
 	def post(self, request, *args, **kwargs):
-		url = reverse('banners-list', request=request, format=None)
+		# url = reverse('banners-list', request=request, format=None)
 		form = self.form_class(request.POST, request.FILES)
 		if form.is_valid():
 			instance = form.save()
-			EmailHandler().sent_mail_for_banners(instance, url)
 		else:
 			print(form.errors)
 			# import pdb;pdb.set_trace()
