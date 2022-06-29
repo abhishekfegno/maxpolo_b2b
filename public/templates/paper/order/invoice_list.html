@@ -32,8 +32,7 @@
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class=""><a href="{% url 'invoice_detail_edit' order_id=object.id %}">{{
-                                    object.invoice_id }}</a></div>
+                                <div class=""><a href="{% url 'invoice_detail_edit' order_id=object.id %}">{{object.invoice_id }}</a></div>
                             </td>
                             <td>
                                 <div class="">{{ object.invoice_date }}</div>
