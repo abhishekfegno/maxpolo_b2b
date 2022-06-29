@@ -4,11 +4,12 @@ from rest_framework import status, permissions
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.mixins import CreateModelMixin
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from apps.catalogue.models import Product
-from apps.order.api.serializers import OrderSerializer, OrderDetailSerializer
+from apps.order.api.serializers import OrderSerializer, OrderDetailSerializer, OrderCreateSerializer
 from apps.order.models import SalesOrder, SalesOrderLine
 from apps.user.models import Dealer
 from lib.sent_email import EmailHandler
@@ -82,9 +83,14 @@ class OrderListAPIView2(ListAPIView):
         return Response(result, status=status.HTTP_200_OK)
 
 
-class OrderListAPIView(ListAPIView):
+class OrderListAPIView(CreateModelMixin, ListAPIView):
     queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
-    serializer_class = OrderSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return OrderSerializer
+        return OrderCreateSerializer
+
     pagination_class = PageNumberPagination
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     permission_classes = (permissions.IsAuthenticated, )
@@ -92,5 +98,8 @@ class OrderListAPIView(ListAPIView):
 
     def filter_queryset(self, queryset):
         return queryset.filter(dealer=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
