@@ -38,7 +38,7 @@ class LoginAPIView(GenericAPIView):
         if serializer.is_valid():
             try:
                 u = User.objects.get(email=data['email']).username
-                user = authenticate(request, username=u, password=data['password'])
+                user = authenticate(request, email=data['email'], password=data['password'])
                 login(request, user)
 
                 out['user'] = {
