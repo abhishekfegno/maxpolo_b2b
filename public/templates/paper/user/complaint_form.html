@@ -1,5 +1,4 @@
 {% extends 'paper/index.html' %}{% load crispy_forms_tags %}{% block content%}
-
 <div class='row'>
     <div class='col-md-8'>
         <div class='card'>
@@ -8,38 +7,47 @@
 
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
-                        <thead class="">
-                        <tr class="">
-                            <th scope="col">Description</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Created by</th>
-                        </tr>
-                        </thead>
                         <tbody>
                         <tr>
-                            <!--                    <td scope="row"> </td>-->
-
+                            <td>Ticket ID</td>
+                            <td>{{ object.ticket_id }}</td>
+                        </tr>
+                        <tr>
+                            <td>Dealer</td>
                             <td>
-                                <details>
-                                    <summary>{{ object.description }}</summary>
-                                    <p>{{ object.description }}</p>
-                                </details>
-                                <div class=""></div>
-                            </td>
-                            <td>
-                                <div class="">{{ object.status }}</div>
-                            </td>
-                            <td>
-                                <div class="">{{ object.created_by }}</div>
-                            </td>
-                            <td>
-                                <div class=""><a class="delBrand btn btn-danger" href="javascript:void(0)"
-                                                 onclick="swalFunction(this, '{% url 'complaint-delete' pk=object.pk %}')">Delete</a>
-                                </div>
+                                <a href="{% if object.created_by %}{% url 'user-update' role='dealer' pk=object.created_by_id %}{% endif %}">
+                                    {{ object.created_by.get_full_name|default:"-" }}</a>
                             </td>
                         </tr>
+                        <tr>
+                            <td>Subject</td>
+                            <td>{{ object.title }}</td>
+                        </tr>
+                        <tr>
+                            <td>Description</td>
+                            <td>{{ object.description }}</td>
+                        </tr>
+                        <tr>
+                            <td>Image</td>
+                            <td>
+                                {% if object.photo %}
+                                <img src="{{ object.photo.url }}" alt="" height="80" width="auto" >
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Against Order</td>
+                            <td> {{ object.order_id|default:"-" }} </td>
+                        </tr>
+                        <tr>
+                            <td>Date</td>
+                            <td>{{ object.order_id|default:"-" }} </td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td></td>
+                        </tr>
                         </tbody>
-
                     </table>
                 </div>
 
