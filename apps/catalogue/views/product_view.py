@@ -86,3 +86,9 @@ class ProductDeleteView(DeleteView):
     template_name = 'paper/catalogue/product_list.html'
     model = Product
     success_url = '/catalogue/product/list/'
+
+
+    def get(self, request, *args, **kwargs):
+        # import pdb;pdb.set_trace()
+        print(self.get_object().delete())
+        return redirect('product-list')
