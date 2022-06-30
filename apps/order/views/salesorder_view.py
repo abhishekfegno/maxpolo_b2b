@@ -256,7 +256,6 @@ class QuotationListView(FormMixin, ListView):
 
     def post(self, request, *args, **kwargs):
         form = QuotationForm(request.POST)
-
         # orderline_formset = inlineformset_factory(SalesOrder, SalesOrderLine, fields=('product', 'quantity'))
         if form.is_valid():
             products = form.data.getlist('product')
@@ -267,6 +266,7 @@ class QuotationListView(FormMixin, ListView):
                     raise QuantityInvalidException("Please select product")
                 if not quantities:
                     raise QuantityInvalidException("Please select product")
+                import pdb;pdb.set_trace()
                 order = form.save()
                 for product, quantity in zip(products, quantities):
                     product = Product.objects.get(id=product)
