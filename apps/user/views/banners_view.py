@@ -12,12 +12,23 @@ from apps.user.models import Banners
 from lib.sent_email import EmailHandler
 
 
-class BannersDetailView(UpdateView):
+class BannersDetailView(UpdateView, ListView):
 	queryset = Banners.objects.all()
-	template_name = 'paper/user/banners_form.html'
+	template_name = 'paper/user/banners_list.html'
 	model = Banners
 	form_class = BannersForm
 	success_url = '/banners/list/'
+
+	def post(self, request, *args, **kwargs):
+		# url = reverse('banners-list', request=request, format=None)
+		form = self.form_class(request.POST, request.FILES)
+		if form.is_valid():
+			instance = form.save()
+		else:
+			print(form.errors)
+			# import pdb;pdb.set_trace()
+			messages.add_message(request, messages.INFO, form.errors.get('file')[0])
+		return redirect('banners-list')
 
 
 class BannersListView(CreateView, ListView):
