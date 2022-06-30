@@ -13,35 +13,21 @@
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
                             <th scope="col">Actions</th>
-                            <!--                    <th scope="col">Contact</th>-->
-                            <!--                    <th scope="col">Subscription</th>-->
-                            <!--                    <th scope="col">Last View</th>-->
-                            <!--                    <th scope="col">Action</th>-->
                         </tr>
-                        <!--                <tr>-->
-                        <!--                    <td class="text-dark text-sm"><small>#</small></td>-->
-                        <!--                    <td class="text-dark text-sm"><small>Name of the {{ title }}</small></td>-->
-                        <!--                    <td class="text-dark text-sm"><small>Contact</small></td>-->
-                        <!--                    <td class="text-dark text-sm"><small>Subscription</small></td>-->
-                        <!--                    <td class="text-dark text-sm"><small>Last View</small></td>-->
-                        <!--                    <td class="text-dark text-sm"><small>Hot links for quick actions.</small></td>-->
-                        <!--                </tr>-->
                         </thead>
                         <tbody>
-                        {% for object in object_list %}
-                        <tr>
+                        {% for object_item in object_list %}
+                        <tr class="{% if object.pk == object_item.pk %}selected-row{% endif %}">
                             <!--                    <td scope="row"> </td>-->
                             <td>
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object.name }}</div>
+                                <div class="">{{ object_item.name }}</div>
                             </td>
                             <td>
                                 <div class="">
-                                    <a class="btn btn-primary" href="{% url 'brand-update' pk=object.pk %}">Edit</a>
-                                    <a class="delBrand btn btn-danger" href="javascript:void(0)"
-                                                 onclick="swalFunction(this, '{% url 'brand-delete' pk=object.pk %}' )">Delete</a>
+                                    <a class="btn btn-primary" href="{% url 'brand-update' pk=object_item.pk %}">Edit</a>
                                 </div>
                             </td>
                             <td>
@@ -66,12 +52,21 @@
     <div class='col-5'>
         <div class='card'>
             <div class='card-body'>
-                <h3>Add Brand</h3>
-                                            <td class="text-center text-muted" colspan="100%">Add Brands here </td>
-
+                {% if object.pk %}
+                <a class="pull-right btn btn-secondary" href="{% url 'brand-list' %}" > back to list</a>
+                <h3 class="heading-3 pt-3">Update "{{ object }}"</h3>
+                <p class="text-muted"> Here you can update the current {{ role|lower }}. </p>
+                {% else %}
+                <h3 class="heading-3 pt-3">Add {{ role }}</h3>
+                <p class="text-muted"> Here you can add your {{ role|lower }}s. </p>
+                {% endif %}
                 <form method="POST">
                     {% csrf_token %}
                     {{ form | crispy }}
+                    {% if object.pk %}
+                            <a class="delBrand btn btn-danger  btn-sm" href="javascript:void(0)"
+                               onclick="swalFunction(this, '{% url 'brand-delete' pk=object.pk %}')">Delete</a>
+                    {% endif %}
                     <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
                 </form>
             </div>

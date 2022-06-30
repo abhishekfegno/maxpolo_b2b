@@ -124,7 +124,7 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
     def post(self, request, *args, **kwargs):
         data = {}
         self.serializer_class = self.get_serializer_class()
-        serializer = self.serializer_class(data=request.data)
+        serializer = self.serializer_class(data=request.data, context={'request': request})
         if serializer.is_valid():
             instance = serializer.save()
             EmailHandler().sent_mail_order(instance)

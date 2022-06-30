@@ -13,12 +13,15 @@ from apps.catalogue.models import Product
 from lib.filters import ProductFilter
 
 
-class ProductDetailView(UpdateView):
+class ProductDetailView(UpdateView, ListView):
     queryset = Product.objects.all()
-    template_name = 'paper/catalogue/product_form.html'
+    template_name = 'paper/catalogue/product_list.html'
     model = Product
     form_class = ProductForm
     success_url = '/catalogue/product/list/'
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('product-list')
+    }
 
 
 class ProductListView(FormMixin, ListView):
