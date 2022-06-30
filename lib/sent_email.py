@@ -22,9 +22,8 @@ class EmailHandler(object):
 
     # create an instance of the API class
 
-    def sent_mail_for_pdf(self, recipients, instance, url):
-        if not url:
-            url = ""
+    def sent_mail_for_pdf(self, recipients, instance):
+        url = ""
         from apps.user.models import Dealer
 
         recipient = [i for i in Dealer.objects.all().values('email', 'first_name')]
@@ -37,9 +36,8 @@ class EmailHandler(object):
         self.sent_email_now(recipient, message, subject)
 
 
-    def sent_mail_for_banners(self, recipients, instance, url):
-        if not url:
-            url = ""
+    def sent_mail_for_banners(self, recipients, instance):
+        url = ""
         recipients.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
 
         message = f"New Advertisement have been arrived.Please visit {url}"
