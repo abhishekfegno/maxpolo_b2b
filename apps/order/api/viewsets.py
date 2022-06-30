@@ -109,9 +109,9 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
     queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
 
     def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return OrderSerializer
-        return OrderCreateSerializer
+        if self.request.method == 'POST':
+            return OrderCreateSerializer
+        return OrderSerializer
 
     pagination_class = PageNumberPagination
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
@@ -122,6 +122,7 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
         return queryset.filter(dealer=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
 
     def post(self, request, *args, **kwargs):
+        # import pdb;pdb.set_trace()
         return self.create(request, *args, **kwargs)
 
     def perform_create(self, serializer):

@@ -139,7 +139,7 @@ class SalesOrderDeleteView(DeleteView):
 
 
 class SalesOrderDetailView(UpdateView):
-    queryset = SalesOrder.objects.all().filter(is_confirmed=True).select_related('dealer').prefetch_related('line')
+    queryset = SalesOrder.objects.all().filter(is_confirmed=True).select_related('dealer').prefetch_related('line').order_by('-confirmed_date')
     template_name = 'paper/order/salesorder_form.html'
     model = SalesOrder
     form_class = SalesOrderUpdateForm
@@ -147,7 +147,7 @@ class SalesOrderDetailView(UpdateView):
 
 
 class SalesOrderListView(FormMixin, ListView):
-    queryset = SalesOrder.objects.all().filter(is_confirmed=True, is_invoice=False).select_related('dealer')
+    queryset = SalesOrder.objects.all().filter(is_confirmed=True, is_invoice=False).select_related('dealer').order_by('-confirmed_date')
     template_name = 'paper/order/salesorder_list.html'
     model = SalesOrder
     form_class = QuotationForm
@@ -194,7 +194,7 @@ class SalesOrderListView(FormMixin, ListView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class SalesOrderDeleteView(DeleteView):
-    queryset = SalesOrder.objects.all().select_related('dealer')
+    queryset = SalesOrder.objects.all().select_related('dealer').order_by('-confirmed_date')
     template_name = 'paper/order/salesorder_list.html'
     model = SalesOrder
     success_url = '/order/order/list'
@@ -206,7 +206,7 @@ class SalesOrderDeleteView(DeleteView):
 
 
 class QuotationDetailView(UpdateView):
-    queryset = SalesOrder.objects.all().filter().select_related('dealer').prefetch_related('line')
+    queryset = SalesOrder.objects.all().filter().select_related('dealer').prefetch_related('line').order_by('-created_at')
     template_name = 'paper/order/salesorder_form.html'
     model = SalesOrder
     form_class = QuotationUpdateForm
@@ -221,7 +221,7 @@ class QuotationDetailView(UpdateView):
 
 class QuotationListView(FormMixin, ListView):
     queryset = SalesOrder.objects.all().filter(is_quotation=True, is_cancelled=False, is_confirmed=False,
-                                               is_invoice=False).select_related('dealer')
+                                               is_invoice=False).select_related('dealer').order_by('-created_at')
     template_name = 'paper/order/quotation_list.html'
     model = SalesOrder
     form_class = QuotationForm
@@ -291,7 +291,7 @@ class QuotationListView(FormMixin, ListView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class QuotationDeleteView(DeleteView):
-    queryset = SalesOrder.objects.all().select_related('dealer')
+    queryset = SalesOrder.objects.all().select_related('dealer').order_by('-confirmed_date')
     template_name = 'templates/quotation_list.html'
     model = SalesOrder
     success_url = '/order/quotation/list/'
@@ -303,7 +303,7 @@ class QuotationDeleteView(DeleteView):
 
 
 class InvoiceDetailView(UpdateView):
-    queryset = SalesOrder.objects.all().filter(is_invoice=True).select_related('dealer').prefetch_related('line')
+    queryset = SalesOrder.objects.all().filter(is_invoice=True).select_related('dealer').prefetch_related('line').order_by('-invoice_date')
     template_name = 'paper/order/invoice_form.html'
     model = SalesOrder
     form_class = InvoiceUpdateForm
@@ -311,7 +311,7 @@ class InvoiceDetailView(UpdateView):
 
 
 class InvoiceListView(FormMixin, ListView):
-    queryset = SalesOrder.objects.all().filter(is_invoice=True).select_related('dealer')
+    queryset = SalesOrder.objects.all().filter(is_invoice=True).select_related('dealer').order_by('-invoice_date')
     template_name = 'paper/order/invoice_list.html'
     model = SalesOrder
     form_class = InvoiceUpdateForm
@@ -358,7 +358,7 @@ class InvoiceListView(FormMixin, ListView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class InvoiceDeleteView(DeleteView):
-    queryset = SalesOrder.objects.all().select_related('dealer')
+    queryset = SalesOrder.objects.all().select_related('dealer').order_by('-invoice_date')
     template_name = 'paper/order/invoice_list.html'
     model = SalesOrder
     success_url = '/order/invoice/list'
