@@ -1,5 +1,6 @@
 # New file created
 from django.conf import settings
+from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
@@ -77,6 +78,7 @@ class ProductListView(FormMixin, ListView):
             form.save()
         else:
             print(form.errors)
+            messages.add_message(request,messages.ERROR, form.errors)
         return redirect('product-list')
 
 
