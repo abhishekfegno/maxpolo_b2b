@@ -32,7 +32,11 @@
                         <tr>
                             <!--                    <td scope="row"> </td>-->
                             <td>
-                                <div class="">{{ forloop.counter }}</div>
+                                {% if page_obj %}
+                                <div class="">{{ forloop.counter| add:paginator.page_obj.start_index}}</div>
+                                {% else %}
+                                <div class="">{{ forloop.counter}}</div>
+                                {% endif %}
                             </td>
                             <td>
                                 <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.id_as_text }}</a></div>
