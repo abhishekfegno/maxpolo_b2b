@@ -30,7 +30,7 @@ class Category(MP_Node):
     node_order_by = ['name']
 
     def __str__(self):
-        return f"{self.name}"
+        return " » ".join([a.name for a in [*self.get_ancestors(), self]])
 
 
 class PDF(models.Model):
