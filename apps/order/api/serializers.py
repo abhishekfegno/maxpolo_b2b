@@ -66,6 +66,13 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         model = SalesOrder
         fields = ('dealer', 'line', )
 
+    def create(self, validated_data):
+        lines = validated_data.pop('line')
+        instance = SalesOrder.objects.create(dealer=validated_data['dealer'])
+        for line in lines:
+            SalesOrderLine.objects.create(order=instance, product=line['product'], quantity=line['quantity'])
+        return instance
+
 
 class OrderDetailSerializer(serializers.ModelSerializer):
     line = OrderLineSerializer(many=True)
