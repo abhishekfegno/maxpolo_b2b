@@ -25,7 +25,7 @@
                         <tr>
                             <!--                    <td scope="row"> </td>-->
                             <td>
-                                <div class="">{{ forloop.counter }}</div>
+                                <div class="">{{ forloop.counter|add:paginator.page.start_index }}</div>
                             </td>
                             <td>
                                 <div class="">{{ object.title }}</div>
