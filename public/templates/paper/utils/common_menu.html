@@ -10,12 +10,12 @@
         {% block nav_links %}
 
         <li class="li ">
-            <a aria-controls="navbar-quotations" aria-expanded="false" class="collapsed" data-toggle="collapse"
+            <a aria-controls="navbar-quotations" aria-expanded="true" class="collapsed" data-toggle="collapse"
                href="#navbar-quotations">
                 <i class="ni ni-archive-2"></i>
                 <p>Quotations <b class="caret"></b></p>
             </a>
-            <div class="collapse" id="navbar-quotations" style="">
+            <div class="collapse show" id="navbar-quotations" style="">
                 <ul class="nav">
 
                     <li>
@@ -53,12 +53,12 @@
         </li>
 
         <li class="li ">
-            <a aria-controls="navbar-catalogue" aria-expanded="false" class="collapsed" data-toggle="collapse"
+            <a aria-controls="navbar-catalogue" aria-expanded="true" class="collapsed" data-toggle="collapse"
                href="#navbar-catalogue">
                 <i class="ni ni-archive-2"></i>
                 <p>Catalogue <b class="caret"></b></p>
             </a>
-            <div class="collapse " id="navbar-catalogue" style="">
+            <div class="collapse show" id="navbar-catalogue" style="">
                 <ul class="nav">
                     <li>
                         <a href="{% url 'category-list' %}">
@@ -90,12 +90,12 @@
         </li>
 
         <li class="li ">
-            <a aria-controls="navbar-tracking" aria-expanded="false" class="collapsed" data-toggle="collapse"
+            <a aria-controls="navbar-tracking" aria-expanded="true" class="collapsed" data-toggle="collapse"
                href="#navbar-tracking">
                 <i class="ni ni-archive-2"></i>
                 <p>Tracking <b class="caret"></b></p>
             </a>
-            <div class="collapse" id="navbar-tracking" style="">
+            <div class="collapse show" id="navbar-tracking" style="">
                 <ul class="nav">
                     <li>
                         <a href="{% url 'field-force-tracking' %}">
@@ -114,12 +114,12 @@
             </a>
         </li>
         <li class="li ">
-            <a aria-controls="navbar-user-roles" aria-expanded="false" class="collapsed" data-toggle="collapse"
+            <a aria-controls="navbar-user-roles" aria-expanded="true" class="collapsed show" data-toggle="collapse"
                href="#navbar-user-roles">
                 <i class="ni ni-archive-2"></i>
                 <p> User Roles <b class="caret"></b></p>
             </a>
-            <div class="collapse " id="navbar-user-roles" style="">
+            <div class="collapse show" id="navbar-user-roles" style="">
                 <ul class="nav">
                     <!--    {% if not request.user.is_manager %}-->
                     <li>
@@ -150,12 +150,12 @@
 
 
         <li class="li ">
-            <a aria-controls="navbar-configuration" aria-expanded="false" class="collapsed" data-toggle="collapse"
+            <a aria-controls="navbar-configuration" aria-expanded="true" class="collapsed" data-toggle="collapse"
                href="#navbar-configuration">
                 <i class="ni ni-archive-2"></i>
                 <p> Configurations <b class="caret"></b></p>
             </a>
-            <div class="collapse " id="navbar-configuration" style="">
+            <div class="collapse show" id="navbar-configuration" style="">
                 <ul class="nav">
                     <li>
                         <a href="{% url 'banners-list' %}">
