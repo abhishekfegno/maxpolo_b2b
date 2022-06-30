@@ -1,5 +1,4 @@
 {% extends 'paper/index.html' %}{% load crispy_forms_tags %}{% block content%}
-
 <div class='row'>
     <div class='col-md-8'>
         <div class='card'>
@@ -16,10 +15,8 @@
                         <tr>
                             <td>Dealer</td>
                             <td>
-
                                 <a href="{% if object.created_by %}{% url 'user-update' role='dealer' pk=object.created_by_id %}{% endif %}">
                                     {{ object.created_by.get_full_name|default:"-" }}</a>
-
                             </td>
                         </tr>
                         <tr>
@@ -44,34 +41,13 @@
                         </tr>
                         <tr>
                             <td>Date</td>
-                            <td></td>
+                            <td>{{ object.order_id|default:"-" }} </td>
                         </tr>
                         <tr>
                             <td>Status</td>
                             <td></td>
                         </tr>
                         </tbody>
-
-                        <tbody>
-                        <tr>
-                            <!--                    <td scope="row"> </td>-->
-                            <td>
-                                <div class=""></div>
-                            </td>
-                            <td>
-                                <div class="">{{ object.status }}</div>
-                            </td>
-                            <td>
-                                <div class="">{{ object.created_by }}</div>
-                            </td>
-                            <td>
-                                <div class=""><a class="delBrand btn btn-danger" href="javascript:void(0)"
-                                                 onclick="swalFunction(this, '{% url 'complaint-delete' pk=object.pk %}')">Delete</a>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-
                     </table>
                 </div>
 

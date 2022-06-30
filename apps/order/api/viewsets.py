@@ -99,16 +99,16 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
 
     {
         "dealer" : <dealer_id>,
-        "lines": [{
+        "line": [{
             "product": <product_id>,
             "quantity": 8
         }, {...}, {...}]
     }
 
     """
-    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
+    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product').order_by('-created_at')
 
-    def get_serializer_class(self):
+    def get_serializer_class(self, data=None):
         if self.request.method == 'POST':
             return OrderCreateSerializer
         return OrderSerializer
@@ -122,10 +122,14 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
         return queryset.filter(dealer=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
 
     def post(self, request, *args, **kwargs):
-        # import pdb;pdb.set_trace()
-        return self.create(request, *args, **kwargs)
+        data = {}
+        self.serializer_class = self.get_serializer_class()
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            instance = serializer.save()
+            EmailHandler().sent_mail_order(instance)
+        else:
+            data['errors'] = serializer.errors
+        return Response(data)
 
-    def perform_create(self, serializer):
-        serializer.save()
-        EmailHandler().sent_mail_order(serializer.instance)
 
