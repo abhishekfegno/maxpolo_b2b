@@ -36,7 +36,11 @@
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object_item.title }}</div>
+                                <div class="">
+                                    <a href="{% url 'pdf-modify' pk=object_item.pk %}">
+                                        {{ object_item.title }}
+                                    </a>
+                                </div>
                             </td>
                             <td>
                                 <div class=""><a class="btn btn-primary btn-sm"

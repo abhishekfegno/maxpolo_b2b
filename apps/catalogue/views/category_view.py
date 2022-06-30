@@ -60,7 +60,7 @@ class CategoryDeleteView(DeleteView):
     success_url = '/catalogue/category/list/'
 
 
-class PDFListView(CreateView, ListView):
+class PDFListView(UpdateView, ListView):
     queryset = PDF.objects.all()
     template_name = 'paper/catalogue/pdf_list.html'
     model = PDF
@@ -69,6 +69,11 @@ class PDFListView(CreateView, ListView):
     extra_context = {
         "breadcrumbs": settings.BREAD.get('pdf-list')
     }
+
+    def get_object(self, queryset=None):
+        if len(self.kwargs.keys()):
+            return super(PDFListView, self).get_object(queryset)
+        return None
 
     def post(self, request, *args, **kwargs):
         url = reverse('pdf-list', request=request, format=None, )
