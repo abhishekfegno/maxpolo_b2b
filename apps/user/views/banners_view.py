@@ -49,7 +49,7 @@ class BannersListView(CreateView, ListView):
 		else:
 			print(form.errors)
 			# import pdb;pdb.set_trace()
-			messages.add_message(request, messages.INFO, form.errors.get('file')[0])
+			messages.add_message(request, messages.ERROR, form.errors.get('file')[0])
 		return redirect('banners-list')
 
 

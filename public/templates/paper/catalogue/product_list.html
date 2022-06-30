@@ -44,8 +44,8 @@
                         <tr class="{% if object.pk == object_item.pk %}selected-row{% endif %}">
                             <!--                    <td scope="row"> </td>-->
                             <td>
-                                {% if page.obj %}
-                                <div class="">{{ forloop.counter|add:page.obj.start_index }}</div>
+                                {% if filter %}
+                                <div class="">{{ forloop.counter|add:filter.start_index }}</div>
                                 {% else %}
                                 <div class="">{{ forloop.counter }}</div>
                                 {% endif %}
