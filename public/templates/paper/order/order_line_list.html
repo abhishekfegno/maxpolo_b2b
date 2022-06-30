@@ -48,13 +48,13 @@
             </form>
         </div>
         {% elif order.order_type == 'salesorder' %}
-        <div class="float-right " style="display:flex;">
-            <form action="{% url 'quotation_status' pk=order.id %}" class="form-inline"  method="post">
-                {% csrf_token %}
-                <input type="hidden" hidden name="is_invoice" value=1 class="form-control">
-                <input type="button" onclick="confirm_submit(event)" class="btn btn-secondary btn-inline" value="Invoice Order">
-            </form>
-          </div>
+<!--        <div class="float-right " style="display:flex;">-->
+<!--            <form action="{% url 'quotation_status' pk=order.id %}" class="form-inline"  method="post">-->
+<!--                {% csrf_token %}-->
+<!--                <input type="hidden" hidden name="is_invoice" value=1 class="form-control">-->
+<!--                <input type="button" onclick="confirm_submit(event)" class="btn btn-secondary btn-inline" value="Invoice Order">-->
+<!--            </form>-->
+<!--          </div>-->
         {% elif order.is_invoice %}
         <div class="float-right ">
             <a href="#" class="btn btn-info "> Capture Invoice </a>
