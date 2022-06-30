@@ -21,13 +21,13 @@ class BannersDetailView(UpdateView, ListView):
 
 	def post(self, request, *args, **kwargs):
 		# url = reverse('banners-list', request=request, format=None)
-		form = self.form_class(request.POST, request.FILES)
+		form = self.form_class(request.POST, request.FILES, instance=self.get_object())
 		if form.is_valid():
 			instance = form.save()
 		else:
 			print(form.errors)
 			# import pdb;pdb.set_trace()
-			messages.add_message(request, messages.INFO, form.errors.get('file')[0])
+			messages.add_message(request, messages.ERROR, form.errors.get('file')[0])
 		return redirect('banners-list')
 
 
