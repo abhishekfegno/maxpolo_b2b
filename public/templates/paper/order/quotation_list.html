@@ -33,7 +33,7 @@
                             <!--                    <td scope="row"> </td>-->
                             <td>
                                 {% if page_obj %}
-                                <div class="">{{ forloop.counter| add:paginator.page_obj.start_index}}</div>
+                                <div class="">{{ forloop.counter| add:page_obj.start_index}}</div>
                                 {% else %}
                                 <div class="">{{ forloop.counter}}</div>
                                 {% endif %}

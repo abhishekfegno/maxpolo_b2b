@@ -44,7 +44,12 @@
                         <tr class="{% if object.pk == object_item.pk %}selected-row{% endif %}">
                             <!--                    <td scope="row"> </td>-->
                             <td>
-                                <div class="">{{ forloop.counter|add:paginator.page.start_index }}</div>
+                                {% if page.obj %}
+                                <div class="">{{ forloop.counter|add:page.obj.start_index }}</div>
+                                {% else %}
+                                <div class="">{{ forloop.counter }}</div>
+                                {% endif %}
+
                             </td>
                             <td>
                                 <div class=""><img src="{{ object_item.photo_url }}" style="width:100px;height:100px"></div>
