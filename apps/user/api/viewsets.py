@@ -214,7 +214,6 @@ class HomePageAPI(APIView):
     permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
-
         dealer_id = request.GET.get('dealer', request.user.id)
         advertisements = AdvertisementSerializer(Banners.objects.all(), many=True, context={'request': request}).data
         pdf = ProductPDFSerializer(PDF.objects.select_related('category')[:6], many=True, context={'request': request}).data
