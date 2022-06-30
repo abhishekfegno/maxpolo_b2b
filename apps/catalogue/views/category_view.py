@@ -59,6 +59,10 @@ class CategoryDeleteView(DeleteView):
     model = Category
     success_url = '/catalogue/category/list/'
 
+    def get(self, request, *args, **kwargs):
+        # import pdb;pdb.set_trace()
+        print(self.get_object().delete())
+        return redirect('category-list')
 
 class PDFListView(CreateView, ListView):
     queryset = PDF.objects.all()

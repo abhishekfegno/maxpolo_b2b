@@ -51,13 +51,8 @@ class BrandDeleteView(DeleteView):
 
     # success_url = '/catalogue/brand/list/'
 
-    def post(self, request, *args, **kwargs):
-        """
-        Call the delete() method on the fetched object and then redirect to the
-        success URL.
-        """
-        self.object = self.get_object()
-        success_url = self.get_success_url()
+    def get(self, request, *args, **kwargs):
         # import pdb;pdb.set_trace()
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
+        print(self.get_object().delete())
+        return redirect('brand-list')
+
