@@ -21,12 +21,12 @@ class ProductFilter(FilterSet):
 class OrderFilter(FilterSet):
     class Meta:
         model = SalesOrder
-        fields = {'order_id': ['icontains'], 'dealer__username': ['icontains']}
+        fields = {'order_id': ['icontains'], 'dealer': ['exact']}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.filters['order_id__icontains'].label = 'Order Id'
-        self.filters['dealer__username__icontains'].label = 'Dealer'
+        self.filters['order_id__icontains'].label = 'Reference ID'
+        # self.filters['dealer'].label = 'Dealer'
 
 
 class PaymentFilter(FilterSet):
