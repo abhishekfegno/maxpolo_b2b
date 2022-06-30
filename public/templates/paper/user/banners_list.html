@@ -39,8 +39,7 @@
                                 </div>
                             </td>
                             <td>
-                                <div class=""><a class="delBrand btn btn-danger" href="javascript:void(0)"
-                                                 onclick="swalFunction(this, '{% url 'banners-delete' pk=object.pk %}', '{% url 'banners-list' %}')">Delete</a>
+                                <div class="">
                                 </div>
                             </td>
                         </tr>
@@ -61,10 +60,21 @@
     <div class='col-5'>
         <div class='card'>
             <div class='card-body'>
-                <h3>Create Advertisements</h3>
+                {% if object.pk%}
+                <a class="pull-right btn btn-secondary" href="{% url 'product-list' %}" > back to list</a>
+                <h3 class="heading-3 pt-3">Update "advertisements"</h3>
+                <p class="text-muted"> Here you can update the advertisement. </p>
+                {% else %}
+                <h3 class="heading-3 pt-3">Add advertisements"</h3>
+                <p class="text-muted"> Here you can add the advertisements here. </p>
+                {% endif %}
                 <form enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
                     {{ form | crispy }}
+                    {% if object.pk %}
+                    <a class="delBrand btn btn-danger" href="javascript:void(0)"
+                                                 onclick="swalFunction(this, '{% url 'banners-delete' pk=object.pk %}')">Delete</a>
+                    {% endif %}
                     <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
                 </form>
             </div>

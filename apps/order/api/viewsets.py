@@ -117,9 +117,28 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     permission_classes = (permissions.IsAuthenticated, )
     filterset_fields = ['is_cancelled', 'is_confirmed', 'is_invoice', 'is_quotation']
+    filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
+    search_fields = ('order_id', 'invoice_id')
 
     def filter_queryset(self, queryset):
         return queryset.filter(dealer=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
+
+    def list(self, request, *args, **kwargs):
+        page_number = request.GET.get('page', 1)
+        page_size = request.GET.get('page_size', 10)
+        # import pdb;pdb.set_trace()
+        queryset = self.filter_queryset(self.get_queryset())
+        paginator = Paginator(queryset, page_size)
+        try:
+            page_number = paginator.validate_number(page_number)
+        except EmptyPage:
+            page_number = paginator.num_pages
+        page_obj = paginator.get_page(page_number)
+        serializer = self.get_serializer(page_obj.object_list, many=True, context={'request': request})
+        print(serializer.data)
+        return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=serializer.data))
+
+
 
     def post(self, request, *args, **kwargs):
         data = {}
