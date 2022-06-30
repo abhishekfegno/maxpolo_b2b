@@ -262,9 +262,9 @@ class QuotationListView(FormMixin, ListView):
             quantities = form.data.getlist('quantity')
             print(products, quantities)
             try:
-                if '' in products:
+                if '' in products or not products:
                     raise QuantityInvalidException("Please select product")
-                if '' in quantities:
+                if '' in quantities or not quantities:
                     raise QuantityInvalidException("Please select quantity")
                 # import pdb;pdb.set_trace()
                 order = form.save()
@@ -279,11 +279,10 @@ class QuotationListView(FormMixin, ListView):
                     print(f"line created {line} for order {order}")
                     print(f"order {order} created")
                     messages.add_message(request, messages.SUCCESS, f"New Order {order} has been created")
-                order.save()
-
             except Exception as e:
                 print(str(e))
                 messages.add_message(request, messages.ERROR, str(e))
+
         else:
             messages.add_message(request, messages.ERROR, form.errors)
         return redirect('quotation-list')
