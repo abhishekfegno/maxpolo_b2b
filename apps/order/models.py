@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models import Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.functional import cached_property
 
 INVOICE_STATUS = (
     ('new', 'New'),
@@ -32,27 +33,51 @@ class SalesOrder(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     confirmed_date = models.DateTimeField(null=True, blank=True)
     invoice_date = models.DateTimeField(null=True, blank=True)
+    __show_dealer_in_str__ = False
 
     def __str__(self):
         if self.invoice_id:
+            if self.__show_dealer_in_str__:
+                return f"{self.invoice_id} - {self.dealer.get_full_name()}"
             return self.invoice_id
         return self.order_id
 
-    @property
-    def order_type(self):
-        if self.is_confirmed:
-            order = 'salesorder'
-        elif self.is_invoice:
-            order = 'invoice'
-        else:
-            order = 'quotation'
-        return order
+    QUOTATION = "quotation"
+    INVOICED = "invoice"
+    CONFIRMED = "salesorder"
+    CANCELLED = "cancelled"
 
     @property
+    def status(self):
+        if self.is_invoice:
+            return self.INVOICED
+        elif self.is_confirmed:
+            return self.CONFIRMED
+        elif self.is_cancelled:
+            return self.CANCELLED
+        return self.QUOTATION
+
+    @status.setter
+    def status(self, value):
+        if value == self.QUOTATION:
+            spread = 0, 0, 0, 1
+        elif value == self.CANCELLED:
+            spread = 0, 0, 1, 0
+        elif value == self.CONFIRMED:
+            spread = 0, 1, 0, 0
+        elif value == self.INVOICED:
+            spread = 1, 0, 0, 0
+        else:
+            return
+        self.is_invoice, self.is_confirmed, self.is_cancelled, self.is_quotation = spread
+
+    @property
+    def order_type(self):
+        return self.status
+
+    @cached_property
     def has_transaction(self):
-        if self.transaction_set.all():
-            return True
-        return False
+        return self.transaction_set.exists()
 
     @property
     def id_as_text(self):
@@ -88,6 +113,7 @@ def create_order_ids(sender, instance, created, **kwargs):
     if instance.is_invoice and instance.is_confirmed:
         print("changing invoice_id")
         SalesOrder.objects.filter(pk=instance.pk).update(invoice_date=datetime.now(), is_confirmed=False,
+                                                         invoice_remaining_amount=instance.invoice_amount,
                                                          invoice_id='INV' + f'{instance.pk}'.zfill(6))
     # if instance.invoice_amount:
     #     print("credit status")
