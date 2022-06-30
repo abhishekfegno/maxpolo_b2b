@@ -49,6 +49,12 @@ class SalesOrder(models.Model):
         return order
 
     @property
+    def has_transaction(self):
+        if self.transaction_set.all():
+            return True
+        return False
+
+    @property
     def id_as_text(self):
         return f'ORD{str(self.pk).zfill(6)}'
 
