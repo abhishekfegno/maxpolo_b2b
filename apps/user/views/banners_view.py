@@ -55,8 +55,12 @@ class BannersListView(CreateView, ListView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class BannersDeleteView(DeleteView):
+	queryset = Banners.objects.all()
+	template_name = 'paper/user/banners_delete.html'
+	model = Banners
+	success_url = '/banners/list/'
 
-    queryset = Banners.objects.all()
-    template_name = 'paper/user/banners_delete.html'
-    model = Banners
-    success_url = '/banners/list/'
+	def get(self, request, *args, **kwargs):
+		# import pdb;pdb.set_trace()
+		print(self.get_object().delete())
+		return redirect('banners-list')

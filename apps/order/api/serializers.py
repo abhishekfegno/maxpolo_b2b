@@ -69,6 +69,10 @@ class OrderCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         lines = validated_data.pop('line')
         instance = SalesOrder.objects.create(dealer=validated_data['dealer'])
+        if not instance.dealer:
+            # import pdb;pdb.set_trace()
+            instance.dealer = self.context.get('request').user
+            instance.save()
         for line in lines:
             SalesOrderLine.objects.create(order=instance, product=line['product'], quantity=line['quantity'])
         return instance

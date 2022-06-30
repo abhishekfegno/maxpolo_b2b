@@ -68,7 +68,8 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <button class='btn btn-success' style="float:right;" type='submit'> Save</button>
+
+                            <button class='btn btn-success float-right' style="float:right;" type='submit'> Save</button>
                         </div>
                     </div>
                     <div class="row">
@@ -117,8 +118,8 @@
                                     {% if object.pk != object_item.pk %}
                                     <a class="btn btn-primary btn-sm" href="{% url 'user-update' role=view.kwargs.role pk=object_item.pk %}">Edit</a>
                                     {% else %}
-                                    <a class="delBrand btn btn-danger  btn-sm" href="javascript:void(0)"
-                                       onclick="swalFunction(this, '{% url 'user-delete' role=view.kwargs.role pk=object_item.pk %}')">Delete</a>
+<!--                                    <a class="delBrand btn btn-danger  btn-sm" href="javascript:void(0)"-->
+<!--                                       onclick="swalFunction(this, '{% url 'user-delete' role=view.kwargs.role pk=object_item.pk %}')">Delete</a>-->
                                     {% endif %}
                                 </div>
                             </td>

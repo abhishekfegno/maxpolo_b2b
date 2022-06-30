@@ -12,12 +12,15 @@ from apps.catalogue.forms.brand_form import BrandForm
 from apps.catalogue.models import Brand
 
 
-class BrandDetailView(UpdateView):
+class BrandDetailView(UpdateView, ListView):
     queryset = Brand.objects.all()
-    template_name = 'paper/catalogue/brand_form.html'
+    template_name = 'paper/catalogue/brand_list.html'
     model = Brand
     form_class = BrandForm
     success_url = '/catalogue/brand/list/'
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('brand-list')
+    }
 
 
 class BrandListView(CreateView, ListView):
@@ -48,13 +51,8 @@ class BrandDeleteView(DeleteView):
 
     # success_url = '/catalogue/brand/list/'
 
-    def post(self, request, *args, **kwargs):
-        """
-        Call the delete() method on the fetched object and then redirect to the
-        success URL.
-        """
-        self.object = self.get_object()
-        success_url = self.get_success_url()
+    def get(self, request, *args, **kwargs):
         # import pdb;pdb.set_trace()
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
+        print(self.get_object().delete())
+        return redirect('brand-list')
+

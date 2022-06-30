@@ -2,6 +2,7 @@
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
@@ -76,3 +77,9 @@ class ComplaintDeleteView(DeleteView):
     template_name = 'paper/user/complaint_delete.html'
     model = Complaint
     success_url = '/complaint/list'
+
+
+    def get(self, request, *args, **kwargs):
+        # import pdb;pdb.set_trace()
+        print(self.get_object().delete())
+        return redirect('complaint-list')

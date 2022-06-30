@@ -40,8 +40,8 @@
 
                         </thead>
                         <tbody>
-                        {% for object in filter %}
-                        <tr>
+                        {% for object_item  in filter %}
+                        <tr class="{% if object.pk == object_item.pk %}selected-row{% endif %}">
                             <!--                    <td scope="row"> </td>-->
                             <td>
                                 <div class="">{{ forloop.counter }}</div>
@@ -50,22 +50,20 @@
                                 <div class=""><img src="{{ object.photo_url }}" style="width:100px;height:100px"></div>
                             </td>
                             <td>
-                                <div class="">{{ object.name }}</div>
+                                <div class="">{{ object_item.name }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object.product_code }}</div>
+                                <div class="">{{ object_item.product_code }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object.brand }}</div>
+                                <div class="">{{ object_item.brand }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object.category.name }}</div>
+                                <div class="">{{ object_item.category.name }}</div>
                             </td>
                             <td>
                                 <div class="">
-                                    <a class="btn btn-primary" href="{% url 'product-update' pk=object.pk %}">Edit</a>
-                                    <a class="btn btn-danger" href="javascript:void(0)"onclick="swalFunction(this, '{% url 'product-delete' pk=object.pk %}')">Delete</a>
-
+                                    <a class="btn btn-primary" href="{% url 'product-update' pk=object_item.pk %}">Edit</a>
                                 </div>
                             </td>
                             <td>
@@ -90,14 +88,21 @@
     <div class='col-5'>
         <div class='card'>
             <div class='card-body'>
-                <h3>Add Product</h3>
-                        <tr>
-                                            <td class="text-center text-muted" colspan="100%">Add Products corresponding to category and brand here </td>
-                            </td>
-                        </tr>
+                {% if object.pk%}
+                <a class="pull-right btn btn-secondary" href="{% url 'product-list' %}" > back to list</a>
+                <h3 class="heading-3 pt-3">Update "{{ object }}"</h3>
+                <p class="text-muted"> Here you can update the current {{ role|lower }}. </p>
+                {% else %}
+                <h3 class="heading-3 pt-3">Add Product"</h3>
+                <p class="text-muted"> Here you can add the products here. </p>
+                {% endif %}
                 <form enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
                     {{ form | crispy }}
+                    {% if object.pk %}
+                            <a class="delBrand btn btn-danger  btn-sm" href="javascript:void(0)"
+                               onclick="swalFunction(this, '{% url 'product-delete' pk=object.pk %}')">Delete</a>
+                    {% endif %}
                     <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
                 </form>
             </div>

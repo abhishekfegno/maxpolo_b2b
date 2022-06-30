@@ -13,16 +13,37 @@ from apps.catalogue.models import Product
 from lib.filters import ProductFilter
 
 
-class ProductDetailView(UpdateView):
-    queryset = Product.objects.all()
-    template_name = 'paper/catalogue/product_form.html'
+class ProductDetailView(UpdateView, ListView):
+    queryset = Product.objects.all().select_related('brand', 'category').order_by('-id')
+    template_name = 'paper/catalogue/product_list.html'
     model = Product
     form_class = ProductForm
+    filtering_backends = (DjangoFilterBackend,)
+    filtering_class = ProductFilter
     success_url = '/catalogue/product/list/'
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('product-list')
+    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page_number = self.request.GET.get('page', 1)
+        page_size = self.request.GET.get('page_size', 10)
+        queryset = ProductFilter(self.request.GET, queryset=self.get_queryset())
+        context['filter_form'] = ProductFilter(self.request.GET, queryset=self.get_queryset()).form
+        # import pdb;pdb.set_trace()
+        paginator = Paginator(queryset.qs, page_size)
+        try:
+            page_number = paginator.validate_number(page_number)
+        except EmptyPage:
+            page_number = paginator.num_pages
+        filter = paginator.get_page(page_number)
+        context['filter'] = filter
+        return context
 
 
 class ProductListView(FormMixin, ListView):
-    queryset = Product.objects.all().select_related('brand', 'category')
+    queryset = Product.objects.all().select_related('brand', 'category').order_by('-id')
     template_name = 'paper/catalogue/product_list.html'
     model = Product
     form_class = ProductForm
