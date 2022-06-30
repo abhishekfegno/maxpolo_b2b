@@ -20,7 +20,7 @@
                         </thead>
                         <tbody>
                         {% for object_item in object_list %}
-                        <tr %} %}class="selected-row" endif if object object_item== {% {%>
+                        <tr class="{% if object.pk == object_item.pk %}selected-row{% endif %}">
                             <td>
                                 <div class="">{{ forloop.counter }}</div>
                             </td>
@@ -30,9 +30,7 @@
                             <td>
                                 <div aria-label="Second group" class="btn-group mr-2" role="group">
                                     {% if object_item == object %}
-                                    <div class=""><a class="delBrand btn btn-danger  btn-inline btn-sm"
-                                                     href="javacript:void(0)"
-                                                     onclick="swalFunction(this, '{% url 'branch-delete' pk=object_item.pk %}')">Delete</a>
+                                    <div class="">
                                     </div>
                                     {% else %}
                                     <div class="">
@@ -69,6 +67,11 @@
                     {% csrf_token %}
                     {{ form | crispy }}
                     <hr>
+                    {% if object.pk %}
+                    <a class="delBrand btn btn-danger  btn-inline btn-sm"
+                                                     href="javacript:void(0)"
+                                                     onclick="swalFunction(this, '{% url 'branch-delete' pk=object.pk %}')">Delete</a>
+                    {% endif %}
                     <button class='btn btn-success' style="float:right;" type='submit'> Save</button>
                 </form>
             </div>

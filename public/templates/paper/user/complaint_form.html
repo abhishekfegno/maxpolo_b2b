@@ -21,7 +21,7 @@
 
                             <td>
                                 <details>
-                                    <summary>{{ object.description }}</summary>
+                                    <summary>{{ object.description |striptags | truncatechars:14 }}</summary>
                                     <p>{{ object.description }}</p>
                                 </details>
                                 <div class=""></div>

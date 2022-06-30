@@ -12,12 +12,15 @@ from apps.catalogue.forms.brand_form import BrandForm
 from apps.catalogue.models import Brand
 
 
-class BrandDetailView(UpdateView):
+class BrandDetailView(UpdateView, ListView):
     queryset = Brand.objects.all()
-    template_name = 'paper/catalogue/brand_form.html'
+    template_name = 'paper/catalogue/brand_list.html'
     model = Brand
     form_class = BrandForm
     success_url = '/catalogue/brand/list/'
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('brand-list')
+    }
 
 
 class BrandListView(CreateView, ListView):
