@@ -106,7 +106,7 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
     }
 
     """
-    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
+    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product').order_by('-created_at')
 
     def get_serializer_class(self, data=None):
         if self.request.method == 'POST':
