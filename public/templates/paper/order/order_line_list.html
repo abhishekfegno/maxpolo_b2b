@@ -93,7 +93,7 @@
                                 <p> Invoiced </p>
                             </div>
                         </li>
-                        <li class="li">
+                        <li class="li {% if order.invoice_status in 'payment_done' %}complete{% endif %}">
                             <div class="timestamp">
                                <span class="date">{{ order.invoice_status|upper }}<span>
                             </div>
@@ -101,7 +101,7 @@
                                 <p> Payment </p>
                             </div>
                         </li>
-                        <li class="li">
+                        <li class="li {% if order.invoice_status == 'payment_done' %}complete{% endif %}">
                             <div class="timestamp">
                               <span class="date">{% if order.invoice_status == 'payment_done' %}DONE!{% else %}-{% endif %}<span>
                             </div>
@@ -302,6 +302,7 @@
             </div>
         </div>
     </div>
+    {% if order.has_transaction %}
     <div class="col-md-8">
         <div class="card">
             <div class="card-header">
@@ -341,6 +342,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
 
 <script>
