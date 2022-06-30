@@ -129,7 +129,7 @@ class UserListView(ModelFormMixin, SuccessMessageMixin, ListView, ProcessFormVie
         return super(UserListView, self).post(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse('user-list', kwargs=self.kwargs)
+        return reverse('user-list', kwargs={'role': self.kwargs['role']})
 
 
 class UserPasswordView(UpdateView):

@@ -73,7 +73,7 @@
                     {{ form | crispy }}
                     {% if object.pk %}
                     <a class="delBrand btn btn-danger" href="javascript:void(0)"
-                                                 onclick="swalFunction(this, '{% url 'banners-delete' pk=object.pk %}')">Delete</a>
+                                                 onclick="swalFunction(this, '{% url 'banners-delete' pk=object.pk %}', '{% url 'banners-list' %}')">Delete</a>
                     {% endif %}
                     <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
                 </form>

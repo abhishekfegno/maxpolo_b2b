@@ -169,7 +169,7 @@ class SalesOrderListView(FormMixin, ListView):
         page_size = self.request.GET.get('page_size', 10)
         queryset = OrderFilter(self.request.GET, queryset=self.get_queryset())
         context['filter_form'] = queryset.form
-        # import pdb;pdb.set_trace()
+
         paginator = Paginator(queryset.qs, page_size)
         try:
             page_number = paginator.validate_number(page_number)
