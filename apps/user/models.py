@@ -64,6 +64,9 @@ class User(AbstractUser):
     address_state = models.CharField(max_length=50, null=True, blank=False)
     zone = models.ForeignKey('executivetracking.Zone', on_delete=models.SET_NULL, null=True, blank=False)
 
+    excalation_number = models.CharField(max_length=20, null=True, blank=False)
+
+
     @property
     def address(self):
         return self.get_full_name(), self.company_cin, self.address_street, self.address_street, self.address_city

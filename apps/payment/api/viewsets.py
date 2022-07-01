@@ -7,12 +7,12 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from apps.order.models import SalesOrder
-from apps.payment.api.serializers import TransactionSerializer
+from apps.payment.api.serializers import TransactionSerializer, TransactionListSerializer
 from apps.payment.models import Transaction
 from lib.utils import list_api_formatter
 
 
-class TransactionListAPIView(ListAPIView):
+class TransactionListAPIView2(ListAPIView):
     """
     """
     queryset = Transaction.objects.all().select_related('order').order_by('created_at')
@@ -58,3 +58,13 @@ class TransactionListAPIView(ListAPIView):
     #     except Exception as e:
     #         result['errors'] = str(e)
     #     return Response(result, status=status.HTTP_200_OK)
+
+
+class TransactionListAPIView(ListAPIView):
+    queryset = SalesOrder.objects.filter(is_invoice=True)
+    serializer_class = TransactionListSerializer
+    filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
+    filterset_fields = []
+    search_fields = ()
+    ordering_fields = ()
+    pagination_class = PageNumberPagination
