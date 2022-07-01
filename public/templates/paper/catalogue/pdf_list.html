@@ -63,6 +63,8 @@
         <div class='card'>
             <div class='card-body'>
                 {% if object.pk %}
+                                <a class="pull-right btn btn-secondary" href="{% url 'pdf-list' %}" > back to list</a>
+
                 <h3>Update PDF</h3>
                 <td class="text-center text-muted" colspan="100%">Update corresponding PDF here </td>
                 {% else %}
