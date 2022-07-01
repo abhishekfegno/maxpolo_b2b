@@ -74,8 +74,11 @@ class TransactionListAPIView(ListAPIView):
         page_number = request.GET.get('page', 1)
         page_size = request.GET.get('page_size', 20)
         # import pdb;pdb.set_trace()
-        queryset = self.filter_queryset(self.get_queryset().filter(dealer=request.user).exclude(transaction=None))
-
+        try:
+            queryset = self.filter_queryset(self.get_queryset().filter(dealer=request.user).exclude(transaction=None))
+        except Exception as e:
+            queryset = self.filter_queryset(self.get_queryset().exclude(transaction=None))
+            print(str(e))
         paginator = Paginator(queryset, page_size)
         try:
             page_number = paginator.validate_number(page_number)
