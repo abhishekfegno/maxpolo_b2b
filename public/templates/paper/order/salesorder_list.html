@@ -21,7 +21,7 @@
                         <tr class="">
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Created by</th>
+                            <th scope="col">Dealer Name</th>
                             <th scope="col">Ordered on</th>
                         </tr>
 
@@ -37,7 +37,7 @@
                                 <div class="">{{ forloop.counter }}</div>
                                 {% endif %}                            </td>
                             <td>
-                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.order_id }}</a></div>
+                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.id_as_text }}</a></div>
                             </td>
                             <td>
                                 <div class="">{{ object.dealer.get_full_name|default:object.dealer.email|default:"unknown" }}</div>
