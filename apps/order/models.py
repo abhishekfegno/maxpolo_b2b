@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, FileExtensionValidator
 from django.db import models
 # Create your models here.
 from django.db.models import Sum
@@ -29,7 +29,7 @@ class SalesOrder(models.Model):
     invoice_status = models.CharField(max_length=20, choices=INVOICE_STATUS, default='new')
     invoice_amount = models.FloatField(default=0.0)
     invoice_remaining_amount = models.FloatField(default=0.1)  # must be set to 0.1 for programming purpose
-    # invoice_pdf = models.FileField(upload_to='invoice/', blank=True, null=True)
+    invoice_pdf = models.FileField(upload_to='invoice/', validators=[FileExtensionValidator(['pdf'])], blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     confirmed_date = models.DateTimeField(null=True, blank=True)
