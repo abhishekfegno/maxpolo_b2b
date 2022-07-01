@@ -214,7 +214,7 @@ class ComplaintListView(ListAPIView):
 
 class HomePageAPI(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-    permission_classes = (permissions.IsAuthenticated, )
+    # permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         dealer_id = request.GET.get('dealer', request.user.id)

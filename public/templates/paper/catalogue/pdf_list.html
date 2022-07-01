@@ -31,9 +31,9 @@
                                 </div>
                             </td>
                             <td>
-                                <div class=""><a class="btn btn-primary btn-sm"
-                                                 href="{% url 'pdf-update' pk=object_item.pk %}" target="_blank">View
-                                    PDF</a></div>
+                                <div class="">
+                                    <a class="btn btn-primary btn-sm"href="{{ object_item.file.url }}" target="_blank">View PDF</a>
+                                </div>
                             </td>
                             <td>
                                 <div class="">{{ object_item.category.name }}</div>
