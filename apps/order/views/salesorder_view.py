@@ -211,8 +211,11 @@ class QuotationDetailView(UpdateView):
     model = SalesOrder
     form_class = QuotationUpdateForm
 
-    def form_invalid(self, form):
+    def post(self, request, *args, **kwargs):
         # import pdb; pdb.set_trace()
+        return super().post(request, *args, **kwargs)
+
+    def form_invalid(self, form):
         return super().form_invalid(form)
 
     def get_success_url(self):
