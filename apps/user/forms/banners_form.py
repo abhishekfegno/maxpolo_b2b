@@ -1,8 +1,16 @@
 # New file created 
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm, UserChangeForm
 
 from apps.user.models import Banners, Dealer, Executive, Role, User
+
+
+class UserCreationForm(BaseUserCreationForm):
+    class Meta:
+        model = Dealer
+        fields = ("password1", "password2", 'first_name', 'last_name',
+            'branch', 'mobile', 'excalation_number', 'email', 'executive', 'company_cin', 'address_street',
+            'address_city', 'address_state', )
 
 
 class BannersForm(forms.ModelForm):
@@ -41,8 +49,8 @@ class DealerForm(UserCreationForm):
         model = Dealer
         fields = (
             "password1", "password2", 'first_name', 'last_name',
-            'branch', 'mobile', 'email', 'executive', 'company_cin', 'address_street', 'address_city',
-            'address_state', )
+            'branch', 'mobile', 'excalation_number', 'email', 'executive', 'company_cin', 'address_street',
+            'address_city', 'address_state', )
 
     def save(self, commit=True):
         self.instance.user_role = Role.DEALER
