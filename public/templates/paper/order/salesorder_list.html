@@ -40,7 +40,7 @@
                                 <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.order_id }}</a></div>
                             </td>
                             <td>
-                                <div class="">{{ object.dealer.get_full_name|default:object.dealer.email }}</div>
+                                <div class="">{{ object.dealer.get_full_name|default:object.dealer.email|default:"unknown" }}</div>
                             </td>
                             <td>
                                 <div class="">{{ object.confirmed_date }}</div>
