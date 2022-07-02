@@ -157,7 +157,7 @@
                                         {{ forloop.counter }}
                                     </td>
                                     <td>
-                                        {{ object.product.name }}
+                                        {{ object.product.name | default:"unknown"}}
                                     </td>
                                     <td>
                                         {% if object.pk != order_line_item.pk %}
@@ -166,6 +166,7 @@
                                         <form action="" method="post">
                                             {% csrf_token %}
                                             <input type="number" class="form-control" name="quantity" value="{{ object.quantity }}">
+<!--                                            <button type="submit" style="float:right;" class="btn text-white btn-success btn-sm">Submit</button>-->
                                         </form>
                                         {% endif %}
                                     </td>
@@ -173,12 +174,12 @@
                                         <div class="">
 
                                             {% if object.pk == order_line_item.pk %}
-                                            <a class="btn text-white btn-primary btn-sm"> Back to list </a>
+                                            <a href="{% url 'invoice-list' %}" class="btn text-white btn-primary btn-sm"> Back to list </a>
                                             {% elif not order.is_confirmed and not order.is_cancelled  %}
-                                            <a href="{% url 'get_orderline-update' order_id=order.pk pk=object.pk %}" class="btn text-white btn-success btn-sm">
+                                            <a href="{% url 'get_orderline_update' order_id=object.order.id pk=object.pk %}" class="btn text-white btn-success btn-sm">
                                                 <img src="{% static 'icons/edit.svg' %}" alt="" width="17">
                                             </a>
-                                            <a class="btn text-white btn-danger btn-sm"> <img src="{% static 'icons/trash.svg' %}" alt="" width="17"> </a>
+                                            <a href="{% url 'get_orderline_delete' pk=object.pk %}" class="btn text-white btn-danger btn-sm"> <img src="{% static 'icons/trash.svg' %}" alt="" width="17"> </a>
                                             {% endif %}
                                         </div>
                                     </td>
@@ -265,6 +266,8 @@
                                     </label>
                                     <input type="hidden" hidden name="invoice_remaining_amount" value="credit" class="form-control" >
                                     <input type="hidden" hidden name="invoice_date" value="{% now 'm/d/Y' %}" class="form-control" >
+                                    <input type="hidden" hidden name="confirmed_date" value="{{ order.confirmed_date| date:'m/d/Y'}}" class="form-control" >
+
                                     <br>
                                     <input type="button" class="btn  btn-danger" onclick="confirm_submit(event)" value="Raise Invoice">
                                 </form>
