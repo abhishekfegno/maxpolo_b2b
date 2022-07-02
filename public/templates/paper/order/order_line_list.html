@@ -26,7 +26,7 @@
     <div class="col-md-6">
         <h3>
             <img src="{% static 'icons/order.png' %}" alt="..." height="40">
-            ORDER / #{% if order.is_invoice %}{{ order.invoice_id }}{% else %}{{ order.id_as_text }} {% endif %}</h3>
+           {% if order.is_invoice %}{{ order.invoice_id }} of  ORDER / #{{ order.id_as_text }} {% else %} ORDER / #{{ order.id_as_text }} {% endif %}</h3>
     </div>
     <div class="col-md-6">
         {% if order.order_type == 'quotation' %}
@@ -73,7 +73,7 @@
                     <ul class="timeline" id="timeline">
                         <li class="li complete">
                             <div class="timestamp">
-                                <span class="date">{{ order.created_at|date|default:"TBD" }}<span>
+                                <span class="date">{{ order.created_at|date|default:"-" }}<span>
                             </div>
                             <div class="status">
                                 <p> Order Placed </p>
@@ -81,7 +81,7 @@
                         </li>
                         <li class="li {% if order.is_invoice or order.is_confirmed %}complete{% endif %}">
                             <div class="timestamp">
-                                <span class="date">{{ order.confirmed_date|date|default:"TBD" }}<span>
+                                <span class="date">{{ order.confirmed_date|date|default:"-" }}<span>
                             </div>
                             <div class="status">
                                 <p> Sale Order </p>
@@ -89,7 +89,7 @@
                         </li>
                         <li class="li  {% if order.is_invoice %}complete{% endif %}">
                             <div class="timestamp">
-                               <span class="date">{{ order.invoice_date|date|default:"TBD" }}<span>
+                               <span class="date">{{ order.invoice_date|date|default:"-" }}<span>
                             </div>
                             <div class="status">
                                 <p> Invoiced </p>
@@ -245,10 +245,10 @@
                             </div>
                             <div class="card-body">
                                 <p class="text-muted">Provide with your Invoice Amount and Invoice Number to raise an invoice against the Order. </p>
-                                <form action="{% url 'quotation-update' pk=order.id %}" method="post" enctype="multipart/form-data">
+                                <form action="{% url 'quotation-update' pk=order.id %}" method="POST" enctype="multipart/form-data">
                                     {% csrf_token %}
-                                    <input type="hidden" hidden name="is_confirmed" value=true class="form-control">
-                                    <input type="hidden" hidden name="is_cancelled" value=false class="form-control">
+<!--                                    <input type="hidden" hidden name="is_confirmed" value=true class="form-control">-->
+<!--                                    <input type="hidden" hidden name="is_cancelled" value=false class="form-control">-->
                                     <input type="hidden" hidden name="is_invoice" value=true class="form-control">
                                     <input type="hidden" hidden name="invoice_status" value="credit" class="form-control">
                                     <label>
@@ -261,7 +261,7 @@
                                     </label>
                                     <label>
                                         Invoice PDF
-                                        <input type="file"  name="invoice_pdf" value="" class="form-control" >
+                                        <input type="file"  name="invoice_pdf" class="form-control" >
                                     </label>
                                     <input type="hidden" hidden name="invoice_remaining_amount" value="credit" class="form-control" >
                                     <input type="hidden" hidden name="invoice_date" value="{% now 'm/d/Y' %}" class="form-control" >
