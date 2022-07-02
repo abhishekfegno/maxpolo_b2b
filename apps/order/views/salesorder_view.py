@@ -26,6 +26,16 @@ def get_orderline_form(request):
     return render(request, 'paper/line_form_htmx.html', context={'form': form})
 
 
+def get_orderline_delete(request, pk):
+    try:
+        line = SalesOrderLine.objects.get(pk=pk)
+        order_id = line.order.id
+        line.delete()
+    except Exception as e:
+        print(str(e))
+    return redirect('get_orderline', order_id)
+
+
 def quotation_status(request, pk):
     q = SalesOrder.objects.get(pk=pk)
     if request.method == 'POST':
@@ -215,6 +225,7 @@ class QuotationDetailView(UpdateView):
         if request.FILES:
             inv = self.get_object()
             inv.invoice_pdf = request.FILES.get('invoice_pdf')
+            print(inv.confirmed_date)
             inv.save()
         return super().post(request, *args, **kwargs)
 

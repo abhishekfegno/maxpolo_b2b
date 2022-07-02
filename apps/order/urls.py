@@ -16,8 +16,8 @@ urlpatterns = [
 
     path('order/line/form/', get_orderline_form, name='get_orderline_form'),
     path('order/detail/<int:order_id>/', get_orderline, name='get_orderline'),
-    path('order/detail/<int:order_id>/<int:pk>/update/', get_orderline, name='get_orderline-update'),
-    path('order/detail/<int:order_id>/<int:pk>/delete/', SalesOrderDeleteView.as_view(), name='get_orderline-delete'),
+    path('order/detail/<int:order_id>/<int:pk>/update/', get_orderline, name='get_orderline_update'),
+    path('order/detail/line/<int:pk>/delete/', get_orderline_delete, name='get_orderline_delete'),
     path('invoice/line/detail/<int:order_id>', invoice_detail_edit, name='invoice_detail_edit'),
     path('order/excel/export/<str:slug>/', get_excel_report_order, name='get_excel_report_order'),
     path('cancelled/list/', cancelled_order, name='cancelled_order'),
