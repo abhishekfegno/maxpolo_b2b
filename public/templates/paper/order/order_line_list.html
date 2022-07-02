@@ -79,6 +79,17 @@
                                 <p> Order Placed </p>
                             </div>
                         </li>
+                        {% if order.is_cancelled %}
+                        <li class="li complete">
+                            <div class="timestamp">
+                                <span class="date">{{ order.created_at|date|default:"-" }}<span>
+                            </div>
+                            <div class="status">
+                                <p> Order Cancelled </p>
+                            </div>
+                        </li>
+                        {% else %}
+
                         <li class="li {% if order.is_invoice or order.is_confirmed %}complete{% endif %}">
                             <div class="timestamp">
                                 <span class="date">{{ order.confirmed_date|date|default:"-" }}<span>
@@ -111,6 +122,7 @@
                                 <p> Completed </p>
                             </div>
                         </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -207,7 +219,7 @@
 
             </div>
             <div class="col-md-4">
-                {% if not order.is_confirmed and not order.is_invoice %}
+                {% if not order.is_confirmed and not order.is_invoice and not order.is_cancelled %}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
@@ -237,7 +249,7 @@
                     </div>
                 </div>
 
-                {% elif order.is_confirmed and not order.is_invoice %}
+                {% elif order.is_confirmed and not order.is_invoice and not order.is_cancelled %}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
@@ -276,6 +288,7 @@
                     </div>
                 </div>
                 {% else %}
+                {% if not order.is_cancelled %}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
@@ -307,6 +320,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 {% endif %}
                 <div class="row">
                 </div>
