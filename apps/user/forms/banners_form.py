@@ -52,6 +52,10 @@ class DealerForm(UserCreationForm):
             'mobile', 'email', 'executive', 'company_cin', 'address_street',
             'address_city', 'address_state', )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['executive'].queryset = Executive.objects.filter()
+
     def save(self, commit=True):
         self.instance.user_role = Role.DEALER
         super(DealerForm, self).save(commit=commit)
