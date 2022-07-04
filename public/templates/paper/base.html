@@ -172,7 +172,30 @@
                     }).select2();
                     $('#listing-table-search-form input.form-control').addClass('form-control-sm')
                 });
+var confirm_submit = function (event){
+    event.preventDefault();
+    var _form = event.target.form;
+    swal({
+      title: "Confirm?",
+      text: "Are you sure?",
+      type: "warning",
 
+      confirmButtonText: "Confirm",
+      cancelButtonText: "Back"
+
+      }
+    ).then(
+      function (isConfirm) {
+        if (isConfirm) {
+          _form.submit();
+        }
+      },
+      function() {
+         console.log('BACK');
+      }
+    );
+
+}
 </script>
 </body>
 </html>
