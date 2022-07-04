@@ -44,6 +44,8 @@ class AdminForm(UserCreationForm):
 
 
 class DealerForm(UserCreationForm):
+    address_street = forms.CharField(required=False)
+    company_cin = forms.CharField(required=False)
 
     class Meta:
         model = Dealer
@@ -55,6 +57,8 @@ class DealerForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['executive'].queryset = Executive.objects.filter()
+        # self.fields['company_cin'].required = False
+        # self.fields['address_street'].required = False
 
     def save(self, commit=True):
         self.instance.user_role = Role.DEALER
@@ -73,6 +77,8 @@ class ExecutiveForm(UserCreationForm):
 
 
 class DealerUpdateForm(UserChangeForm):
+    address_street = forms.CharField(required=False)
+    company_cin = forms.CharField(required=False)
 
     class Meta:
         model = Dealer
@@ -85,6 +91,7 @@ class DealerUpdateForm(UserChangeForm):
     def __init__(self, *args, **kwargs):
         super(DealerUpdateForm, self).__init__(*args, **kwargs)
         self.fields['executive'].queryset = Executive.objects.filter()
+
 
     def save(self, commit=True):
         self.instance.user_role = Role.DEALER

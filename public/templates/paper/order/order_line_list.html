@@ -316,8 +316,18 @@
                                     </div>
                                 </div>
                                 {% endif %}
+                                {% if object.invoice_pdf %}
+                                <div class="row">
+                                    <div class="col-6">
+                                            <a class="btn btn-primary btn-sm" href="{{ object.invoice_pdf.url }}"  target="_blank">View Invoice PDF</a>
+                                    </div>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-12">
+
                     </div>
                 </div>
                 {% endif %}

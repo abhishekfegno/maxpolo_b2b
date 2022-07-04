@@ -32,6 +32,11 @@ def get_orderline_delete(request, pk):
     try:
         line = SalesOrderLine.objects.get(pk=pk)
         order_id = line.order.id
+        if line.order.line.all().count() <= 1:
+            line.order.delete()
+            line.delete()
+            print("Order deleted")
+            return redirect('quotation-list')
         line.delete()
     except Exception as e:
         print(str(e))
