@@ -1,4 +1,6 @@
 # New file created
+from datetime import datetime
+
 from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
@@ -14,7 +16,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.catalogue.models import Product
 from apps.order.forms.salesorder_form import QuotationForm, QuotationLineForm, QuotationUpdateForm, InvoiceUpdateForm, \
-    SalesOrderUpdateForm, InvoiceAmountForm
+    SalesOrderUpdateForm, InvoiceAmountForm, InvoiceForm
 from apps.order.models import SalesOrder, SalesOrderLine
 from apps.payment.models import QuantityInvalidException
 from lib.filters import OrderFilter
@@ -150,10 +152,15 @@ class SalesOrderDeleteView(DeleteView):
 
 class SalesOrderDetailView(UpdateView):
     queryset = SalesOrder.objects.all().filter(is_confirmed=True).select_related('dealer').prefetch_related('line').order_by('-confirmed_date')
-    template_name = 'paper/order/salesorder_form.html'
+    template_name = 'paper/order/order_line_list.html'
     model = SalesOrder
     form_class = SalesOrderUpdateForm
     success_url = '/order/order/list'
+
+    # def post(self, request, *args, **kwargs):
+    #
+    #     return super().post(request, *args, **kwargs)
+
 
 
 class SalesOrderListView(FormMixin, ListView):
@@ -222,12 +229,16 @@ class QuotationDetailView(UpdateView):
     form_class = QuotationUpdateForm
 
     def post(self, request, *args, **kwargs):
-        if request.FILES:
-            inv = self.get_object()
-            inv.invoice_pdf = request.FILES.get('invoice_pdf')
-            print(inv.confirmed_date)
-            inv.save()
-        return super().post(request, *args, **kwargs)
+        try:
+            super().post(request, *args, **kwargs)
+            if request.FILES:
+                inv = self.get_object()
+                inv.invoice_pdf = request.FILES.get('invoice_pdf')
+                print(inv.confirmed_date)
+                inv.save()
+        except Exception as e:
+            messages.add_message(request, messages.ERROR, str(e))
+        return redirect('salesorder-list')
 
     def form_invalid(self, form):
         return super().form_invalid(form)
@@ -321,9 +332,9 @@ class QuotationDeleteView(DeleteView):
 
 class InvoiceDetailView(UpdateView):
     queryset = SalesOrder.objects.all().filter(is_invoice=True).select_related('dealer').prefetch_related('line').order_by('-invoice_date')
-    template_name = 'paper/order/invoice_form.html'
+    template_name = 'paper/order/order_line_list.html'
     model = SalesOrder
-    form_class = InvoiceUpdateForm
+    form_class = InvoiceForm
     success_url = '/order/invoice/list'
 
 
@@ -331,7 +342,7 @@ class InvoiceListView(FormMixin, ListView):
     queryset = SalesOrder.objects.all().filter(is_invoice=True).select_related('dealer').order_by('-invoice_date')
     template_name = 'paper/order/invoice_list.html'
     model = SalesOrder
-    form_class = InvoiceUpdateForm
+    form_class = InvoiceForm
     filtering_backends = (DjangoFilterBackend,)
     filtering_class = OrderFilter
     filterset_fields = ('order_id',)
@@ -360,16 +371,43 @@ class InvoiceListView(FormMixin, ListView):
         context['filter'] = filter
         return context
 
+
     def post(self, request, *args, **kwargs):
-        form = InvoiceUpdateForm(request.POST)
+        form = InvoiceForm(request.POST)
+        # orderline_formset = inlineformset_factory(SalesOrder, SalesOrderLine, fields=('product', 'quantity'))
         if form.is_valid():
-            products = form.data.get('product')
-            quantity = form.data.get('quantity')
-            order = form.save()
-            for product, quantity in zip(products, quantity):
-                line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity,
-                                                     order=order)
-                print(f"line created {line} for order {order}")
+            products = form.data.getlist('product')
+            quantities = form.data.getlist('quantity')
+            print(products, quantities)
+            try:
+                if '' in products or not products:
+                    raise QuantityInvalidException("Please select product")
+                if '' in quantities or not quantities:
+                    raise QuantityInvalidException("Please select quantity")
+                # import pdb;pdb.set_trace()
+                form.instance.is_confirmed = True
+                form.instance.is_invoice = True
+                form.instance.confirmed_date = datetime.now()
+                form.instance.invoice_date = datetime.now()
+                order = form.save()
+                for product, quantity in zip(products, quantities):
+                    product = Product.objects.get(id=product)
+                    print(product)
+
+                    if int(quantity) <= 0:
+                        order.delete()
+                        raise QuantityInvalidException("Invalid Quantity")
+
+                    line = SalesOrderLine.objects.create(product=product, quantity=quantity, order=order)
+                    print(f"line created {line} for order {order}")
+                    print(f"order {order} created")
+                    messages.add_message(request, messages.SUCCESS, f"New Order {order} has been created")
+            except Exception as e:
+                print(str(e))
+                messages.add_message(request, messages.ERROR, str(e))
+
+        else:
+            messages.add_message(request, messages.ERROR, form.errors)
         return redirect('invoice-list')
 
 

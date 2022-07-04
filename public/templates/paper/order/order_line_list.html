@@ -266,11 +266,11 @@
                                     <input type="hidden" hidden name="invoice_status" value="credit" class="form-control">
                                     <label>
                                         Amount
-                                        <input type="number"  name="invoice_amount" value="credit" class="form-control" onchange="document.querySelector('[name=\'invoice_remaining_amount\']').value = event.target.value ;">
+                                        <input type="number"  name="invoice_amount" required class="form-control" onchange="document.querySelector('[name=\'invoice_remaining_amount\']').value = event.target.value ;" >
                                     </label>
                                     <label>
                                         #Invoice Number
-                                        <input type="text"  name="invoice_id" value="" class="form-control" >
+                                        <input type="text"  name="invoice_id" class="form-control" required>
                                     </label>
                                     <label>
                                         Invoice PDF

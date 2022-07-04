@@ -76,3 +76,9 @@ class InvoiceAmountForm(forms.ModelForm):
 
         for key in self.fields:
             self.fields[key].required = False
+
+
+class InvoiceForm(forms.ModelForm):
+    class Meta:
+        model = SalesOrder
+        fields = ('dealer', 'invoice_amount', 'invoice_id')
