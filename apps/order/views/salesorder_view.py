@@ -230,6 +230,9 @@ class QuotationDetailView(UpdateView):
 
     def post(self, request, *args, **kwargs):
         try:
+            invoice_id = request.POST.get('invoice_id')
+            if invoice_id and SalesOrder.objects.filter(invoice_id=invoice_id).exists():
+                raise QuantityInvalidException("Invoice with invoice id already exists !!!")
             if request.FILES:
                 inv = self.get_object()
                 inv.invoice_pdf = request.FILES.get('invoice_pdf')
@@ -238,8 +241,7 @@ class QuotationDetailView(UpdateView):
         except Exception as e:
             print(str(e))
             messages.add_message(request, messages.ERROR, str(e))
-        # import pdb;pdb.set_trace()
-        return redirect('salesorder-list')
+        return super().post(request, *args, **kwargs)
 
 
     def form_invalid(self, form):
