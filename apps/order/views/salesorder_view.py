@@ -290,6 +290,7 @@ class QuotationListView(FormMixin, ListView):
                     print(product)
 
                     if int(quantity) <= 0:
+                        order.delete()
                         raise QuantityInvalidException("Invalid Quantity")
 
                     line = SalesOrderLine.objects.create(product=product, quantity=quantity, order=order)
