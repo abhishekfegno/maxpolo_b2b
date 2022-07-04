@@ -18,7 +18,7 @@ INVOICE_STATUS = (
 
 class SalesOrder(models.Model):
     order_id = models.CharField(max_length=10)
-    invoice_id = models.CharField(max_length=10, null=True, blank=True)
+    invoice_id = models.CharField(max_length=10, null=True, blank=True, unique=True)
     dealer = models.ForeignKey('user.User', on_delete=models.SET_NULL, null=True, blank=False)
 
     is_quotation = models.BooleanField(default=True)
@@ -35,6 +35,9 @@ class SalesOrder(models.Model):
     confirmed_date = models.DateTimeField(null=True, blank=True)
     invoice_date = models.DateTimeField(null=True, blank=True)
     __show_dealer_in_str__ = False
+
+    class Meta:
+        unique_together = ('order_id', 'invoice_id')
 
     def __str__(self):
         if self.invoice_id:

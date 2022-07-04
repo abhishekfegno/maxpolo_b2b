@@ -407,7 +407,8 @@ class InvoiceListView(FormMixin, ListView):
                 messages.add_message(request, messages.ERROR, str(e))
 
         else:
-            messages.add_message(request, messages.ERROR, form.errors)
+            # import pdb;pdb.set_trace()
+            messages.add_message(request, messages.ERROR, form.errors.get('invoice_id')[0])
         return redirect('invoice-list')
 
 
