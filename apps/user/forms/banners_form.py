@@ -92,7 +92,6 @@ class DealerUpdateForm(UserChangeForm):
         super(DealerUpdateForm, self).__init__(*args, **kwargs)
         self.fields['executive'].queryset = Executive.objects.filter()
 
-
     def save(self, commit=True):
         self.instance.user_role = Role.DEALER
         super(DealerUpdateForm, self).save(commit=commit)
