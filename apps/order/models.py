@@ -18,7 +18,7 @@ INVOICE_STATUS = (
 
 class SalesOrder(models.Model):
     order_id = models.CharField(max_length=10)
-    invoice_id = models.CharField(max_length=10, null=True, blank=True, unique=True)
+    invoice_id = models.CharField(max_length=10, null=True, blank=True)
     dealer = models.ForeignKey('user.User', on_delete=models.SET_NULL, null=True, blank=False)
 
     is_quotation = models.BooleanField(default=True)

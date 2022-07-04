@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'apps.order',
     'apps.executivetracking',
     'apps.payment',
+    'apps.notification',
 
     'dg',
     'django_extensions',

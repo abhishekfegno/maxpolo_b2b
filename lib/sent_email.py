@@ -7,9 +7,10 @@ import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 
 # from apps.user.models import Dealer
+from lib.events import EventHandler
 
 
-class EmailHandler(object):
+class EmailHandler(EventHandler):
     api_key = os.environ.get('SENDINBLUE_API_KEY')
 
     # Configure API key authorization: api-key
@@ -22,7 +23,7 @@ class EmailHandler(object):
 
     # create an instance of the API class
 
-    def sent_mail_for_pdf(self, recipients, instance):
+    def event_for_pdfs(self, recipients, instance):
         url = ""
         from apps.user.models import Dealer
 
@@ -36,7 +37,7 @@ class EmailHandler(object):
         self.sent_email_now(recipient, message, subject)
 
 
-    def sent_mail_for_banners(self, recipients, instance):
+    def event_for_banners(self, recipients, instance):
         url = ""
         recipients.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
 
@@ -48,7 +49,7 @@ class EmailHandler(object):
 
         self.sent_email_now(recipients, message, subject)
 
-    def sent_mail_complaint(self, instance):
+    def event_for_complaints(self, instance):
         recipient = []
         if instance.created_by is None:
             return
@@ -62,7 +63,7 @@ class EmailHandler(object):
         # import pdb;pdb.set_trace()
         self.sent_email_now(recipient, message, subject)
 
-    def sent_mail_order(self, instance):
+    def event_for_orders(self, instance):
         recipient = []
         recipient.append({'email': instance.dealer.email, 'first_name': instance.dealer.first_name})
         recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
