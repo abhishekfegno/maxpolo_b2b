@@ -8,9 +8,9 @@ from apps.user.models import Banners, Dealer, Executive, Role, User
 class UserCreationForm(BaseUserCreationForm):
     class Meta:
         model = Dealer
-        fields = ("password1", "password2", 'first_name', 'last_name',
-            'branch', 'mobile', 'excalation_number', 'email', 'executive', 'company_cin', 'address_street',
-            'address_city', 'address_state', )
+        fields = ('first_name', 'last_name',
+                  'branch', 'mobile', 'email', 'executive', 'company_cin', 'address_street',
+                  'address_city', 'address_state', "password1", "password2", )
 
 
 class BannersForm(forms.ModelForm):
@@ -48,8 +48,8 @@ class DealerForm(UserCreationForm):
     class Meta:
         model = Dealer
         fields = (
-            "password1", "password2", 'first_name', 'last_name',
-            'branch', 'mobile', 'excalation_number', 'email', 'executive', 'company_cin', 'address_street',
+            'first_name', 'last_name', 'username',  "password1", "password2",  'branch',
+            'mobile', 'email', 'executive', 'company_cin', 'address_street',
             'address_city', 'address_state', )
 
     def save(self, commit=True):
@@ -61,7 +61,7 @@ class ExecutiveForm(UserCreationForm):
 
     class Meta:
         model = Executive
-        fields = ("password1", "password2", 'first_name', 'last_name', 'branch', 'mobile', 'email')
+        fields = ('first_name', 'last_name', 'username', "password1", "password2", 'branch', 'mobile', 'email')
 
     def save(self, commit=True):
         self.instance.user_role = Role.EXECUTIVE
@@ -73,9 +73,14 @@ class DealerUpdateForm(UserChangeForm):
     class Meta:
         model = Dealer
         fields = (
-            "password", 'first_name', 'last_name',
+            'first_name', 'last_name', 'username',
             'branch', 'mobile', 'email', 'executive', 'company_cin', 'address_street', 'address_city',
-            'address_state', )
+            'address_state', "password",
+        )
+
+    def __init__(self, *args, **kwargs):
+        super(DealerUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['executive'].queryset = Executive.objects.filter()
 
     def save(self, commit=True):
         self.instance.user_role = Role.DEALER
@@ -86,7 +91,7 @@ class ExecutiveUpdateForm(UserChangeForm):
 
     class Meta:
         model = Executive
-        fields = ("password", 'first_name', 'last_name', 'branch', 'mobile', 'email')
+        fields = ("password", 'username', 'first_name', 'last_name', 'branch', 'mobile', 'email')
 
     def save(self, commit=True):
         self.instance.user_role = Role.EXECUTIVE
@@ -97,7 +102,7 @@ class AdminUpdateForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ("password", 'first_name', 'last_name', 'branch', 'mobile', 'email')
+        fields = ("password", 'username', 'first_name', 'last_name', 'branch', 'mobile', 'email')
 
     def save(self, commit=True):
         self.instance.user_role = Role.ADMIN

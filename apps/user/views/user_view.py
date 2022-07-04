@@ -86,9 +86,9 @@ class UserListView(ModelFormMixin, SuccessMessageMixin, ListView, ProcessFormVie
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset()
         if self.kwargs.get('role') == 'dealer':
-            queryset = Dealer.objects.all()
+            queryset = Dealer.objects.all().filter(user_role=Role.DEALER)
         if self.kwargs.get('role') == 'executive':
-            queryset = Executive.objects.all()
+            queryset = Executive.objects.all().filter(user_role=Role.EXECUTIVE)
         if self.kwargs.get('role') == 'admin':
             queryset = User.objects.all().filter(user_role=Role.ADMIN)
         return queryset

@@ -65,8 +65,6 @@ class User(AbstractUser):
     address_state = models.CharField(max_length=50, null=True, blank=False)
     zone = models.ForeignKey('executivetracking.Zone', on_delete=models.SET_NULL, null=True, blank=False)
 
-    excalation_number = models.CharField(max_length=20, null=True, blank=False)
-
 
     @property
     def address(self):
@@ -166,6 +164,7 @@ class SiteConfiguration(SingletonModel):
     email_02 = models.EmailField(default='manoj@fegno.com')
     email_03 = models.EmailField(default='jomon@fegno.com')
     email_04 = models.EmailField(default='jerinisready@gmail.com')
+    excalation_number = models.CharField(max_length=20, null=True, blank=False)
 
     @property
     def enquiry_emails(self):
@@ -176,7 +175,6 @@ class SiteConfiguration(SingletonModel):
         for index in range(len(value)):
             if index < 4:
                 setattr(self, f'email_0{index + 1}', value[index])
-
 
 
 @receiver(post_save, sender=Complaint)
