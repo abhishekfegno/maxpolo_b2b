@@ -22,10 +22,17 @@ class QuantityInvalidException(Exception):
 
 
 class Transaction(models.Model):
+    CHOICES = (
+        ('new', 'New'),
+        ('credit', 'Credit'),
+        ('payment_partial', 'Payment Partial'),
+        ('payment_done', 'Payment Done'),
+        ('cancelled', 'Cancelled')
+    )
     order = models.ForeignKey('order.SalesOrder', on_delete=models.SET_NULL, null=True, blank=False)
     amount = models.FloatField(default=0.0)
     amount_balance = models.FloatField(default=0.0)
-    status = models.CharField(max_length=20, default='Credit', null=True, blank=False)
+    status = models.CharField(max_length=20, default='Credit', choices=CHOICES, null=True, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
