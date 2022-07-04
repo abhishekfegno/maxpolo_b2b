@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DeleteView, UpdateView, ListView
 from django.views.generic.edit import FormMixin
 
-from apps.payment.forms import TransactionForm
+from apps.payment.forms import TransactionForm, TransactionUpdateForm
 from apps.payment.models import Transaction
 from lib.filters import PaymentFilter
 from lib.importexport import PaymentReport
@@ -28,13 +28,9 @@ class TransactionDetailView(UpdateView, ListView):
     queryset = Transaction.objects.select_related('order').order_by('created_at')
     template_name = 'paper/payment/transaction_list.html'
     model = Transaction
-    form_class = TransactionForm
+    form_class = TransactionUpdateForm
     success_url = '/payment/transaction/list'
 
-
-    def get(self, request, *args, **kwargs):
-        # import pdb;pdb.set_trace()
-        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, instance=self.get_object())

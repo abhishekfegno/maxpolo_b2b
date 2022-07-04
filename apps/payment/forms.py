@@ -17,3 +17,9 @@ class TransactionForm(forms.ModelForm):
         #     s.__show_dealer_in_str__ = True
         #     print(s)
         self.fields['order'].queryset = so_qs
+
+
+class TransactionUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Transaction
+        fields = ('status',)
