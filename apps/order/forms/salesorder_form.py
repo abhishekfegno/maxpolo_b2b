@@ -81,4 +81,4 @@ class InvoiceAmountForm(forms.ModelForm):
 class InvoiceForm(forms.ModelForm):
     class Meta:
         model = SalesOrder
-        fields = ('dealer', 'invoice_amount', 'invoice_id')
+        fields = ('dealer', 'invoice_amount', 'invoice_id', 'invoice_pdf')

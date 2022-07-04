@@ -175,10 +175,11 @@
                                         {% if object.pk != order_line_item.pk %}
                                         {{ object.quantity }}
                                         {% else %}
-                                        <form action="" method="post">
+                                        <form action="{% url 'get_orderline_update' order_id=object.order.id pk=object.pk %}" method="post">
                                             {% csrf_token %}
+                                            <input type="hidden" class="form-control" name="is_quotation" value="true">
                                             <input type="number" class="form-control" name="quantity" value="{{ object.quantity }}">
-<!--                                            <button type="submit" style="float:right;" class="btn text-white btn-success btn-sm">Submit</button>-->
+                                            <button type="submit" style="float:right;" class="btn text-white btn-success btn-sm">Submit</button>
                                         </form>
                                         {% endif %}
                                     </td>
@@ -186,7 +187,7 @@
                                         <div class="">
 
                                             {% if object.pk == order_line_item.pk %}
-                                            <a href="{% url 'get_orderline' order_id=object.order.pk %}" class="btn text-white btn-primary btn-sm"> Change </a>
+<!--                                            <a href="{% url 'get_orderline' order_id=object.order.pk %}" class="btn text-white btn-primary btn-sm"> Change </a>-->
                                             {% elif not order.is_confirmed and not order.is_cancelled and not order.is_invoice  %}
                                             <a href="{% url 'get_orderline_update' order_id=object.order.id pk=object.pk %}" class="btn text-white btn-success btn-sm">
                                                 <img src="{% static 'icons/edit.svg' %}" alt="" width="17">

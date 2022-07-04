@@ -86,6 +86,10 @@ def get_orderline(request, order_id, pk=None):
     context['net_txn_remaining'] = order.invoice_amount - context['net_txn_amt']
 
     if request.method == 'POST':
+        if request.POST.get('quantity'):
+            line = order.line.get(pk=pk)
+            line.quantity = request.POST.get('quantity')
+            line.save()
         if form.is_valid():
             form.save()
             return redirect(order.order_type + '-list')
