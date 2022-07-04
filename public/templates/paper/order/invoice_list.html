@@ -1,13 +1,13 @@
 {% extends 'paper/layout.html' %}{% load crispy_forms_tags %}{% block content%}{% include 'paper/htmx.html' %}
 <div class='row'>
 
-    <div class='col-md-12'>
+    <div class='col-md-7'>
         <div class='card'>
             <div class='card-body'>
                 <div>
                     <a class="btn btn-primary" href="{% url 'get_excel_report_order' slug=order_type %}"
                        style="float:right;">Download Excel</a>
-                    <h3>{{ order_type }} List</h3>
+                    <h3>Invoiced List</h3>
                 </div>
                 <div>
                     {% include 'paper/catalogue/product_filter.html'%}
@@ -29,13 +29,16 @@
                         <tr>
                             <!--                    <td scope="row"> </td>-->
                             <td>
+                                 {% if filter %}
+                                <div class="">{{ forloop.counter0|add:filter.start_index }}</div>
+                                {% else %}
                                 <div class="">{{ forloop.counter }}</div>
+                                {% endif %}                            </td>
+                            <td>
+                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{object.invoice_id | default:object.id_as_text }}</a></div>
                             </td>
                             <td>
-                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{object.invoice_id }}</a></div>
-                            </td>
-                            <td>
-                                <div class="">{{ object.dealer.get_full_name }}</div>
+                                <div class="">{{ object.dealer.get_full_name|default:"unknown"  }}</div>
                             </td>
                             <td>
                                 <div class="">{{ object.invoice_date }}</div>
@@ -57,6 +60,32 @@
             </div>
             {% include 'paper/pagination.html' %}
 
+        </div>
+    </div>
+    <div class='col-5'>
+        <div class='card'>
+            <div class='card-body'>
+                <h3>Create Invoice</h3>
+                <div class="card-header">
+                    {% if form.errors %}
+                    <pre>
+                        {{ form.errors }}
+                    </pre>
+                    {% endif %}
+                </div>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    <hr>
+                    <code>You can use the ADD PRODUCT button below to add a new item into the order.</code>
+                    <div id="lineform"></div>
+                    <button class="btn btn-sm btn-success" hx-get="{% url 'get_orderline_form' %}" hx-swap="beforeend"
+                            hx-target="#lineform" type="button"> Add product
+                    </button>
+                    <input hx-post="{% url 'salesorder-list' %}" type="hidden">
+                    <button class='btn btn btn-danger' style="float:right;" type='submit'> Raise Invoice </button>
+                </form>
+            </div>
         </div>
     </div>
 

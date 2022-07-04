@@ -13,6 +13,7 @@
                         <thead class="thead-dark">
                         <tr class="table-header">
                             <th scope="col">ID</th>
+                            <th scope="col">InvoiceID</th>
                             <th scope="col">Name</th>
                             <th scope="col">Ordered_on</th>
                             <th scope="col">Paid</th>
@@ -22,34 +23,41 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for object in object_list %}
-                        <tr>
+                        {% for object_item in object_list %}
+                        <tr class="{% if object.pk == object_item.pk %}selected-row{% endif %}">
                             <!--                    <td scope="row"> </td>-->
                             <td>
+                                {% if filter %}
+                                <div class="">{{ forloop.counter0|add:filter.start_index }}</div>
+                                {% else %}
                                 <div class="">{{ forloop.counter }}</div>
+                                {% endif %}                            </td>
+                            <td>
+                                <div class=""><a href="">{{object_item.order.invoice_id }}</a></div>
                             </td>
                             <td>
-                                <div class=""><a href="">{{object.order.invoice_id }}</a></div>
+                                <div class="">{{object_item.order.dealer.get_full_name }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object.created_at }}</div>
+                                <div class="">{{ object_item.created_at }}</div>
                             </td>
                             <td>
-                                <div class="">₹{{ object.amount }}</div>
+                                <div class="">₹{{ object_item.amount }}</div>
                             </td>
                             <td>
-                                <div class="">₹{{ object.amount_balance }}</div>
+                                <div class="">₹{{ object_item.amount_balance }}</div>
                             </td>
                             <td>
-                                <div class=""><span class="badge badge-pill badge-info">{{object.status}}</span></div>
+                                <div class=""><span class="badge badge-pill badge-info">{{object_item.status}}</span></div>
                             </td>
                             <td>
+                                {% if not object.pk %}
                                 <div class="">
-                                    <a class="btn btn-primary"
-                                       href="{% url 'transaction-update' pk=object.pk %}">Edit</a>
-                                    <a class="delBrand btn btn-danger" href="javascript:void(0)"
-                                       onclick="swalFunction(this, '{% url 'transaction-delete' object.pk %}')">Delete</a>
+                                    <a class="btn btn-sm btn-primary"
+                                       href="{% url 'transaction-update' pk=object_item.pk %}">Cancel</a>
                                 </div>
+                                {% endif %}
+
                             </td>
                         </tr>
                         {% empty %}
@@ -72,11 +80,20 @@
     <div class='col-4'>
         <div class='card'>
             <div class='card-body'>
-                <h3>Create {{ order_type }}</h3>
+                {% if object.pk %}
+                <a class="pull-right btn btn-secondary" href="{% url 'transaction-list' %}" > back to list</a>
+                <h3 class="heading-3 pt-3">Update Transaction</h3>
+                <p class="text-muted"> Here you can update the current transaction. </p>
+                {% else %}
+                <h3 class="heading-3 pt-3">Add Transaction</h3>
+                <p class="text-muted"> Here you can add the transaction here. </p>
+                {% endif %}
                 <form method="POST">
                     {% csrf_token %}
                     {{ form | crispy }}
-                    <button class='btn btn-lg btn-success' style="float:right;" type='submit'> Save</button>
+<!--                            <a class="delBrand btn btn-danger  btn-sm" href="javascript:void(0)"-->
+<!--                               onclick="swalFunction(this, '')">Delete</a>-->
+                    <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
                 </form>
             </div>
         </div>

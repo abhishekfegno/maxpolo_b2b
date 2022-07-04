@@ -7,6 +7,7 @@ from solo.models import SingletonModel
 
 
 # Create your models here.
+from apps.notification.events import NotificationEvent
 from lib.faker import FakeImage
 from lib.sent_email import EmailHandler
 
@@ -63,6 +64,9 @@ class User(AbstractUser):
     address_city = models.CharField(max_length=50, null=True, blank=False)
     address_state = models.CharField(max_length=50, null=True, blank=False)
     zone = models.ForeignKey('executivetracking.Zone', on_delete=models.SET_NULL, null=True, blank=False)
+
+    excalation_number = models.CharField(max_length=20, null=True, blank=False)
+
 
     @property
     def address(self):
@@ -178,12 +182,15 @@ class SiteConfiguration(SingletonModel):
 @receiver(post_save, sender=Complaint)
 def sent_email_complaint(sender, created, instance, **kwargs):
     if created:
-        EmailHandler().sent_mail_complaint(instance)
+        EmailHandler().event_for_complaints(instance)
+        NotificationEvent().event_for_complaints(instance)
+
 
 
 @receiver(post_save, sender=Banners)
 def sent_email_banners(sender, created, instance, **kwargs):
     recipients = [i for i in Dealer.objects.all().values('email', 'first_name')]
     if created:
-        EmailHandler().sent_mail_for_banners(recipients, instance)
+        EmailHandler().event_for_banners(recipients, instance)
+        NotificationEvent().event_for_banners(instance)
 

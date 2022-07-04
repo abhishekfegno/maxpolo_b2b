@@ -1,6 +1,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
 <script>
-    function swalFunction(element, url){
+    function swalFunction(element, url, redirect_url ){
 
     Swal.fire({
           title: 'Are you sure?',
@@ -16,15 +16,13 @@
             $.ajax({
                 type:"POST",
                 url:url,
-                
-
             })
             Swal.fire(
               'Deleted!',
               'Your file has been deleted.',
               'success'
             ).then(function(){
-<!--                    window.location.reload();-->
+                    window.location.href = (window.location.href +'../../') + 'list/'
             })
 
             }
@@ -32,5 +30,20 @@
     } // end of swalFunction()
 
 
+function confirm_submit(event){
+    event.preventDefault();
+    var _form = event.target.form;
+    Swal.fire({
+          title: event.target.textContent + " ? ",
+          text: `Are you sure you want to proceed with ${event.target.textContent}?`,
+          type: "question",
+          confirmButtonText: "Confirm",
+          cancelButtonText: "Back"
+      }
+    ).then(
+      function (isConfirm) { isConfirm && _form.submit(); }
+    );
+}
 
+confirm_form = confirm_submit;
 </script>

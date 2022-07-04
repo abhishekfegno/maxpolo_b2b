@@ -41,8 +41,8 @@ class CategoryListView(ModelFormMixin, ListView, ProcessFormView):
 
     def post(self, request, *args, **kwargs):
         """
-		Handle POST requests: instantiate a form instance with the passed
-		POST variables and then check if it's valid.
+            Handle POST requests: instantiate a form instance with the passed
+            POST variables and then check if it's valid.
 		"""
         form = self.get_form()
         if form.is_valid():
@@ -64,6 +64,7 @@ class CategoryDeleteView(DeleteView):
         print(self.get_object().delete())
         return redirect('category-list')
 
+
 class PDFListView(UpdateView, ListView):
     queryset = PDF.objects.all()
     template_name = 'paper/catalogue/pdf_list.html'
@@ -81,13 +82,13 @@ class PDFListView(UpdateView, ListView):
 
     def post(self, request, *args, **kwargs):
         url = reverse('pdf-list', request=request, format=None, )
-        form = self.form_class(request.POST, request.FILES)
+        form = self.form_class(request.POST, request.FILES, instance=self.get_object())
         if form.is_valid():
             instance = form.save()
             # EmailHandler().sent_mail_for_pdf(instance, url)
         else:
             print(form.errors)
-            messages.add_message(request, messages.INFO, form.errors.get('file')[0])
+            messages.add_message(request, messages.ERROR, form.errors.get('file')[0])
         return redirect('pdf-list')
 
 

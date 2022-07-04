@@ -43,6 +43,10 @@ class ProductAPIView(ListAPIView):
     ordering_fields = ('product_code', 'name')
     pagination_class = PageNumberPagination
 
+    def filter_queryset(self, queryset):
+        # import pdb;pdb.set_trace()
+        return queryset.filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
+
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page_number', 1)
         page_size = request.GET.get('page_size', 20)

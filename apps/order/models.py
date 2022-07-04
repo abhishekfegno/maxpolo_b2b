@@ -1,11 +1,12 @@
 from datetime import datetime
 
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, FileExtensionValidator
 from django.db import models
 # Create your models here.
 from django.db.models import Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.functional import cached_property
 
 INVOICE_STATUS = (
     ('new', 'New'),
@@ -28,25 +29,59 @@ class SalesOrder(models.Model):
     invoice_status = models.CharField(max_length=20, choices=INVOICE_STATUS, default='new')
     invoice_amount = models.FloatField(default=0.0)
     invoice_remaining_amount = models.FloatField(default=0.1)  # must be set to 0.1 for programming purpose
+    invoice_pdf = models.FileField(upload_to='invoice/', validators=[FileExtensionValidator(['pdf'])], blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     confirmed_date = models.DateTimeField(null=True, blank=True)
     invoice_date = models.DateTimeField(null=True, blank=True)
+    __show_dealer_in_str__ = False
+
+    class Meta:
+        unique_together = ('order_id', 'invoice_id')
 
     def __str__(self):
         if self.invoice_id:
+            if self.__show_dealer_in_str__:
+                return f"{self.invoice_id} - {self.dealer.get_full_name()}"
             return self.invoice_id
         return self.order_id
 
+    QUOTATION = "quotation"
+    INVOICED = "invoice"
+    CONFIRMED = "salesorder"
+    CANCELLED = "cancelled"
+
+    @property
+    def status(self):
+        if self.is_invoice:
+            return self.INVOICED
+        elif self.is_confirmed:
+            return self.CONFIRMED
+        elif self.is_cancelled:
+            return self.CANCELLED
+        return self.QUOTATION
+
+    @status.setter
+    def status(self, value):
+        if value == self.QUOTATION:
+            spread = 0, 0, 0, 1
+        elif value == self.CANCELLED:
+            spread = 0, 0, 1, 0
+        elif value == self.CONFIRMED:
+            spread = 0, 1, 0, 0
+        elif value == self.INVOICED:
+            spread = 1, 0, 0, 0
+        else:
+            return
+        self.is_invoice, self.is_confirmed, self.is_cancelled, self.is_quotation = spread
+
     @property
     def order_type(self):
-        if self.is_confirmed:
-            order = 'salesorder'
-        elif self.is_invoice:
-            order = 'invoice'
-        else:
-            order = 'quotation'
-        return order
+        return self.status
+
+    @cached_property
+    def has_transaction(self):
+        return self.transaction_set.exists()
 
     @property
     def id_as_text(self):
@@ -77,12 +112,11 @@ def create_order_ids(sender, instance, created, **kwargs):
         SalesOrder.objects.filter(pk=instance.pk).update(order_id='QN' + f'{instance.pk}'.zfill(6))
     if instance.is_confirmed:
         print("changing order_id")
-        SalesOrder.objects.filter(pk=instance.pk).update(confirmed_date=datetime.now(), is_quotation=False,
-                                                         order_id='SO' + f'{instance.pk}'.zfill(6))
+        SalesOrder.objects.filter(pk=instance.pk).update(is_quotation=False)
     if instance.is_invoice and instance.is_confirmed:
         print("changing invoice_id")
-        SalesOrder.objects.filter(pk=instance.pk).update(invoice_date=datetime.now(), is_confirmed=False,
-                                                         invoice_id='INV' + f'{instance.pk}'.zfill(6))
+        SalesOrder.objects.filter(pk=instance.pk).update(is_confirmed=False,
+                                                         invoice_remaining_amount=instance.invoice_amount)
     # if instance.invoice_amount:
     #     print("credit status")
     #     SalesOrder.objects.filter(pk=instance.pk).update(invoice_status='credit')

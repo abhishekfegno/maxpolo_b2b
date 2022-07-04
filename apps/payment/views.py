@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DeleteView, UpdateView, ListView
 from django.views.generic.edit import FormMixin
 
-from apps.payment.forms import TransactionForm
+from apps.payment.forms import TransactionForm, TransactionUpdateForm
 from apps.payment.models import Transaction
 from lib.filters import PaymentFilter
 from lib.importexport import PaymentReport
@@ -24,12 +24,25 @@ def get_excel_report_payment(request):
     return response
 
 
-class TransactionDetailView(UpdateView):
-    queryset = Transaction.objects.select_related('order')
-    template_name = 'paper/payment/transaction_form.html'
+class TransactionDetailView(UpdateView, ListView):
+    queryset = Transaction.objects.select_related('order').order_by('created_at')
+    template_name = 'paper/payment/transaction_list.html'
     model = Transaction
-    form_class = TransactionForm
+    form_class = TransactionUpdateForm
     success_url = '/payment/transaction/list'
+
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, instance=self.get_object())
+        if form.is_valid():
+            try:
+                form.save()
+            except Exception as e:
+                print(str(e))
+                messages.add_message(request, messages.INFO, str(e))
+        else:
+            messages.add_message(request, messages.INFO, form.errors)
+        return redirect('transaction-list')
 
 
 class TransactionListView(FormMixin, ListView):

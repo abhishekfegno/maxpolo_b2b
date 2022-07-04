@@ -4,9 +4,11 @@
         <div class='card'>
             <div class='card-body'>
                 <div>
+                    {% if order_type %}
                     <a class="btn btn-primary" href="{% url 'get_excel_report_order' slug=order_type %}"
                        style="float:right;">Download Excel</a>
-                    <h3>{{ order_type }} List</h3>
+                    {% endif %}
+                    <h3>Confirmed List</h3>
                 </div>
                 <div>
                     {% include 'paper/catalogue/product_filter.html'%}
@@ -21,7 +23,7 @@
                         <tr class="">
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Created by</th>
+                            <th scope="col">Dealer Name</th>
                             <th scope="col">Ordered on</th>
                         </tr>
 
@@ -31,13 +33,16 @@
                         <tr>
                             <!--                    <td scope="row"> </td>-->
                             <td>
+                                {% if filter %}
+                                <div class="">{{ forloop.counter0|add:filter.start_index }}</div>
+                                {% else %}
                                 <div class="">{{ forloop.counter }}</div>
+                                {% endif %}                            </td>
+                            <td>
+                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.id_as_text }}</a></div>
                             </td>
                             <td>
-                                <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.order_id }}</a></div>
-                            </td>
-                            <td>
-                                <div class="">{{ object.dealer.get_full_name|default:object.dealer.email }}</div>
+                                <div class="">{{ object.dealer.get_full_name|default:"unknown" }}</div>
                             </td>
                             <td>
                                 <div class="">{{ object.confirmed_date }}</div>

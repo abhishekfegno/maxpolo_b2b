@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
+from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -11,7 +11,7 @@ from django.views.generic.edit import FormMixin, ModelFormMixin, ProcessFormView
 from rest_framework.authtoken.models import Token
 
 
-from apps.user.forms.banners_form import DealerUpdateForm, ExecutiveUpdateForm, AdminUpdateForm
+from apps.user.forms.banners_form import DealerUpdateForm, ExecutiveUpdateForm, AdminUpdateForm, UserCreationForm
 from apps.catalogue.models import Product, Brand
 from apps.order.models import SalesOrder
 from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm, AdminForm

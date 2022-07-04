@@ -9,6 +9,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView, GenericAPIView
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -179,7 +180,8 @@ class ComplaintListView(ListAPIView):
     ordering_fields = ()
     pagination_class = PageNumberPagination
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-    permission_classes = (permissions.IsAuthenticated, )
+    # permission_classes = (permissions.IsAuthenticated, )
+    parser_classes = (MultiPartParser, FileUploadParser)
 
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page_number', 1)
@@ -199,6 +201,7 @@ class ComplaintListView(ListAPIView):
         data = {}
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
+            # import pdb;pdb.set_trace()
             instance = serializer.save()
             if not instance.created_by:
                 instance.created_by = request.user
@@ -211,7 +214,7 @@ class ComplaintListView(ListAPIView):
 
 class HomePageAPI(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-    permission_classes = (permissions.IsAuthenticated, )
+    # permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         dealer_id = request.GET.get('dealer', request.user.id)
