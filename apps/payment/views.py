@@ -31,6 +31,11 @@ class TransactionDetailView(UpdateView, ListView):
     form_class = TransactionForm
     success_url = '/payment/transaction/list'
 
+
+    def get(self, request, *args, **kwargs):
+        # import pdb;pdb.set_trace()
+        return super().get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, instance=self.get_object())
         if form.is_valid():

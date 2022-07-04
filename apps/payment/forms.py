@@ -13,7 +13,7 @@ class TransactionForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         so_qs = SalesOrder.objects.filter(
             is_invoice=True, invoice_status__in=['credit', 'payment_partial']).select_related('dealer')
-        for s in so_qs:
-            s.__show_dealer_in_str__ = True
-            print(s)
+        # for s in so_qs:
+        #     s.__show_dealer_in_str__ = True
+        #     print(s)
         self.fields['order'].queryset = so_qs
