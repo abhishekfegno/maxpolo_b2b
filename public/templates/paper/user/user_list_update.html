@@ -23,12 +23,18 @@
                                 <div class="col-md-4">
                                     {{ form.last_name|as_crispy_field }}
                                 </div>
+                                <div class="col-md-4">
+                                    {{ form.branch|as_crispy_field }}
+                                </div>
                             </div>
                             <hr>
                         </div>
 
                         <div class="col-md-12">
                             <div class="row">
+                                <div class="col-md-4">
+                                    {{ form.username|as_crispy_field }}
+                                </div>
                                 <div class="col-md-4">
                                     {{ form.mobile|as_crispy_field }}
                                 </div>
@@ -44,21 +50,21 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="col-md-4">
-                                    {{ form.address_street|as_crispy_field }}
+                                    {{ form.company_cin|as_crispy_field }}
                                 </div>
                                 <div class="col-md-4">
-                                    {{ form.company_cin|as_crispy_field }}
+                                    {{ form.executive |as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{ form.address_street|as_crispy_field }}
                                 </div>
                                 <div class="col-md-4">
                                     {{ form.address_city|as_crispy_field }}
                                 </div>
                                 <div class="col-md-4">
                                     {{ form.address_state|as_crispy_field }}
-                                </div>
-                                <div class="col-md-4">
-                                    {% if executive %}
-                                    {{ form.dealer |as_crispy_field }}
-                                    {% endif %}
                                 </div>
                             </div>
                             <hr>
