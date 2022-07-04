@@ -56,9 +56,9 @@
         <!--          </div>-->
         {% elif order.is_invoice %}
         <div class="float-right ">
-            <form action="#" method="post">
+            <form action="#" method="get">
                 {% csrf_token %}
-                <a onclick="" href="#" class="btn btn-info "> Capture Invoice </a>
+                <a onclick="" href="{% url 'invoice-list' %}" class="btn btn-info "> Capture Invoice </a>
             </form>
         </div>
         {% else %}
@@ -186,7 +186,7 @@
                                         <div class="">
 
                                             {% if object.pk == order_line_item.pk %}
-                                            <a href="{% url 'invoice-list' %}" class="btn text-white btn-primary btn-sm"> Back to list </a>
+                                            <a href="{% url 'get_orderline' order_id=object.order.pk %}" class="btn text-white btn-primary btn-sm"> Change </a>
                                             {% elif not order.is_confirmed and not order.is_cancelled  %}
                                             <a href="{% url 'get_orderline_update' order_id=object.order.id pk=object.pk %}" class="btn text-white btn-success btn-sm">
                                                 <img src="{% static 'icons/edit.svg' %}" alt="" width="17">
