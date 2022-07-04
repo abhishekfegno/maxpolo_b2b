@@ -9,6 +9,7 @@ from treebeard.mp_tree import MP_Node
 
 
 # Create your models here.
+from apps.notification.events import NotificationEvent
 from apps.user.models import Dealer
 from lib.sent_email import EmailHandler
 
@@ -73,4 +74,5 @@ class Product(models.Model):
 def sent_email_pdf(sender, created, instance, **kwargs):
     recipients = [i for i in Dealer.objects.all().values('email', 'first_name')]
     if created:
-        EmailHandler().sent_mail_for_banners(recipients, instance)
+        EmailHandler().event_for_pdfs(recipients, instance)
+        NotificationEvent().event_for_pdfs(instance)

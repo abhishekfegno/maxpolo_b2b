@@ -224,21 +224,23 @@ class SalesOrderDeleteView(DeleteView):
 
 class QuotationDetailView(UpdateView):
     queryset = SalesOrder.objects.all().filter().select_related('dealer').prefetch_related('line').order_by('-created_at')
-    template_name = 'paper/order/quotation_list.html'
+    template_name = 'paper/order/salesorder_list.html'
     model = SalesOrder
     form_class = QuotationUpdateForm
 
     def post(self, request, *args, **kwargs):
         try:
-            super().post(request, *args, **kwargs)
             if request.FILES:
                 inv = self.get_object()
                 inv.invoice_pdf = request.FILES.get('invoice_pdf')
                 print(inv.confirmed_date)
                 inv.save()
         except Exception as e:
+            print(str(e))
             messages.add_message(request, messages.ERROR, str(e))
+        # import pdb;pdb.set_trace()
         return redirect('salesorder-list')
+
 
     def form_invalid(self, form):
         return super().form_invalid(form)

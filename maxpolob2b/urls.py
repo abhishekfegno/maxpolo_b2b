@@ -47,6 +47,7 @@ urlpatterns = [
         path('user/', include('apps.user.api.urls')),
         path('order/', include('apps.order.api.urls')),
         path('payment/', include('apps.payment.api.urls')),
+        path('notification/', include('apps.notification.api.urls')),
         path('tracking/', include('apps.executivetracking.api_urls')),
     ])),
     path('__debug__/', include(debug_toolbar.urls)),
