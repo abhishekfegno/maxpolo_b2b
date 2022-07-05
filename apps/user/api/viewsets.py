@@ -27,7 +27,6 @@ from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
 
 
 class ExeDealerMixin(object):
-    
     def get_dealer_id(self):
         if 'dealer_id' in self.request.GET:
             return self.request.GET['dealer_id']
@@ -199,6 +198,7 @@ class ComplaintListView(ExeDealerMixin, ListAPIView):
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page_number', 1)
         page_size = request.GET.get('page_size', 20)
+
 
         serializer = self.get_serializer(self.get_queryset().filter(created_by_id=self.get_dealer_id()), many=True, context={'request': request})
         queryset = self.filter_queryset(self.get_queryset())

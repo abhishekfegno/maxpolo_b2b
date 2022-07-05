@@ -1,6 +1,13 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from rest_framework.permissions import BasePermission
 
 from apps.user.models import Role
+
+
+class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+
+    def test_func(self):
+        return self.request.user.is_superuser
 
 
 class IsAdmin(BasePermission):

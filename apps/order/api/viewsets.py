@@ -126,6 +126,7 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
             # print(queryset)
             filt = {k: v for k, v in self.request.query_params.items() if k not in ('dealer_id', )}
             # import pdb;pdb.set_trace()
+            # print(queryset.filter(**filt))
             return queryset.filter(**filt)
         return queryset.filter(dealer=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
 
