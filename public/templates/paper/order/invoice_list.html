@@ -43,7 +43,7 @@
                                 <div class="">{{ object.dealer.get_full_name|default:"unknown"  }}</div>
                             </td>
                             <td>
-                                <div class="">{{ object.invoice_date }}</div>
+                                <div class="">{{ object.invoice_date|date:"D d M Y" }}</div>
                             </td>
 
                         </tr>
