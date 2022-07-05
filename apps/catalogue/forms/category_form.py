@@ -18,3 +18,7 @@ class PDFForm(forms.ModelForm):
     class Meta:
         model = PDF
         fields = ('title', 'file', 'image', 'category')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['category'].queryset = Category.objects.filter(numchild=0)
