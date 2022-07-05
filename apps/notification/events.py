@@ -4,7 +4,7 @@ from .models import Notification
 
 class NotificationEvent(EventHandler):
     def event_for_banners(self, instance):
-        # return None
+        return None
         from apps.user.models import Dealer
         user_id = [i for i in Dealer.objects.all()]
         title = "Advertisements have created"
@@ -20,18 +20,19 @@ class NotificationEvent(EventHandler):
         description = f"Your have created a complaint {instance.ticket_id}, we will check it and resolve as soon as possible"
         return Notification.objects.create(title=title, description=description, user=instance.created_by)
 
-    def event_for_orders(self, instance,message):
+    def event_for_orders(self, instance, message):
         # return None
         title = f"Dear {instance.dealer}!! Your order {instance.id_as_text} has been placed"
         description = "You have created a order, we will verify and notify you the order confirmation.Thank You !!"
         return Notification.objects.create(title=title, description=description, user=instance.dealer)
 
     def event_for_pdfs(self, instance):
-        # return None
+        return None
         from apps.user.models import Dealer
         user_id = [i for i in Dealer.objects.all()]
         title = "New Products have been launched"
         description = "New Products have been launched,Check the new products"
         title_list = [i for i in len(user_id)*title]
         description_list = [i for i in len(user_id)*description]
+
         return Notification.objects.bulk_create(title=title_list, description=description_list, user=user_id)
