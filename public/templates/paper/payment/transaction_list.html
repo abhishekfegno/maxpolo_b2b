@@ -33,10 +33,10 @@
                                 <div class="">{{ forloop.counter }}</div>
                                 {% endif %}                            </td>
                             <td>
-                                <div class=""><a href="">{{object_item.order.invoice_id | default: object.order.id_as_text }}</a></div>
+                                <div class=""><a href="">{{object_item.order.invoice_id | default: object_item.order.id_as_text }}</a></div>
                             </td>
                             <td>
-                                <div class="">{{object_item.order.dealer.get_full_name | default: object.order.dealer.email  }}</div>
+                                <div class="">{{object_item.order.dealer.get_full_name | default: object_item.order.dealer.email  }}</div>
                             </td>
                             <td>
                                 <div class="">{{ object_item.created_at }}</div>
