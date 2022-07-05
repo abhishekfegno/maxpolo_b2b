@@ -19,7 +19,7 @@ from apps.catalogue.models import Product
 from apps.order.forms.salesorder_form import QuotationForm, QuotationLineForm, QuotationUpdateForm, InvoiceUpdateForm, \
     SalesOrderUpdateForm, InvoiceAmountForm, InvoiceForm, TransactionCreateForm
 from apps.order.models import SalesOrder, SalesOrderLine
-from apps.payment.models import QuantityInvalidException, Transaction
+from apps.payment.models import QuantityInvalidException, Transaction, AmountMissMatchException
 from lib.filters import OrderFilter
 from lib.importexport import OrderReport
 
@@ -285,6 +285,9 @@ class QuotationDetailView(UpdateView):
     def post(self, request, *args, **kwargs):
         try:
             invoice_id = request.POST.get('invoice_id')
+            invoice_amount = request.POST.get('invoice_amount', 1)
+            if int(invoice_amount) <= 0:
+                raise AmountMissMatchException("Invoice Amount Invalid  !!!")
             if invoice_id and SalesOrder.objects.filter(invoice_id=invoice_id).exists():
                 raise QuantityInvalidException("Invoice with invoice id already exists !!!")
             if request.FILES:
@@ -295,6 +298,7 @@ class QuotationDetailView(UpdateView):
         except Exception as e:
             print(str(e))
             messages.add_message(request, messages.ERROR, str(e))
+            return redirect('salesorder-list')
         return super().post(request, *args, **kwargs)
 
 
