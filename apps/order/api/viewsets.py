@@ -124,8 +124,9 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
         if self.request.user.user_role == 16:
             dealer = self.request.query_params.get('dealer_id')
             # print(queryset)
-            return queryset.filter(dealer_id=dealer).filter(
-                **{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
+            filt = {k: v for k, v in self.request.query_params.items()}
+            # import pdb;pdb.set_trace()
+            return queryset.filter(dealer_id=dealer).filter(**filt)
         return queryset.filter(dealer=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
 
     def list(self, request, *args, **kwargs):
