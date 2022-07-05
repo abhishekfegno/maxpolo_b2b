@@ -25,6 +25,10 @@ from apps.user.models import User, Complaint, Banners, Dealer
 from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
 
+class ExeDealerMixin(object):
+    def get_dealer(self):
+        self.request.GET.get()
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginAPIView(GenericAPIView):
@@ -62,8 +66,8 @@ class LoginAPIView(GenericAPIView):
         serializer = self.get_serializer(data=data)
         if serializer.is_valid():
             try:
-                u = User.objects.get(email=data['email']).username
-                user = authenticate(request, username=u, password=data['password'])
+                # u = User.objects.get(email=data['email']).username
+                user = authenticate(request, username=data['username'], password=data['password'])
                 login(request, user)
                 out['user'] = {
                     "id": user.id,
