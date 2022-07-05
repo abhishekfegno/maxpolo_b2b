@@ -131,4 +131,4 @@ class OrderDetailSerializer(serializers.ModelSerializer):
         model = SalesOrder
         fields = ('id', 'order_id', 'invoice_id', 'invoice_status', 'invoice_date', 'invoice_amount',
                   'invoice_remaining_amount', 'confirmed_date', 'is_invoice', 'is_cancelled', 'is_confirmed',
-                  'is_quotation', 'dealer', 'created_at', 'dealer', 'status', 'line', 'transactions')
+                  'is_quotation', 'dealer', 'created_at', 'dealer', 'line', 'transactions')
