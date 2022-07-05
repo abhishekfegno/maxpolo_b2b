@@ -8,6 +8,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.functional import cached_property
 
+from apps.notification.events import NotificationEvent
+from lib.sent_email import EmailHandler
+
 INVOICE_STATUS = (
     ('new', 'New'),
     ('credit', 'Credit'),
@@ -120,12 +123,21 @@ class SalesOrderLine(models.Model):
 @receiver(post_save, sender=SalesOrder)
 def create_order_ids(sender, instance, created, **kwargs):
     if created:
+        message = f"Dear {instance.dealer}!! Your order {instance.id_as_text} has been placed"
+        EmailHandler().event_for_orders(instance)
+        NotificationEvent().event_for_orders(instance, message)
         SalesOrder.objects.filter(pk=instance.pk).update(order_id='QN' + f'{instance.pk}'.zfill(6))
     if instance.is_confirmed:
         print("changing order_id")
+        message = f"Dear {instance.dealer}!! Your order {instance.id_as_text} has been  has been confirmed"
+        EmailHandler().event_for_orders(instance)
+        NotificationEvent().event_for_orders(instance, message)
         SalesOrder.objects.filter(pk=instance.pk).update(is_quotation=False)
     if instance.is_invoice and instance.is_confirmed:
         print("changing invoice_id")
+        message = f"Dear {instance.dealer}!! Your order {instance.id_as_text} has been invoiced"
+        EmailHandler().event_for_orders(instance)
+        NotificationEvent().event_for_orders(instance, message)
         SalesOrder.objects.filter(pk=instance.pk).update(is_confirmed=False,
                                                          invoice_remaining_amount=instance.invoice_amount)
     # if instance.invoice_amount:

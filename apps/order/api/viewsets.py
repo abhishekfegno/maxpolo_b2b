@@ -135,7 +135,6 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
             page_number = paginator.num_pages
         page_obj = paginator.get_page(page_number)
         serializer = self.get_serializer(page_obj.object_list, many=True, context={'request': request})
-        print(serializer.data)
         return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=serializer.data))
 
 

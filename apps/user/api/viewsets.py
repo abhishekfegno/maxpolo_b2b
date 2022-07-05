@@ -201,12 +201,8 @@ class ComplaintListView(ListAPIView):
         data = {}
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            # import pdb;pdb.set_trace()
-            instance = serializer.save()
-            if not instance.created_by:
-                instance.created_by = request.user
-                instance.save()
-            EmailHandler().sent_mail_complaint(instance)
+            serializer.validated_data['created_by'] = request.user
+            serializer.save()
         else:
             data['errors'] = serializer.errors
         return Response(data)
