@@ -36,6 +36,7 @@ class OrderSerializer(serializers.ModelSerializer):
     dealer = serializers.SerializerMethodField()
     timeline = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
+    transaction = serializers.SerializerMethodField()
 
     def get_status(self, instance):
         return self.status
