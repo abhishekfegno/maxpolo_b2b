@@ -39,7 +39,7 @@ class OrderSerializer(serializers.ModelSerializer):
     transaction = serializers.SerializerMethodField()
 
     def get_status(self, instance):
-        return self.status
+        return instance.status
     
     def get_dealer(self, instance):
         if instance.dealer:
