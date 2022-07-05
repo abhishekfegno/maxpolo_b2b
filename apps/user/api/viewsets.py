@@ -25,9 +25,13 @@ from apps.user.models import User, Complaint, Banners, Dealer
 from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
 
+
 class ExeDealerMixin(object):
-    def get_dealer(self):
-        self.request.GET.get()
+    
+    def get_dealer_id(self):
+        if 'dealer_id' in self.request.GET:
+            return self.request.GET['dealer_id']
+        return self.request.user.id
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -68,6 +72,11 @@ class LoginAPIView(GenericAPIView):
             try:
                 # u = User.objects.get(email=data['email']).username
                 user = authenticate(request, username=data['username'], password=data['password'])
+                if user is None:
+                    return Response({
+                        "status": "Unauthorized!!! "
+                    }, status=status.HTTP_401_UNAUTHORIZED)
+
                 login(request, user)
                 out['user'] = {
                     "id": user.id,
@@ -117,15 +126,15 @@ class DealerListView(ListAPIView):
         return Dealer.objects.all().filter(executive=self.request.user)
 
 
-class ProfileAPIView(GenericAPIView):
+class ProfileAPIView(ExeDealerMixin, GenericAPIView):
     queryset = User.objects.all().select_related('branch').prefetch_related('dealers')
     serializer_class = ProfileAPISerializer
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     permission_classes = (permissions.IsAuthenticated, )
-
+    
     def get(self, request, *args, **kwargs):
         try:
-            serializer = self.get_serializer(self.get_queryset().get(id=request.user.id)).data
+            serializer = self.get_serializer(self.get_queryset().get(id=self.get_dealer_id())).data
             result = serializer
         except Exception as e:
             result = {str(e)}
@@ -169,7 +178,7 @@ class PasswordResetView(GenericAPIView):
         return Response(result)
 
 
-class ComplaintListView(ListAPIView):
+class ComplaintListView(ExeDealerMixin, ListAPIView):
     """
         {
             "title":"asdf",
@@ -186,11 +195,6 @@ class ComplaintListView(ListAPIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     # permission_classes = (permissions.IsAuthenticated, )
     parser_classes = (MultiPartParser, FileUploadParser)
-
-    def get_dealer_id(self):
-        if 'dealer_id' in self.request.GET:
-            return self.request.GET['dealer_id']
-        return self.request.user.id
 
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page_number', 1)
@@ -218,19 +222,19 @@ class ComplaintListView(ListAPIView):
         return Response(data)
 
 
-class HomePageAPI(APIView):
+class HomePageAPI(ExeDealerMixin, APIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     # permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
-        dealer_id = request.GET.get('dealer', request.user.id)
+        # dealer_id = request.GET.get('dealer', request.user.id)
         advertisements = AdvertisementSerializer(Banners.objects.all(), many=True, context={'request': request}).data
         pdf = ProductPDFSerializer(PDF.objects.select_related('category')[:6], many=True, context={'request': request}).data
         upcoming_payments = UpcomingPaymentSerializer(
             SalesOrder.objects.filter(
-                is_invoice=True, dealer_id=dealer_id, invoice_status__in=['payment_partial', 'credit']),
+                is_invoice=True, dealer_id=self.get_dealer_id(), invoice_status__in=['payment_partial', 'credit']),
             many=True, context={'request': request}).data
-        dealer = Dealer.objects.all().filter(pk=dealer_id).first()
+        dealer = Dealer.objects.all().filter(pk=self.get_dealer_id()).first()
         result = {
             "banners": advertisements,
             "new arrival": pdf,
