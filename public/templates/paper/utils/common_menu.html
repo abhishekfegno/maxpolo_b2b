@@ -113,10 +113,20 @@
             </div>
         </li>
         <li>
-            <a href="{% url 'complaint-list' %}">
-                <i class=""></i>
-                <span>Claims</span>
+            <a aria-controls="navbar-claims" aria-expanded="true" class="collapsed show" data-toggle="collapse"
+               href="#navbar-claims">
+                <i class="ni ni-archive-2"></i>
+                <p> Claims <b class="caret"></b></p>
             </a>
+            <div class="collapse show" id="navbar-claims" style="">
+                <ul class="nav">
+                    <li>
+                        <a href="{% url 'complaint-list' %}">
+                            <i aria-hidden="true" class="fa fa-book"></i><span class="sidebar-normal">Claims</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </li>
         <li class="li ">
             <a aria-controls="navbar-user-roles" aria-expanded="true" class="collapsed show" data-toggle="collapse"

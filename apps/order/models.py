@@ -41,9 +41,9 @@ class SalesOrder(models.Model):
 
     def __str__(self):
         if self.invoice_id:
-            if self.__show_dealer_in_str__:
-                return f"{self.invoice_id} - {self.dealer.get_full_name()}"
-            return self.invoice_id
+            # if self.__show_dealer_in_str__:
+            return f"{self.invoice_id} - {self.dealer.get_full_name()}"
+            # return self.invoice_id
         return self.order_id
 
     QUOTATION = "quotation"
