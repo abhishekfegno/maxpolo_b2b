@@ -144,8 +144,6 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
         serializer = self.get_serializer(page_obj.object_list, many=True, context={'request': request})
         return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=serializer.data))
 
-
-
     def post(self, request, *args, **kwargs):
         data = {}
         self.serializer_class = self.get_serializer_class()
