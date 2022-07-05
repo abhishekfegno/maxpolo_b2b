@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Sum
@@ -141,6 +142,7 @@ def get_excel_report_order(request, slug):
     return response
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def cancelled_order(request):
     queryset = SalesOrder.objects.all().filter(is_cancelled=True).select_related('dealer')
     context = {}
@@ -216,7 +218,7 @@ class CreditListView(ListView):
         'order_type': 'credit'
     }
 
-    
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class SalesOrderListView(FormMixin, ListView):
     queryset = SalesOrder.objects.all().filter(is_confirmed=True, is_invoice=False).select_related('dealer').order_by('-confirmed_date')
     template_name = 'paper/order/salesorder_list.html'
@@ -275,6 +277,7 @@ class SalesOrderDeleteView(DeleteView):
         print(self.get_object().delete())
         return redirect('salesorder-list')
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 
 class QuotationDetailView(UpdateView):
     queryset = SalesOrder.objects.all().filter().select_related('dealer').prefetch_related('line').order_by('-created_at')
@@ -308,6 +311,7 @@ class QuotationDetailView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('get_orderline', kwargs={'order_id': self.kwargs['pk']})
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 
 class QuotationListView(FormMixin, ListView):
     queryset = SalesOrder.objects.all().filter(is_quotation=True, is_cancelled=False, is_confirmed=False,
@@ -399,6 +403,7 @@ class InvoiceDetailView(UpdateView):
     form_class = InvoiceForm
     success_url = '/order/invoice/list'
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 
 class InvoiceListView(FormMixin, ListView):
     queryset = SalesOrder.objects.all().filter(is_invoice=True).select_related('dealer').order_by('-invoice_date')

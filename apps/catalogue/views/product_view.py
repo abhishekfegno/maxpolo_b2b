@@ -1,6 +1,7 @@
 # New file created
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
@@ -14,6 +15,7 @@ from apps.catalogue.models import Product
 from lib.filters import ProductFilter
 
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class ProductDetailView(UpdateView, ListView):
     queryset = Product.objects.all().select_related('brand', 'category').order_by('-id')
     template_name = 'paper/catalogue/product_list.html'
@@ -43,6 +45,7 @@ class ProductDetailView(UpdateView, ListView):
         return context
 
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class ProductListView(FormMixin, ListView):
     queryset = Product.objects.all().select_related('brand', 'category').order_by('-id')
     template_name = 'paper/catalogue/product_list.html'

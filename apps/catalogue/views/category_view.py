@@ -3,6 +3,7 @@ import os
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 from django.http import FileResponse, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
@@ -16,6 +17,7 @@ from apps.catalogue.models import Category, PDF
 from lib.sent_email import EmailHandler
 
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class CategoryListView(ModelFormMixin, ListView, ProcessFormView):
     queryset = Category.get_root_nodes()
     template_name = 'paper/catalogue/category_list.html'
@@ -53,6 +55,7 @@ class CategoryListView(ModelFormMixin, ListView, ProcessFormView):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class CategoryDeleteView(DeleteView):
     queryset = Category.objects.all()
     template_name = 'paper/catalogue/category_delete.html'
@@ -65,6 +68,7 @@ class CategoryDeleteView(DeleteView):
         return redirect('category-list')
 
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class PDFListView(UpdateView, ListView):
     queryset = PDF.objects.all()
     template_name = 'paper/catalogue/pdf_list.html'
@@ -92,6 +96,7 @@ class PDFListView(UpdateView, ListView):
         return redirect('pdf-list')
 
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class PDFDetailView(UpdateView):
     queryset = PDF.objects.all()
     template_name = 'paper/catalogue/pdf_form.html'

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -24,6 +25,7 @@ def get_excel_report_payment(request):
     return response
 
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class TransactionDetailView(UpdateView, ListView):
     queryset = Transaction.objects.select_related('order').order_by('created_at')
     template_name = 'paper/payment/transaction_list.html'
@@ -45,6 +47,7 @@ class TransactionDetailView(UpdateView, ListView):
         return redirect('transaction-list')
 
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class TransactionListView(FormMixin, ListView):
     queryset = Transaction.objects.select_related('order').order_by('created_at')
     template_name = 'paper/payment/transaction_list.html'

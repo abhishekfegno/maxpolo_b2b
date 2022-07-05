@@ -1,5 +1,6 @@
 # New file created
 from django.conf import settings
+from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -23,6 +24,7 @@ def get_excel_report_complaint(request):
     return response
 
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class ComplaintDetailView(UpdateView):
     """
         {
@@ -40,6 +42,7 @@ class ComplaintDetailView(UpdateView):
     success_url = '/complaint/list'
 
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class ComplaintListView(CreateView, ListView):
     queryset = Complaint.objects.all()
     template_name = 'paper/user/complaint_list.html'

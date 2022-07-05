@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
@@ -12,6 +13,7 @@ from apps.user.models import Banners
 from lib.sent_email import EmailHandler
 
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class BannersDetailView(UpdateView, ListView):
 	queryset = Banners.objects.all()
 	template_name = 'paper/user/banners_list.html'
@@ -31,6 +33,7 @@ class BannersDetailView(UpdateView, ListView):
 		return redirect('banners-list')
 
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class BannersListView(CreateView, ListView):
 	queryset = Banners.objects.all()
 	template_name = 'paper/user/banners_list.html'

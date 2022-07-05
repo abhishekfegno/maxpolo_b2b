@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect
@@ -19,6 +20,7 @@ from apps.user.models import Banners, User, Dealer, Executive, Role, Complaint
 from lib.token_handler import token_expire_handler, is_token_expired
 
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class IndexView(TemplateView):
     template_name = 'paper/index.html'
 
@@ -64,6 +66,7 @@ class UserDetailView(UpdateView):
         return redirect('user-list', role=role)
 
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class UserListView(ModelFormMixin, SuccessMessageMixin, ListView, ProcessFormView):
     queryset = User.objects.all()
     template_name = 'paper/user/user_list.html'

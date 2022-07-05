@@ -16,6 +16,7 @@ from apps.catalogue.models import Brand
 from lib.permissions import IsAdmin, SuperUserRequiredMixin
 
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class BrandDetailView(SuperUserRequiredMixin, UpdateView, ListView):
     queryset = Brand.objects.all()
     template_name = 'paper/catalogue/brand_list.html'
@@ -27,7 +28,8 @@ class BrandDetailView(SuperUserRequiredMixin, UpdateView, ListView):
     }
 
 
-class BrandListView(SuperUserRequiredMixin, CreateView, ListView):
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
+class BrandListView(CreateView, ListView):
     queryset = Brand.objects.all()
     template_name = 'paper/catalogue/brand_list.html'
     model = Brand

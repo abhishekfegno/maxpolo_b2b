@@ -70,6 +70,7 @@ class LoginAPIView(GenericAPIView):
             try:
                 # u = User.objects.get(email=data['email']).username
                 user = authenticate(request, username=data['username'], password=data['password'])
+                # import pdb;pdb.set_trace()
                 login(request, user)
                 out['user'] = {
                     "id": user.id,
