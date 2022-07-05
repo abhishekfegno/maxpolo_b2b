@@ -66,7 +66,7 @@ class QuotationUpdateForm(forms.ModelForm):
         model = SalesOrder
         fields = ('is_confirmed', 'is_cancelled', 'is_quotation', 'is_invoice', 'invoice_id',
                   'invoice_status', 'invoice_amount', 'invoice_remaining_amount',
-                  'confirmed_date', 'invoice_date')
+                  'confirmed_date', 'invoice_date', 'invoice_pdf')
 
 
 class SalesOrderUpdateForm(forms.ModelForm):
@@ -96,7 +96,7 @@ class InvoiceUpdateForm(forms.ModelForm):
 class InvoiceAmountForm(forms.ModelForm):
     class Meta:
         model = SalesOrder
-        fields = ('invoice_amount',)
+        fields = ('invoice_amount', 'invoice_pdf')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

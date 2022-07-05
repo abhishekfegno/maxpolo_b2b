@@ -3,7 +3,7 @@ from django_filters import FilterSet
 from apps.catalogue.models import Product
 from apps.order.models import SalesOrder
 from apps.payment.models import Transaction
-from apps.user.models import Complaint
+from apps.user.models import Complaint, Dealer
 
 
 class ProductFilter(FilterSet):
@@ -26,7 +26,8 @@ class OrderFilter(FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # self.filters['order_id__icontains'].label = 'Reference ID'
-        # self.filters['dealer'].label = 'Dealer'
+        self.filters['dealer'].label = 'Dealer'
+        self.filters['dealer'].queryset = Dealer.objects.all()
 
 
 class PaymentFilter(FilterSet):

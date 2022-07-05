@@ -15,6 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView, DeleteView, ListView
 from django.views.generic.edit import FormMixin, ModelFormMixin, ProcessFormView, CreateView
 from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.views import FilterView
 
 from apps.catalogue.models import Product
 from apps.order.forms.salesorder_form import QuotationForm, QuotationLineForm, QuotationUpdateForm, InvoiceUpdateForm, \
@@ -150,7 +151,6 @@ def cancelled_order(request):
     page_size = request.GET.get('page_size', 10)
     queryset = OrderFilter(request.GET, queryset=queryset)
     context['filter_form'] = queryset.form
-    # import pdb;pdb.set_trace()
     paginator = Paginator(queryset.qs, page_size)
     try:
         page_number = paginator.validate_number(page_number)
@@ -210,13 +210,18 @@ class CreditListView(ListView):
     queryset = SalesOrder.objects.all().filter(is_invoice=True, invoice_remaining_amount__gt=0).select_related('dealer').order_by('invoice_date')
     template_name = 'paper/order/credit_list.html'
     filtering_backends = (DjangoFilterBackend, )
-    filtering_class = OrderFilter
-    filterset_fields = ('order_id', )
+    filterset_class = OrderFilter
+    # filterset_fields = ('order_id', )
     success_url = reverse_lazy('credit-list')
     extra_context = {
         "breadcrumbs": settings.BREAD.get('credit-list'),
         'order_type': 'credit'
     }
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        object_list = OrderFilter(self.request.GET, queryset=self.get_queryset())
+        return super(CreditListView, self).get_context_data(object_list=object_list, **kwargs)
+
 
 @method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class SalesOrderListView(FormMixin, ListView):
@@ -289,6 +294,7 @@ class QuotationDetailView(UpdateView):
         try:
             invoice_id = request.POST.get('invoice_id')
             invoice_amount = request.POST.get('invoice_amount', 1)
+            invoice_pdf = request.POST.get('invoice_pdf', 1)
             if int(invoice_amount) <= 0:
                 raise AmountMissMatchException("Invoice Amount Invalid  !!!")
             if invoice_id and SalesOrder.objects.filter(invoice_id=invoice_id).exists():
@@ -437,7 +443,6 @@ class InvoiceListView(FormMixin, ListView):
         filter = paginator.get_page(page_number)
         context['filter'] = filter
         return context
-
 
     def post(self, request, *args, **kwargs):
         form = InvoiceForm(request.POST)
