@@ -12,9 +12,15 @@ from rest_framework.permissions import BasePermission
 
 from apps.catalogue.forms.brand_form import BrandForm
 from apps.catalogue.models import Brand
+from lib.permissions import IsAdmin
 
 
-@method_decorator(permission_required(BasePermission), name='dispatch')
+def issuperuser(request):
+    from apps.user.models import Role
+    return bool(request.user and request.user.is_superuser)
+
+
+# @method_decorator(user_passes_test(issuperuser), name='dispatch')
 class BrandDetailView(UpdateView, ListView):
     queryset = Brand.objects.all()
     template_name = 'paper/catalogue/brand_list.html'
