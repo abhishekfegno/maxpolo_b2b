@@ -28,7 +28,7 @@ class SalesOrder(models.Model):
 
     invoice_status = models.CharField(max_length=20, choices=INVOICE_STATUS, default='new')
     invoice_amount = models.FloatField(default=0.0)
-    invoice_remaining_amount = models.FloatField(default=0.1)  # must be set to 0.1 for programming purpose
+    invoice_remaining_amount = models.FloatField(default=0)
     invoice_pdf = models.FileField(upload_to='invoice/', validators=[FileExtensionValidator(['pdf'])], blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
@@ -90,6 +90,17 @@ class SalesOrder(models.Model):
     @property
     def total_line_quantity(self):
         return self.line.all().aggregate(total_quantity=Sum('quantity')).values()
+
+    def recalculate_remaining(self):
+        net_paid_amount = self.transaction_set.all().exclude(status='cancelled').aggeregate(sum=Sum('amount'))['sum'] or 0
+        self.invoice_remaining_amount = max(self.invoice_amount - net_paid_amount, 0)
+        if self.invoice_remaining_amount == self.invoice_amount:
+            self.status = 'credit'
+        elif self.invoice_remaining_amount == 0:
+            self.status = 'payment_done'
+        else:
+            self.status = 'payment_partial'
+        self.save()
 
     def save(self, **kwargs):
         if self.is_confirmed and self.is_cancelled:

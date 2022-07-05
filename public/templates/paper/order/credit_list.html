@@ -1,13 +1,11 @@
-{% extends 'paper/layout.html' %}
-{% load crispy_forms_tags %}
-{% block content%}{% include 'paper/htmx.html' %}
+{% extends 'paper/layout.html' %}{% load crispy_forms_tags %}{% block content%}{% include 'paper/htmx.html' %}
 <div class='row'>
 
     <div class='col-md-7'>
         <div class='card'>
             <div class='card-body'>
                 <div>
-                    <a class="btn btn-primary" href="{% url 'get_excel_report_order' slug=order_type %}"
+                    <a class="btn btn-primary" href="{% url 'get_excel_report_order' slug=order_type %}?filter={{ request.GET }}"
                        style="float:right;">Download Excel</a>
                     <h3>Invoiced List</h3>
                 </div>
@@ -24,6 +22,7 @@
                             <th scope="col">Invoice ID</th>
                             <th scope="col">Dealer</th>
                             <th scope="col">Invoice Date</th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -31,11 +30,12 @@
                         <tr>
                             <!--                    <td scope="row"> </td>-->
                             <td>
-                                 {% if filter %}
+                                {% if filter %}
                                 <div class="">{{ forloop.counter0|add:filter.start_index }}</div>
                                 {% else %}
                                 <div class="">{{ forloop.counter }}</div>
-                                {% endif %}                            </td>
+                                {% endif %}
+                            </td>
                             <td>
                                 <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{object.invoice_id | default:object.id_as_text }}</a></div>
                             </td>
@@ -44,6 +44,9 @@
                             </td>
                             <td>
                                 <div class="">{{ object.invoice_date }}</div>
+                            </td>
+                            <td>
+                                <a href="{% url '' %}" class="btn btn-link">Mark a Transaction</a>
                             </td>
 
                         </tr>

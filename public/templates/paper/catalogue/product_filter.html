@@ -4,14 +4,12 @@
         <hr>
         <form class="" id="listing-table-search-form" method="GET">
             <div class="row">
+                <div class="col-md-12">
                 {% for field in filter_form %}
-                <div class="col-md-4">
                     {{ field | as_crispy_field }}
-                </div>
                 {% endfor %}
-                <div class="col-md-4">
-                    <input class='btn btn-success pull-right' style="float:right; margin-top:24px;" type="submit"
-                           value='Search'>
+                <input class='btn btn-success pull-right' style="float:right; margin-top:24px;" type="submit"
+                       value='Search'>
                 </div>
             </div>
         </form>

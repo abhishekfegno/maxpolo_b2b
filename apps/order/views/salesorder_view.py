@@ -3,22 +3,23 @@ from datetime import datetime
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Sum
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView, DeleteView, ListView
-from django.views.generic.edit import FormMixin
+from django.views.generic.edit import FormMixin, ModelFormMixin, ProcessFormView, CreateView
 from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.catalogue.models import Product
 from apps.order.forms.salesorder_form import QuotationForm, QuotationLineForm, QuotationUpdateForm, InvoiceUpdateForm, \
-    SalesOrderUpdateForm, InvoiceAmountForm, InvoiceForm
+    SalesOrderUpdateForm, InvoiceAmountForm, InvoiceForm, TransactionCreateForm
 from apps.order.models import SalesOrder, SalesOrderLine
-from apps.payment.models import QuantityInvalidException
+from apps.payment.models import QuantityInvalidException, Transaction
 from lib.filters import OrderFilter
 from lib.importexport import OrderReport
 
@@ -126,6 +127,14 @@ def get_excel_report_order(request, slug):
     if slug.lower() == 'invoice':
         queryset = SalesOrder.objects.filter(is_invoice=True)
         name = slug
+    if slug.lower() == 'credit':
+        queryset = SalesOrder.objects.filter(is_invoice=True, invoice_remaining_amount__gt=0)
+        name = slug
+    try:
+        queryset = queryset.filter(**request.GET)
+    except Exception as e:
+        pass
+    
     dataset = OrderReport().export(queryset)
     response = HttpResponse(dataset.xlsx, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = f'attachment; filename="{name}.xls"'
@@ -171,7 +180,43 @@ class SalesOrderDetailView(UpdateView):
     #     return super().post(request, *args, **kwargs)
 
 
+class TransactionCreateView(CreateView):
+    extra_context = {
+        'breadcrumbs': settings.BREAD.get('transaction-create'),
+        'credit_invoices': SalesOrder.objects.all().filter(is_invoice=True, invoice_remaining_amount__gt=0).select_related('dealer').order_by('invoice_date')
+    }
+    model = Transaction
+    form_class = TransactionCreateForm
+    success_url = reverse_lazy('credit-list')
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['order'] = self.get_object(self.extra_context['credit_invoices'])
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        msg = f"Your Transaction for amount Rs. {form.instance.amount}/- has been created against {form.instance.order.id_as_text}. "
+        messages.success(self.request, msg)
+        if form.instance.amount_balance > 0:
+            msg = f"Payment for Rs. {form.instance.amount_balance} remaining."
+            messages.info(self.request, msg)
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class CreditListView(ListView):
+    queryset = SalesOrder.objects.all().filter(is_invoice=True, invoice_remaining_amount__gt=0).select_related('dealer').order_by('invoice_date')
+    template_name = 'paper/order/credit_list.html'
+    filtering_backends = (DjangoFilterBackend, )
+    filtering_class = OrderFilter
+    filterset_fields = ('order_id', )
+    success_url = reverse_lazy('credit-list')
+    extra_context = {
+        "breadcrumbs": settings.BREAD.get('credit-list'),
+        'order_type': 'credit'
+    }
+
+    
 class SalesOrderListView(FormMixin, ListView):
     queryset = SalesOrder.objects.all().filter(is_confirmed=True, is_invoice=False).select_related('dealer').order_by('-confirmed_date')
     template_name = 'paper/order/salesorder_list.html'

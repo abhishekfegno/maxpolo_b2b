@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -84,7 +85,7 @@ class Transaction(models.Model):
 
 
 @receiver(post_save, sender=Transaction)
-def invoice_amount_update(sender, created, instance, **kwargs):
+def invoice_amount_update(sender, instance, created, **kwargs):
     if created:
         actual_inv_amount = instance.order.invoice_amount
         remaining_amount = instance.order.invoice_remaining_amount
@@ -119,5 +120,11 @@ def invoice_amount_update(sender, created, instance, **kwargs):
 
         SalesOrder.objects.filter(pk=instance.order.pk).update(invoice_remaining_amount=remaining_amount,
                                                                invoice_status=status)
+
         Transaction.objects.filter(pk=instance.pk).update(amount_balance=remaining_amount, status=status)
+    elif instance.status == "cancelled":
+        instance.order.recalculate_remaining()
+
+
+
 

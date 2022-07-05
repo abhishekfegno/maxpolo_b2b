@@ -194,8 +194,12 @@ var confirm_submit = function (event){
          console.log('BACK');
       }
     );
-
 }
+$(document).ready(function(){
+    var noder = $('a[href^="/order/order/excel/export/"]');
+    noder && noder.each(function(){this.href = this.href + window.location.search});
+})
+
 </script>
 </body>
 </html>

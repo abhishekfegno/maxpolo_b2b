@@ -26,4 +26,7 @@ urlpatterns = [
 
     # path('order/status-update/<int:id>/', get_orderline_form, name='order-status-update'),
 
+    path('credit/', CreditListView.as_view(), name='credit-list'),
+    path('transaction/against-<int:pk>/', TransactionCreateView.as_view(), name='transaction-create'),
+
 ]
