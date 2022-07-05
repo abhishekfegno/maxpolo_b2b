@@ -121,6 +121,11 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
     search_fields = ('order_id', 'invoice_id')
 
     def filter_queryset(self, queryset):
+        if self.request.user.user_role == 16:
+            dealer = self.request.query_params.get('dealer_id')
+            # print(queryset)
+            return queryset.filter(dealer_id=dealer).filter(
+                **{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
         return queryset.filter(dealer=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
 
     def list(self, request, *args, **kwargs):
