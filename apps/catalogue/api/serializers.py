@@ -21,14 +21,26 @@ class ProductSerializer(serializers.ModelSerializer):
 class ProductPDFSerializer(serializers.ModelSerializer):
     # title = serializers.CharField(source='name')
     # file = serializers.
+    children = serializers.SerializerMethodField()
+
+    def get_children(self, instance):
+        return []
 
     class Meta:
         model = PDF
-        fields = ('id', "title", "image", 'file')
+        fields = ('id', "title", 'file', "children")
 
 
 class CategorySerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
+    title = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
+
+    def get_file(self, instance):
+        pass
+
+    def get_title(self, instance):
+        return instance.name
 
     def get_children(self, instance):
         if instance.numchild == 0 and instance.pdf.all().exists:
@@ -41,4 +53,4 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'children')
+        fields = ('id', 'title', 'children', 'file')
