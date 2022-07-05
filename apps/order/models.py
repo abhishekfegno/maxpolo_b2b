@@ -42,6 +42,10 @@ class SalesOrder(models.Model):
     class Meta:
         unique_together = ('order_id', 'invoice_id')
 
+    @property
+    def percentage_paid(self):
+        return ((self.invoice_amount - self.invoice_remaining_amount) * 10000 // self.invoice_amount)/100
+
     def __str__(self):
         if self.invoice_id:
             # if self.__show_dealer_in_str__:

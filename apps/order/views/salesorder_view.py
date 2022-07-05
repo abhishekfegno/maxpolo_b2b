@@ -183,19 +183,27 @@ class SalesOrderDetailView(UpdateView):
 class TransactionCreateView(CreateView):
     extra_context = {
         'breadcrumbs': settings.BREAD.get('transaction-create'),
-        'credit_invoices': SalesOrder.objects.all().filter(is_invoice=True, invoice_remaining_amount__gt=0).select_related('dealer').order_by('invoice_date')
+        'order_type': 'credit',
     }
+    template_name = 'paper/payment/transaction_form.html'
     model = Transaction
     form_class = TransactionCreateForm
     success_url = reverse_lazy('credit-list')
+    order_qs = SalesOrder.objects.all().filter(is_invoice=True, invoice_remaining_amount__gt=0).select_related('dealer').order_by('invoice_date')
+
+    def get_context_data(self, **kwargs):
+        kwargs['credit_invoices'] = self.order_qs
+        kwargs['object'] = self.get_object(queryset=self.order_qs)
+        kwargs = super(TransactionCreateView, self).get_context_data(**kwargs)
+        return kwargs
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['order'] = self.get_object(self.extra_context['credit_invoices'])
+        kwargs['order'] = self.get_object(queryset=self.order_qs)
         return kwargs
-
+        
     def form_valid(self, form):
-        form.save()
+        self.object = form.save()
         msg = f"Your Transaction for amount Rs. {form.instance.amount}/- has been created against {form.instance.order.id_as_text}. "
         messages.success(self.request, msg)
         if form.instance.amount_balance > 0:
@@ -206,8 +214,8 @@ class TransactionCreateView(CreateView):
 
 class CreditListView(ListView):
     queryset = SalesOrder.objects.all().filter(is_invoice=True, invoice_remaining_amount__gt=0).select_related('dealer').order_by('invoice_date')
-    template_name = 'paper/order/credit_list.html'
     filtering_backends = (DjangoFilterBackend, )
+    template_name = 'paper/order/credit_list.html'
     filterset_class = OrderFilter
     # filterset_fields = ('order_id', )
     success_url = reverse_lazy('credit-list')
@@ -217,7 +225,9 @@ class CreditListView(ListView):
     }
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        object_list = OrderFilter(self.request.GET, queryset=self.get_queryset())
+        _filter = OrderFilter(self.request.GET, queryset=self.get_queryset())
+        kwargs['filter_form'] = _filter.form
+        kwargs['filter_qs'] = _filter.qs
         return super(CreditListView, self).get_context_data(object_list=object_list, **kwargs)
 
     
