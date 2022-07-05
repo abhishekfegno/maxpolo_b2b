@@ -49,7 +49,7 @@ class LoginAPIView(GenericAPIView):
             "address_state": user.address_state,
             "branch": user.branch and user.branch.name,
             "executive": {
-                'name': user.executive.name,
+                'name': user.executive.first_name,
             } if user.executive else None,
             "zone": None,
             "mobile": user.mobile,

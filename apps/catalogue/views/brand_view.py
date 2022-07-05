@@ -1,17 +1,20 @@
 # New file created
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
+from rest_framework.permissions import BasePermission
 
 from apps.catalogue.forms.brand_form import BrandForm
 from apps.catalogue.models import Brand
 
 
+@method_decorator(permission_required(BasePermission), name='dispatch')
 class BrandDetailView(UpdateView, ListView):
     queryset = Brand.objects.all()
     template_name = 'paper/catalogue/brand_list.html'
