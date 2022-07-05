@@ -36,9 +36,10 @@ class OrderSerializer(serializers.ModelSerializer):
     dealer = serializers.SerializerMethodField()
     timeline = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
+    transaction = serializers.SerializerMethodField()
 
     def get_status(self, instance):
-        return self.status
+        return instance.status
     
     def get_dealer(self, instance):
         if instance.dealer:
@@ -83,7 +84,7 @@ class OrderSerializer(serializers.ModelSerializer):
         model = SalesOrder
         fields = ('id', 'order_id', 'invoice_id', 'invoice_status', 'invoice_date', 'invoice_amount',
                   'invoice_remaining_amount', 'confirmed_date', 'is_invoice', 'is_cancelled', 'is_confirmed',
-                  'is_quotation', 'dealer', 'created_at', 'line', 'transaction')
+                  'is_quotation', 'dealer', 'created_at', 'line', 'timeline', 'status', 'transaction')
 
 
 class OrderLineCreateSerializer(serializers.ModelSerializer):
