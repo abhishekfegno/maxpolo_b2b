@@ -25,9 +25,11 @@ from apps.user.models import User, Complaint, Banners, Dealer
 from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
 
+
 class ExeDealerMixin(object):
     def get_dealer(self):
-        self.request.GET.get()
+        if self.request.user.user_role == '16':
+            return self.request.GET.get('dealer_id')
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -190,6 +192,7 @@ class ComplaintListView(ListAPIView):
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page_number', 1)
         page_size = request.GET.get('page_size', 20)
+
         serializer = self.get_serializer(self.get_queryset().filter(created_by=self.request.user), many=True, context={'request': request})
         queryset = self.filter_queryset(self.get_queryset())
         paginator = Paginator(queryset, page_size)

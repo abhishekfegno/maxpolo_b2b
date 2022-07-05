@@ -2,6 +2,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -12,16 +13,10 @@ from rest_framework.permissions import BasePermission
 
 from apps.catalogue.forms.brand_form import BrandForm
 from apps.catalogue.models import Brand
-from lib.permissions import IsAdmin
+from lib.permissions import IsAdmin, SuperUserRequiredMixin
 
 
-def issuperuser(request):
-    from apps.user.models import Role
-    return bool(request.user and request.user.is_superuser)
-
-
-# @method_decorator(user_passes_test(issuperuser), name='dispatch')
-class BrandDetailView(UpdateView, ListView):
+class BrandDetailView(SuperUserRequiredMixin, UpdateView, ListView):
     queryset = Brand.objects.all()
     template_name = 'paper/catalogue/brand_list.html'
     model = Brand
@@ -32,7 +27,7 @@ class BrandDetailView(UpdateView, ListView):
     }
 
 
-class BrandListView(CreateView, ListView):
+class BrandListView(SuperUserRequiredMixin, CreateView, ListView):
     queryset = Brand.objects.all()
     template_name = 'paper/catalogue/brand_list.html'
     model = Brand
