@@ -110,7 +110,7 @@ def invoice_amount_update(sender, instance, created, **kwargs):
                 status = 'payment_done'
                 SalesOrder.objects.filter(pk=instance.order.pk).update(invoice_remaining_amount=remaining_amount,
                                                                        invoice_status=status)
-                Transaction.objects.filter(pk=instance.pk).update(amount_balance=remaining_amount, status=status)
+                Transaction.objects.filter(pk=instance.pk).update(amount_balance=remaining_amount, status='payment_done')
         if remaining_amount < 0.0:
             instance.delete()
             print("deleted instance")
@@ -120,7 +120,7 @@ def invoice_amount_update(sender, instance, created, **kwargs):
         SalesOrder.objects.filter(pk=instance.order.pk).update(invoice_remaining_amount=remaining_amount,
                                                                invoice_status=status)
 
-        Transaction.objects.filter(pk=instance.pk).update(amount_balance=remaining_amount, status=status)
+        Transaction.objects.filter(pk=instance.pk).update(amount_balance=remaining_amount, status='payment_done')
     elif instance.status == "cancelled":
         order = instance.order
         order.invoice_remaining_amount = instance.amount + instance.amount_balance

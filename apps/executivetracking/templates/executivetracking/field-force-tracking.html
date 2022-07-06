@@ -91,20 +91,20 @@
                                             <div class="contact  {% if executive.id == object.id %}active{% endif %}">
                                                 <div class="contact__avatar">
                                                     {% if executive.profile_url %}
-                                                    <img alt="{{ executive.name }}"
+                                                    <img alt="{{ executive.first_name }}"
                                                          src="{{ MEDIA_URL }}{{ executive.profile_url }}">
                                                     {% else %}
-                                                    <img alt="{{ executive.name }}"
+                                                    <img alt="{{ executive.get_fullname }}"
                                                          src="{{ settings.STATIC_URL }}{{ settings.PLACEHOLDER_PROFILE_DEFAULT_IMAGE }}">
                                                     {% endif %}
                                                 </div>
                                                 <div class="contact__info">
                                                     <div class="contact__name text-truncate  {% if executive.id == object.id %}font-weight-500 text-primary{% endif %}">
-                                                        {{ executive.name }}
+                                                        {{ executive.get_fullname }}
                                                     </div>
                                                     <div class="contact__location text-truncate text-sm {% if executive.id == object.id %}active{% endif %}">
                                                         {{ executive.branch.name }} <span
-                                                            class="text-muted">| ID:</span> {{            executive.system_id|default:"-" }}
+                                                            class="text-muted">| ID:</span> {{            executive.get_fullname |default:"-" }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -123,19 +123,19 @@
                                     <div class="contact large ">
                                         <div class="contact__avatar">
                                             {% if object.profile_url %}
-                                            <img alt="{{ object.name }} Profile Picture "
+                                            <img alt="{{ object.get_fullname }} Profile Picture "
                                                  src="{{ MEDIA_URL }}{{ object.profile_url }}">
                                             {% else %}
-                                            <img alt="{{ object.name }}"
+                                            <img alt="{{ object.get_fullname }}"
                                                  src="{{ settings.STATIC_URL }}{{ settings.PLACEHOLDER_PROFILE_DEFAULT_IMAGE }}">
                                             {% endif %}
                                         </div>
                                         <div class="contact__info">
                                             <div class="contact__name text-truncate">
-                                                {{ object.name }}
+                                                {{ object.get_fullname }}
                                             </div>
                                             <div class="contact__location text-truncate">
-                                                {{ executive.branch.name }} <span class="text-muted">| ID:</span> {{   executive.system_id|default:"-" }}
+                                                {{ executive.branch.name }} <span class="text-muted">| ID:</span> {{   executive.get_fullname|default:"-" }}
                                             </div>
                                         </div>
                                     </div>

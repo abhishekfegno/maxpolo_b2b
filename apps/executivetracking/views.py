@@ -46,6 +46,7 @@ class FieldForceTracking(
         has_account = hasattr(self.request.user, 'account')
         if has_account and int(self.request.user.user_role) > Role.ADMIN:
             qs = qs.filter(branch=self.request.user.account.branch)
+        # print(qs)
         return qs
 
     def get_context_data(self, **kwargs):
