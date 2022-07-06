@@ -394,7 +394,6 @@
 var confirm_submit = function (event){
     event.preventDefault();
     var _form = event.target.form;
-    console.log(_form)
 
     swal({
       title: "Confirm?",
@@ -413,6 +412,8 @@ var confirm_submit = function (event){
       },
       function() {
          console.log('BACK');
+         console.log('asdfasdf');
+
       }
     );
 
