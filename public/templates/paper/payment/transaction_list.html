@@ -55,7 +55,7 @@
                                 <div class=""><span class="badge badge-pill badge-info">{{object_item.status}}</span></div>
                             </td>
                             <td>
-                                {% if not object.pk %}
+                                {% if not object_item.status == 'cancelled' %}
                                 <div class="">
                                     <a class="btn btn-sm btn-primary"
                                        href="{% url 'transaction-update' pk=object_item.pk %}">Cancel</a>

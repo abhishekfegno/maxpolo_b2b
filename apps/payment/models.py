@@ -122,7 +122,15 @@ def invoice_amount_update(sender, instance, created, **kwargs):
 
         Transaction.objects.filter(pk=instance.pk).update(amount_balance=remaining_amount, status=status)
     elif instance.status == "cancelled":
-        instance.order.recalculate_remaining()
+        order = instance.order
+        order.invoice_remaining_amount = instance.amount + instance.amount_balance
+        if order.invoice_amount == order.invoice_remaining_amount:
+            order.invoice_status = 'credit'
+        else:
+            order.invoice_status = 'payment_partial'
+        import pdb;pdb.set_trace()
+        order.save()
+        # instance.order.recalculate_remaining()
 
 
 

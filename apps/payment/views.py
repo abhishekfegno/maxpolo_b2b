@@ -36,19 +36,9 @@ class TransactionDetailView(UpdateView, ListView):
         form = self.form_class(request.POST, instance=self.get_object())
         if form.is_valid():
             try:
-                transaction = form.save(commit=False)
-                # transaction = self.get_object()
-                order = transaction.order
-                order.invoice_remaining_amount = transaction.amount+transaction.amount_balance
-                if order.invoice_amount == order.invoice_remaining_amount:
-                    order.invoice_status = 'credit'
-                else:
-                    order.invoice_status = 'payment_partial'
-                # import pdb;pdb.set_trace()
-                order.save()
                 form.save()
             except Exception as e:
-                print(str(e))
+                print(str(e), "asdfasdf")
                 messages.add_message(request, messages.ERROR, str(e))
         else:
             messages.add_message(request, messages.ERROR, form.errors)

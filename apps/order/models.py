@@ -100,7 +100,7 @@ class SalesOrder(models.Model):
 
     def recalculate_remaining(self):
         net_paid_amount = self.transaction_set.all().exclude(status='cancelled').aggeregate(sum=Sum('amount'))['sum'] or 0
-        self.invoice_remaining_amount = max(self.invoice_amount - net_paid_amount, 0)
+        self.invoice_remaining_amount = max(self.invoice_amount - float(net_paid_amount), 0)
         if self.invoice_remaining_amount == self.invoice_amount:
             self.status = 'credit'
         elif self.invoice_remaining_amount == 0:

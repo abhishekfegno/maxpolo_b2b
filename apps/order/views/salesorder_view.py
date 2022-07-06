@@ -85,7 +85,8 @@ def get_orderline(request, order_id, pk=None):
     context['object_count'] = order.line.all().count()
     context['net_total_items'] = order.line.all().aggregate(nc=Sum('quantity'))['nc'] or 0
     context['net_txn_amt'] = order.transaction_set.all().aggregate(nc=Sum('amount'))['nc'] or 0
-    context['net_txn_remaining'] = order.invoice_amount - context['net_txn_amt']
+    # context['net_txn_remaining'] = order.invoice_amount - context['net_txn_amt']
+    context['net_txn_remaining'] = order.invoice_remaining_amount
 
     if request.method == 'POST':
         if request.POST.get('quantity'):
