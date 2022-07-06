@@ -132,7 +132,7 @@
                                         </div>
                                         <div class="contact__info">
                                             <div class="contact__name text-truncate">
-                                                {{ object.get_fullname }}
+                                                {{ object.first_name }}
                                             </div>
                                             <div class="contact__location text-truncate">
                                                 {{ executive.branch.name }} <span class="text-muted">| ID:</span> {{   executive.get_fullname|default:"-" }}
