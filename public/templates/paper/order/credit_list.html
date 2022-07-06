@@ -43,7 +43,7 @@
                                 <div class="">{{ item.dealer.get_full_name|default:"unknown"  }}</div>
                             </td>
                             <td>
-                                <div class="">{{ item.invoice_date }}</div>
+                                <div class="">{{ item.invoice_date | date:" D d M Y" }}</div>
                             </td>
                             <td>
                                 <a href="{% url 'transaction-create' pk=item.pk %}" class="btn btn-danger btn-sm">Mark a Transaction</a>

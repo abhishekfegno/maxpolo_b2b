@@ -34,7 +34,9 @@ class Transaction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.order.invoice_id
+        if self.order:
+            return self.order.invoice_id
+        return self.id
 
 #
 # @receiver(post_save, sender=Transaction)
