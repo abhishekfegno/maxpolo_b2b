@@ -356,8 +356,8 @@
                         <thead class="thead-dark">
                         <tr>
                             <th>#</th>
-                            <th>Date</th>
                             <th>Amount</th>
+                            <th>Date</th>
                             <th>Status</th>
 
                         </tr>
@@ -367,8 +367,8 @@
                         {% for txn in  order.transaction_set.all %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
-                            <td>{{ txn.created_at|date }}</td>
                             <td>{{ txn.amount }}</td>
+                            <td>{{ txn.created_at|date }}</td>
                             <td><span class="badge badge-pill badge-info">{{txn.status}}</span></td>
 
                         </tr>
