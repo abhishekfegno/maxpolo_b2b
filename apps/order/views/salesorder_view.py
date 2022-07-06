@@ -463,6 +463,10 @@ class InvoiceListView(FormMixin, ListView):
                 # import pdb;pdb.set_trace()
                 if form.data.get('invoice_id') and self.get_queryset().filter(invoice_id=form.data.get('invoice_id')).exists():
                     raise QuantityInvalidException("Invoice with invoice id already exist !!!")
+
+                if int(form.data.get('invoice_amount')) <= 0:
+                    raise QuantityInvalidException("Please enter a valid amount !!!")
+
                 form.instance.is_confirmed = True
                 form.instance.is_invoice = True
                 form.instance.confirmed_date = datetime.now()
