@@ -159,7 +159,9 @@
                                     <th scope="col">ID</th>
                                     <th scope="col">Product Name</th>
                                     <th scope="col">Quantity</th>
+                                    {% if not order.is_confirmed and not order.is_cancelled and not order.is_invoice %}
                                     <th scope="col">Action</th>
+                                    {% endif %}
                                 </tr>
                                 </thead>
                                 <tbody>
