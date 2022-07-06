@@ -108,7 +108,11 @@
                         </li>
                         <li class="li {% if order.invoice_status in 'payment_done' %}complete{% endif %}">
                             <div class="timestamp">
-                               <span class="date">{{ order.invoice_status|upper }}<span>
+                                {% if order.invoice_status == 'new' %}
+                                    <span class="date"> - <span>
+                                {% else %}
+                               <span class="date">{{ order.invoice_status|upper|default:"-" }}<span>
+                               {% endif %}
                             </div>
                             <div class="status">
                                 <p> Payment </p>

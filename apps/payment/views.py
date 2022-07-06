@@ -36,12 +36,13 @@ class TransactionDetailView(UpdateView, ListView):
         form = self.form_class(request.POST, instance=self.get_object())
         if form.is_valid():
             try:
+                # import pdb;pdb.set_trace()
                 form.save()
             except Exception as e:
                 print(str(e))
-                messages.add_message(request, messages.INFO, str(e))
+                messages.add_message(request, messages.ERROR, str(e))
         else:
-            messages.add_message(request, messages.INFO, form.errors)
+            messages.add_message(request, messages.ERROR, form.errors)
         return redirect('transaction-list')
 
 
