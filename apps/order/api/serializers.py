@@ -71,7 +71,7 @@ class OrderSerializer(serializers.ModelSerializer):
                     "label": "Invoiced",
                 },
                 "completed": {
-                    "status": instance.invoice_amount > 0 and instance.invoice_remaining_amount > 0,
+                    "status": instance.invoice_amount > 0 and instance.invoice_remaining_amount == 0,
                     "date": last_transaction_date,
                     "label": "Paid",
                 },

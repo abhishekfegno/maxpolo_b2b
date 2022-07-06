@@ -43,7 +43,7 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <div class="">{{ object_item.created_at }}</div>
+                                <div class="">{{ object_item.created_at | date:"D d M Y" }}</div>
                             </td>
                             <td>
                                 <div class="">₹{{ object_item.amount }}</div>
