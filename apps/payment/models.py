@@ -128,7 +128,7 @@ def invoice_amount_update(sender, instance, created, **kwargs):
             order.invoice_status = 'credit'
         else:
             order.invoice_status = 'payment_partial'
-        import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         order.save()
         # instance.order.recalculate_remaining()
 
