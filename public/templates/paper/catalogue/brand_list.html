@@ -26,9 +26,11 @@
                                 <div class="">{{ object_item.name }}</div>
                             </td>
                             <td>
+                                {% if object_item.pk != object.pk %}
                                 <div class="">
-                                    <a class="btn btn-primary" href="{% url 'brand-update' pk=object_item.pk %}">Edit</a>
+                                    <a class="btn btn-primary btn-sm" href="{% url 'brand-update' pk=object_item.pk %}">Edit</a>
                                 </div>
+                                {% endif %}
                             </td>
                             <td>
 

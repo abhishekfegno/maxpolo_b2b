@@ -1,6 +1,6 @@
 {% extends 'paper/layout.html' %}{% load crispy_forms_tags %}{% block content%}
 <div class='row'>
-    <div class='col-8'>
+    <div class='col-{%if object.pk%}8{%else%}12{%endif%}'>
         <div class='card'>
             <div class='card-body'>
                                 <a class="btn btn-primary" href="{% url 'get_excel_report_payment' %}" style="float:right;">Download Excel</a>
@@ -43,7 +43,7 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <div class="">{{ object_item.created_at }}</div>
+                                <div class="">{{ object_item.created_at | date:"D d M Y" }}</div>
                             </td>
                             <td>
                                 <div class="">₹{{ object_item.amount }}</div>
@@ -55,7 +55,7 @@
                                 <div class=""><span class="badge badge-pill badge-info">{{object_item.status}}</span></div>
                             </td>
                             <td>
-                                {% if not object.pk %}
+                                {% if not object_item.status == 'cancelled' %}
                                 <div class="">
                                     <a class="btn btn-sm btn-primary"
                                        href="{% url 'transaction-update' pk=object_item.pk %}">Cancel</a>
@@ -81,27 +81,24 @@
         </div>
 
     </div>
+    {% if object.pk %}
     <div class='col-4'>
         <div class='card'>
             <div class='card-body'>
-                {% if object.pk %}
                 <a class="pull-right btn btn-secondary" href="{% url 'transaction-list' %}" > back to list</a>
                 <h3 class="heading-3 pt-3">Update Transaction</h3>
-                <p class="text-muted"> Here you can update the current transaction. </p>
-                {% else %}
-                <h3 class="heading-3 pt-3">Add Transaction</h3>
-                <p class="text-muted"> Here you can add the transaction here. </p>
-                {% endif %}
+                <p class="text-muted"> Are you sure to cancel the transaction?. </p>
                 <form method="POST">
                     {% csrf_token %}
                     {{ form | crispy }}
-<!--                            <a class="delBrand btn btn-danger  btn-sm" href="javascript:void(0)"-->
-<!--                               onclick="swalFunction(this, '')">Delete</a>-->
+
                     <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
                 </form>
             </div>
         </div>
     </div>
+    {% endif %}
+
 </div>{% include 'paper/swal.html' %}
 
 {%endblock%}

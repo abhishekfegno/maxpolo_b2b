@@ -43,4 +43,9 @@ class PaymentFilter(FilterSet):
 class ComplaintFilter(FilterSet):
     class Meta:
         model = Complaint
-        fields = ('status',)
+        fields = ('status', 'created_by')
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.filters['created_by'].label = 'Dealer'

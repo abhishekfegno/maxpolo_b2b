@@ -1,16 +1,132 @@
-{% extends 'paper/index.html' %}{% load crispy_forms_tags %}{% block content%}
+{% extends 'paper/index.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
 <div class='row'>
-    <div class='col-md-6 '>
+    <div class='col-md-7'>
         <div class='card'>
             <div class='card-body'>
-                <fieldset class='form-group '>
-                    <form action='' method='post'>
-                        {% csrf_token %}
-                        {{ form | crispy }}
-                        <button class='btn btn-md btn-success' style="float:right;" type='submit'> Save</button>
-                    </form>
-                </fieldset>
+                <div>
+                    {% if order_type %}
+                    <a class="btn btn-primary" href="{% url 'get_excel_report_order' slug=order_type %}?filter={{ request.GET }}"
+                       style="float:right;">Download Excel</a>
+                    {% endif %}
+                    <h3>Invoiced List</h3>
+                </div>
+                <div>
+                    {% include 'paper/catalogue/product_filter.html'%}
+                </div>
+                <p class="text-muted"> Here you can find all the Invoice Uploaded Sale Orders (SO). </p>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead class="thead-dark">
+                        <tr class="">
+                            <th scope="col">ID</th>
+                            <th scope="col">Invoice ID</th>
+                            <th scope="col">Dealer</th>
+                            <th scope="col">Invoice Date</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in credit_invoices %}
+                        <tr class="{% if item.pk == object.pk %}selected-row{% endif %}">
+                            <!--                    <td scope="row"> </td>-->
+                            <td>
+                                {% if filter %}
+                                <div class="">{{ forloop.counter0|add:filter.start_index }}</div>
+                                {% else %}
+                                <div class="">{{ forloop.counter }}</div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class=""><a href="{% url 'get_orderline' order_id=item.id %}">{{item.invoice_id | default:item.id_as_text }}</a></div>
+                            </td>
+                            <td>
+                                <div class="">{{ item.dealer.get_full_name|default:"unknown"  }}</div>
+                            </td>
+                            <td>
+                                <div class="">{{ item.invoice_date }}</div>
+                            </td>
+                            <td>
+                                <a href="{% url 'transaction-create' pk=item.pk %}" class="btn btn-danger btn-sm">Mark a Transaction</a>
+                            </td>
+
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="text-center text-muted" colspan="100%"> No Active Invoices in the book. Check
+                                back later
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+            {% include 'paper/pagination.html' %}
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class='card'>
+            <div class="card-header">
+                {{ object.dealer.get_full_name }}'s Payment against: {{ object.invoice_id }}
+            </div>
+            <div class='card-body'>
+                <table class="table table-stripped">
+                    <tbody>
+                    <tr>
+                        <td>Dealer </td>
+                        <td>{{ object.dealer.get_full_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Invoice </td>
+                        <td>{{ object.invoice_id }}
+                            <span class="badge badge-danger">{{ object.invoice_status }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Invoice Amount</td>
+                        <td>₹ {{ object.invoice_amount }}</td>
+                    </tr>
+                    <tr>
+                        <td>Invoice Amount Remaining</td>
+                        <td>₹ {{ object.invoice_remaining_amount }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            Percentage Completion
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="{{ object.percentage_paid }}"
+                                     aria-valuemin="0" aria-valuemax="100" style="width:{{ object.percentage_paid }}%">
+                                    {{ object.percentage_paid }}%
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" class="bg-warning">
+                            <fieldset class='form-group p-2'>
+                                <form action='' method='post' >
+                                    <a>Mark a new Payment:</a>
+
+                                    {% csrf_token %}
+                                    {{ form | crispy }}
+                                    <button class='btn btn-md btn-success' style="float:right;" type='submit'> Save</button>
+                                </form>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</div>{% endblock %}
+</div>
+
+{% include 'paper/swal.html' %}
+
+{% endblock %}

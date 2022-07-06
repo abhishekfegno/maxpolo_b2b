@@ -40,10 +40,10 @@ class TransactionDetailView(UpdateView, ListView):
             try:
                 form.save()
             except Exception as e:
-                print(str(e))
-                messages.add_message(request, messages.INFO, str(e))
+                print(str(e), "asdfasdf")
+                messages.add_message(request, messages.ERROR, str(e))
         else:
-            messages.add_message(request, messages.INFO, form.errors)
+            messages.add_message(request, messages.ERROR, form.errors)
         return redirect('transaction-list')
 
 

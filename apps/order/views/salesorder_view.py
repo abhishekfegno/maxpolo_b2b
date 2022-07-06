@@ -86,7 +86,8 @@ def get_orderline(request, order_id, pk=None):
     context['object_count'] = order.line.all().count()
     context['net_total_items'] = order.line.all().aggregate(nc=Sum('quantity'))['nc'] or 0
     context['net_txn_amt'] = order.transaction_set.all().aggregate(nc=Sum('amount'))['nc'] or 0
-    context['net_txn_remaining'] = order.invoice_amount - context['net_txn_amt']
+    # context['net_txn_remaining'] = order.invoice_amount - context['net_txn_amt']
+    context['net_txn_remaining'] = order.invoice_remaining_amount
 
     if request.method == 'POST':
         if request.POST.get('quantity'):
@@ -185,19 +186,27 @@ class SalesOrderDetailView(UpdateView):
 class TransactionCreateView(CreateView):
     extra_context = {
         'breadcrumbs': settings.BREAD.get('transaction-create'),
-        'credit_invoices': SalesOrder.objects.all().filter(is_invoice=True, invoice_remaining_amount__gt=0).select_related('dealer').order_by('invoice_date')
+        'order_type': 'credit',
     }
+    template_name = 'paper/payment/transaction_form.html'
     model = Transaction
     form_class = TransactionCreateForm
     success_url = reverse_lazy('credit-list')
+    order_qs = SalesOrder.objects.all().filter(is_invoice=True, invoice_remaining_amount__gt=0).select_related('dealer').order_by('invoice_date')
+
+    def get_context_data(self, **kwargs):
+        kwargs['credit_invoices'] = self.order_qs
+        kwargs['object'] = self.get_object(queryset=self.order_qs)
+        kwargs = super(TransactionCreateView, self).get_context_data(**kwargs)
+        return kwargs
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['order'] = self.get_object(self.extra_context['credit_invoices'])
+        kwargs['order'] = self.get_object(queryset=self.order_qs)
         return kwargs
-
+        
     def form_valid(self, form):
-        form.save()
+        self.object = form.save()
         msg = f"Your Transaction for amount Rs. {form.instance.amount}/- has been created against {form.instance.order.id_as_text}. "
         messages.success(self.request, msg)
         if form.instance.amount_balance > 0:
@@ -208,8 +217,8 @@ class TransactionCreateView(CreateView):
 
 class CreditListView(ListView):
     queryset = SalesOrder.objects.all().filter(is_invoice=True, invoice_remaining_amount__gt=0).select_related('dealer').order_by('invoice_date')
-    template_name = 'paper/order/credit_list.html'
     filtering_backends = (DjangoFilterBackend, )
+    template_name = 'paper/order/credit_list.html'
     filterset_class = OrderFilter
     # filterset_fields = ('order_id', )
     success_url = reverse_lazy('credit-list')
@@ -219,7 +228,9 @@ class CreditListView(ListView):
     }
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        object_list = OrderFilter(self.request.GET, queryset=self.get_queryset())
+        _filter = OrderFilter(self.request.GET, queryset=self.get_queryset())
+        kwargs['filter_form'] = _filter.form
+        kwargs['filter_qs'] = _filter.qs
         return super(CreditListView, self).get_context_data(object_list=object_list, **kwargs)
 
 
@@ -367,6 +378,9 @@ class QuotationListView(FormMixin, ListView):
                 if '' in quantities or not quantities:
                     raise QuantityInvalidException("Please select quantity")
                 # import pdb;pdb.set_trace()
+                if len(products) != len(set(products)):
+                    raise QuantityInvalidException("Please select a different product")
+
                 order = form.save()
                 for product, quantity in zip(products, quantities):
                     product = Product.objects.get(id=product)
@@ -457,8 +471,15 @@ class InvoiceListView(FormMixin, ListView):
                 if '' in quantities or not quantities:
                     raise QuantityInvalidException("Please select quantity")
                 # import pdb;pdb.set_trace()
+                if len(products) != len(set(products)):
+                    raise QuantityInvalidException("Please select a different product")
+
                 if form.data.get('invoice_id') and self.get_queryset().filter(invoice_id=form.data.get('invoice_id')).exists():
                     raise QuantityInvalidException("Invoice with invoice id already exist !!!")
+
+                if int(form.data.get('invoice_amount')) <= 0:
+                    raise QuantityInvalidException("Please enter a valid amount !!!")
+
                 form.instance.is_confirmed = True
                 form.instance.is_invoice = True
                 form.instance.confirmed_date = datetime.now()

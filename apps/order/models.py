@@ -42,6 +42,10 @@ class SalesOrder(models.Model):
     class Meta:
         unique_together = ('order_id', 'invoice_id')
 
+    @property
+    def percentage_paid(self):
+        return ((self.invoice_amount - self.invoice_remaining_amount) * 10000 // self.invoice_amount)/100
+
     def __str__(self):
         if self.invoice_id:
             # if self.__show_dealer_in_str__:
@@ -96,7 +100,7 @@ class SalesOrder(models.Model):
 
     def recalculate_remaining(self):
         net_paid_amount = self.transaction_set.all().exclude(status='cancelled').aggeregate(sum=Sum('amount'))['sum'] or 0
-        self.invoice_remaining_amount = max(self.invoice_amount - net_paid_amount, 0)
+        self.invoice_remaining_amount = max(self.invoice_amount - float(net_paid_amount), 0)
         if self.invoice_remaining_amount == self.invoice_amount:
             self.status = 'credit'
         elif self.invoice_remaining_amount == 0:

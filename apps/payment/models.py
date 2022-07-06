@@ -34,7 +34,9 @@ class Transaction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.order.invoice_id
+        if self.order:
+            return self.order.invoice_id
+        return self.id
 
 #
 # @receiver(post_save, sender=Transaction)
@@ -108,7 +110,7 @@ def invoice_amount_update(sender, instance, created, **kwargs):
                 status = 'payment_done'
                 SalesOrder.objects.filter(pk=instance.order.pk).update(invoice_remaining_amount=remaining_amount,
                                                                        invoice_status=status)
-                Transaction.objects.filter(pk=instance.pk).update(amount_balance=remaining_amount, status=status)
+                Transaction.objects.filter(pk=instance.pk).update(amount_balance=remaining_amount, status='payment_done')
         if remaining_amount < 0.0:
             instance.delete()
             print("deleted instance")
@@ -118,9 +120,17 @@ def invoice_amount_update(sender, instance, created, **kwargs):
         SalesOrder.objects.filter(pk=instance.order.pk).update(invoice_remaining_amount=remaining_amount,
                                                                invoice_status=status)
 
-        Transaction.objects.filter(pk=instance.pk).update(amount_balance=remaining_amount, status=status)
+        Transaction.objects.filter(pk=instance.pk).update(amount_balance=remaining_amount, status='payment_done')
     elif instance.status == "cancelled":
-        instance.order.recalculate_remaining()
+        order = instance.order
+        order.invoice_remaining_amount = instance.amount + instance.amount_balance
+        if order.invoice_amount == order.invoice_remaining_amount:
+            order.invoice_status = 'credit'
+        else:
+            order.invoice_status = 'payment_partial'
+        # import pdb;pdb.set_trace()
+        order.save()
+        # instance.order.recalculate_remaining()
 
 
 

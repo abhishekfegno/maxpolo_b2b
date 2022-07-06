@@ -108,7 +108,11 @@
                         </li>
                         <li class="li {% if order.invoice_status in 'payment_done' %}complete{% endif %}">
                             <div class="timestamp">
-                               <span class="date">{{ order.invoice_status|upper }}<span>
+                                {% if order.invoice_status == 'new' %}
+                                    <span class="date"> - <span>
+                                {% else %}
+                               <span class="date">{{ order.invoice_status|upper|default:"-" }}<span>
+                               {% endif %}
                             </div>
                             <div class="status">
                                 <p> Payment </p>
@@ -159,7 +163,9 @@
                                     <th scope="col">ID</th>
                                     <th scope="col">Product Name</th>
                                     <th scope="col">Quantity</th>
+                                    {% if not order.is_confirmed and not order.is_cancelled and not order.is_invoice %}
                                     <th scope="col">Action</th>
+                                    {% endif %}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -267,7 +273,7 @@
                                     <input type="hidden" hidden name="invoice_status" value="credit" class="form-control">
                                     <label>
                                         Amount
-                                        <input type="number"  name="invoice_amount" required class="form-control" onchange="document.querySelector('[name=\'invoice_remaining_amount\']').value = event.target.value ;" >
+                                        <input type="number"  name="invoice_amount"  class="form-control" onchange="document.querySelector('[name=\'invoice_remaining_amount\']').value = event.target.value ;" required >
                                     </label>
                                     <label>
                                         #Invoice Number
@@ -350,9 +356,10 @@
                         <thead class="thead-dark">
                         <tr>
                             <th>#</th>
-                            <th>Transaction</th>
                             <th>Amount</th>
                             <th>Date</th>
+                            <th>Status</th>
+
                         </tr>
                         </thead>
 
@@ -360,9 +367,10 @@
                         {% for txn in  order.transaction_set.all %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
-                            <td>{{ txn.id }}</td>
                             <td>{{ txn.amount }}</td>
                             <td>{{ txn.created_at|date }}</td>
+                            <td><span class="badge badge-pill badge-info">{{txn.status}}</span></td>
+
                         </tr>
                         {% empty %}
                         <tr>
@@ -386,6 +394,8 @@
 var confirm_submit = function (event){
     event.preventDefault();
     var _form = event.target.form;
+    console.log(_form)
+
     swal({
       title: "Confirm?",
       text: "Are you sure?",
