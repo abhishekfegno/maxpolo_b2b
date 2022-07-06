@@ -465,6 +465,9 @@ class InvoiceListView(FormMixin, ListView):
                 if '' in quantities or not quantities:
                     raise QuantityInvalidException("Please select quantity")
                 # import pdb;pdb.set_trace()
+                if len(products) != len(set(products)):
+                    raise QuantityInvalidException("Please select a different product")
+
                 if form.data.get('invoice_id') and self.get_queryset().filter(invoice_id=form.data.get('invoice_id')).exists():
                     raise QuantityInvalidException("Invoice with invoice id already exist !!!")
 

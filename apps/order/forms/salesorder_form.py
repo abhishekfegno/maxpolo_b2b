@@ -21,6 +21,8 @@ class TransactionCreateForm(forms.ModelForm):
         inv_number = self.order.id_as_text
         if self.cleaned_data['amount'] <= 0:
             raise forms.ValidationError(f"Invalid Amount. Amount must be greater than 0")
+        if len(str(self.cleaned_data['amount'])) != len(str(self.cleaned_data['amount']).lstrip('0')):
+            raise forms.ValidationError(f"Invalid Amount. Amount must be greater than 0")
         if self.order.is_cancelled:
             raise forms.ValidationError(f"This Invoice is a cancelled {inv_number}")
         if not self.order.invoice_amount:
