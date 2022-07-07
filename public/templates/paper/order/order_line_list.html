@@ -246,6 +246,7 @@
                                     <form action="{% url 'quotation-update' pk=order.id %}" method="post">
                                         {% csrf_token %}
                                         <input type="hidden" hidden name="is_confirmed" value=false class="form-control">
+                                        <input type="hidden" hidden name="is_quotation" value=false class="form-control">
                                         <input type="hidden" hidden name="is_cancelled" value=true class="form-control">
                                         <input type="hidden" hidden name="confirmed_date" value="{% now 'm/d/Y' %}" class="form-control" >
                                         <input type="button" class="btn btn-secondary" onclick="confirm_submit(event)" value="Cancel">

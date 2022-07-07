@@ -57,6 +57,8 @@ class OrderListAPIExecutiveView(ListAPIView):
         qs = queryset
         if 'is_quotation' in filt:
             qs = queryset.filter(is_quotation=True).order_by('-created_at')
+        if 'is_cancelled' in filt:
+            qs = queryset.filter(is_cancelled=True).order_by('-created_at')
         if 'is_confirmed' in filt:
             qs = queryset.filter(is_confirmed=True).order_by('-confirmed_date')
         if 'is_invoice' in filt:
