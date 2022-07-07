@@ -137,13 +137,14 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
         filt = {k: v for k, v in self.request.query_params.items()}
         qs = queryset.filter(dealer=self.request.user, **filt)
         if 'is_quotation' in filt:
-            qs = queryset.filter(**filt).order_by('-created_at')
+            qs = queryset.filter(is_quotation=True).order_by('-created_at')
+        if 'is_cancelled' in filt:
+            qs = queryset.filter(is_cancelled=True).order_by('-created_at')
         if 'is_confirmed' in filt:
-            qs = queryset.filter(**filt).order_by('-confirmed_date')
+            qs = queryset.filter(is_confirmed=True).order_by('-confirmed_date')
         if 'is_invoice' in filt:
-            qs = queryset.filter(**filt).order_by('-invoice_date')
+            qs = queryset.filter(is_invoice=True).order_by('-invoice_date')
         return qs
-        # return queryset.filter(dealer=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
 
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page', 1)
