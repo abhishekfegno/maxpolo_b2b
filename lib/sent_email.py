@@ -12,7 +12,7 @@ from lib.events import EventHandler
 
 class EmailHandler(EventHandler):
     api_key = os.environ.get('SENDINBLUE_API_KEY')
-
+    print(api_key)
     # Configure API key authorization: api-key
     configuration = sib_api_v3_sdk.Configuration()
     configuration.api_key['api-key'] = api_key
@@ -24,6 +24,8 @@ class EmailHandler(EventHandler):
     # create an instance of the API class
 
     def event_for_pdfs(self, recipients, instance):
+        from apps.user.models import User
+        admin = User.objects.get(is_superuser=True)
         url = ""
         from apps.user.models import Dealer
 
@@ -38,8 +40,10 @@ class EmailHandler(EventHandler):
 
 
     def event_for_banners(self, recipients, instance):
+        from apps.user.models import User
+        admin = User.objects.get(is_superuser=True)
         url = ""
-        recipients.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
+        recipients.append({'email': admin.email, 'first_name': admin.first_name})
 
         message = f"New Advertisement have been arrived.Please visit {url}"
         subject = {
@@ -50,11 +54,14 @@ class EmailHandler(EventHandler):
         self.sent_email_now(recipients, message, subject)
 
     def event_for_complaints(self, instance):
+        from apps.user.models import User
+        admin = User.objects.get(is_superuser=True)
         recipient = []
         if instance.created_by is None:
             return
         recipient.append({'email': instance.created_by.email, 'first_name': instance.created_by.first_name})
-        recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
+        recipient.append({'email': admin.email, 'first_name': admin.first_name})
+        print(instance.created_by.email)
         message = f"New Claim have been arrived."
         subject = {
             "subject": "New Claim has been raised",
@@ -64,9 +71,13 @@ class EmailHandler(EventHandler):
         self.sent_email_now(recipient, message, subject)
 
     def event_for_orders(self, instance):
+        from apps.user.models import User
+        admin = User.objects.get(is_superuser=True)
+
         recipient = []
         recipient.append({'email': instance.dealer.email, 'first_name': instance.dealer.first_name})
-        recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
+        recipient.append({'email': admin.email, 'first_name': admin.first_name})
+
         message = f"New Order have been Created."
         subject = {
             "subject": "New Order has been Created",
