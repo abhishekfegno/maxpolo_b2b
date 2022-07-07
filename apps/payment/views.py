@@ -49,7 +49,7 @@ class TransactionDetailView(UpdateView, ListView):
 
 @method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class TransactionListView(FormMixin, ListView):
-    queryset = Transaction.objects.select_related('order').order_by('created_at')
+    queryset = Transaction.objects.select_related('order', 'order__dealer').order_by('created_at')
     template_name = 'paper/payment/transaction_list.html'
     model = Transaction
     form_class = TransactionForm

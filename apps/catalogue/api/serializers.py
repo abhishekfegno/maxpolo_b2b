@@ -51,7 +51,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def get_children(self, instance):
         if instance.numchild == 0 and instance.pdf.all().exists:
-            return ProductPDFSerializer(instance.pdf.all(), many=True).data
+            return ProductPDFSerializer(instance.pdf.all(), many=True, context={'request': self.context['request']}).data
         return self.__class__(
             instance.get_children(),
             many=True,

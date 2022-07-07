@@ -54,7 +54,14 @@ class OrderListAPIExecutiveView(ListAPIView):
 
     def filter_queryset(self, queryset):
         filt = {k: v for k, v in self.request.query_params.items()}
-        return queryset.filter(**filt)
+        qs = queryset.filter(**filt)
+        if 'is_quotation' in filt:
+            qs = queryset.filter(**filt).order_by('-created_at')
+        if 'is_confirmed' in filt:
+            qs = queryset.filter(**filt).order_by('-confirmed_date')
+        if 'is_invoice' in filt:
+            qs = queryset.filter(**filt).order_by('-invoice_date')
+        return qs
 
     def list(self, request, *args, **kwargs):
 
@@ -125,13 +132,16 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
     search_fields = ('order_id', 'invoice_id')
 
     def filter_queryset(self, queryset):
-        #
-        #
-        # if self.request.user.user_role == 16:
-        #     filt = {k: v for k, v in self.request.query_params.items() if k not in ('dealer_id', )}
-        #
-        #     return queryset.filter(**filt)
-        return queryset.filter(dealer=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
+        filt = {k: v for k, v in self.request.query_params.items()}
+        qs = queryset.filter(dealer=self.request.user, **filt)
+        if 'is_quotation' in filt:
+            qs = queryset.filter(**filt).order_by('-created_at')
+        if 'is_confirmed' in filt:
+            qs = queryset.filter(**filt).order_by('-confirmed_date')
+        if 'is_invoice' in filt:
+            qs = queryset.filter(**filt).order_by('-invoice_date')
+        return qs
+        # return queryset.filter(dealer=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
 
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page', 1)

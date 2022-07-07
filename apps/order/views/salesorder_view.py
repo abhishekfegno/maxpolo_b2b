@@ -91,9 +91,16 @@ def get_orderline(request, order_id, pk=None):
 
     if request.method == 'POST':
         if request.POST.get('quantity'):
-            line = order.line.get(pk=pk)
-            line.quantity = request.POST.get('quantity')
-            line.save()
+            quantity = request.POST.get('quantity')
+            try:
+                if int(quantity) <= 0:
+                    raise AmountMissMatchException("Invalid Quantity !!!")
+                line = order.line.get(pk=pk)
+                line.quantity = quantity
+                line.save()
+            except Exception as e:
+                messages.add_message(request, messages.ERROR, str(e))
+
         if form.is_valid():
             form.save()
             return redirect(order.order_type + '-list')
@@ -294,8 +301,8 @@ class SalesOrderDeleteView(DeleteView):
         print(self.get_object().delete())
         return redirect('salesorder-list')
 
-@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class QuotationDetailView(UpdateView):
     queryset = SalesOrder.objects.all().filter().select_related('dealer').prefetch_related('line').order_by('-created_at')
     template_name = 'paper/order/salesorder_list.html'
@@ -329,8 +336,8 @@ class QuotationDetailView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('get_orderline', kwargs={'order_id': self.kwargs['pk']})
 
-@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class QuotationListView(FormMixin, ListView):
     queryset = SalesOrder.objects.all().filter(is_quotation=True, is_cancelled=False, is_confirmed=False,
                                                is_invoice=False).select_related('dealer').order_by('-created_at')

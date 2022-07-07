@@ -155,7 +155,7 @@
                         Swal.fire({
                           icon: '{% if message.tags %}{{ message.tags }}{% endif %}',
                           title: '',
-                          text: '',
+                          text: '{{ message }}',
 
                           customClass: {
                             input: 'exclude-select2',

@@ -70,7 +70,7 @@ class CategoryDeleteView(DeleteView):
 
 @method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class PDFListView(UpdateView, ListView):
-    queryset = PDF.objects.all()
+    queryset = PDF.objects.all().select_related('category')
     template_name = 'paper/catalogue/pdf_list.html'
     model = PDF
     form_class = PDFForm

@@ -62,7 +62,7 @@ class ProductAPIView(ListAPIView):
 
 
 class ProductPDFView(ListAPIView):
-    queryset = PDF.objects.all()
+    queryset = PDF.objects.all().select_related('category')
     serializer_class = ProductPDFSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_fields = ('', '')
