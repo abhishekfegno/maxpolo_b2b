@@ -3,6 +3,13 @@ from rest_framework import serializers
 from apps.catalogue.models import Product, PDF, Category
 
 
+class ProductPDFListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PDF
+        fields = ('id', "title", 'file', 'image')
+
+
 class ProductSerializer(serializers.ModelSerializer):
     brand = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()

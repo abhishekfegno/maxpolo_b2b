@@ -15,7 +15,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
-from apps.catalogue.api.serializers import ProductPDFSerializer
+from apps.catalogue.api.serializers import ProductPDFSerializer, ProductPDFListSerializer
 from apps.catalogue.models import PDF
 from apps.order.api.serializers import UpcomingPaymentSerializer
 from apps.order.models import SalesOrder
@@ -229,7 +229,7 @@ class HomePageAPI(ExeDealerMixin, APIView):
     def get(self, request, *args, **kwargs):
         # dealer_id = request.GET.get('dealer', request.user.id)
         advertisements = AdvertisementSerializer(Banners.objects.all(), many=True, context={'request': request}).data
-        pdf = ProductPDFSerializer(PDF.objects.select_related('category')[:6], many=True, context={'request': request}).data
+        pdf = ProductPDFListSerializer(PDF.objects.select_related('category')[:6], many=True, context={'request': request}).data
         upcoming_payments = UpcomingPaymentSerializer(
             SalesOrder.objects.filter(
                 is_invoice=True, dealer_id=self.get_dealer_id(), invoice_status__in=['payment_partial', 'credit']),
