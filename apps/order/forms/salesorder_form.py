@@ -19,9 +19,12 @@ class TransactionCreateForm(forms.ModelForm):
         
     def clean(self):
         inv_number = self.order.id_as_text
-        if self.cleaned_data['amount'] <= 0:
+        if self.cleaned_data['amount'] <= 0.0:
             raise forms.ValidationError(f"Invalid Amount. Amount must be greater than 0")
         if len(str(self.cleaned_data['amount'])) != len(str(self.cleaned_data['amount']).lstrip('0')):
+            if self.cleaned_data['amount'] == self.order.invoice_remaining_amount:
+                return self.cleaned_data
+            # import pdb;pdb.set_trace()
             raise forms.ValidationError(f"Invalid Amount. Amount must be greater than 0")
         if self.order.is_cancelled:
             raise forms.ValidationError(f"This Invoice is a cancelled {inv_number}")
