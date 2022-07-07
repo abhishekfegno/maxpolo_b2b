@@ -195,6 +195,7 @@ class TransactionCreateView(CreateView):
     order_qs = SalesOrder.objects.all().filter(is_invoice=True, invoice_remaining_amount__gt=0).select_related('dealer').order_by('invoice_date')
 
     def get_context_data(self, **kwargs):
+        # import pdb;pdb.set_trace()
         kwargs['credit_invoices'] = self.order_qs
         kwargs['object'] = self.get_object(queryset=self.order_qs)
         kwargs = super(TransactionCreateView, self).get_context_data(**kwargs)
