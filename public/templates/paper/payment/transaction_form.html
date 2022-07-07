@@ -48,9 +48,11 @@
                             <td>
                                 <div class="">{{ item.invoice_date | date:" D d M Y" }}</div>
                             </td>
+                            {% if not item.pk == object.pk %}
                             <td>
                                 <a href="{% url 'transaction-create' pk=item.pk %}" class="btn btn-danger btn-sm">Mark a Transaction</a>
                             </td>
+                            {% endif %}
 
                         </tr>
                         {% empty %}
