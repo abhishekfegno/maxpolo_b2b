@@ -54,13 +54,13 @@ class OrderListAPIExecutiveView(ListAPIView):
 
     def filter_queryset(self, queryset):
         filt = {k: v for k, v in self.request.query_params.items()}
-        qs = queryset.filter(**filt)
+        qs = queryset
         if 'is_quotation' in filt:
-            qs = queryset.filter(**filt).order_by('-created_at')
+            qs = queryset.filter(is_quotation=True).order_by('-created_at')
         if 'is_confirmed' in filt:
-            qs = queryset.filter(**filt).order_by('-confirmed_date')
+            qs = queryset.filter(is_confirmed=True).order_by('-confirmed_date')
         if 'is_invoice' in filt:
-            qs = queryset.filter(**filt).order_by('-invoice_date')
+            qs = queryset.filter(is_invoice=True).order_by('-invoice_date')
         return qs
 
     def list(self, request, *args, **kwargs):
