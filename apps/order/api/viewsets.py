@@ -30,7 +30,7 @@ class OrderDetailAPIView(RetrieveAPIView):
     pagination_class = PageNumberPagination
 
 
-class OrderListAPIView2(ListAPIView):
+class OrderListAPIExecutiveView(ListAPIView):
     """
     filters
         ?is_quotation=True
@@ -52,6 +52,10 @@ class OrderListAPIView2(ListAPIView):
     pagination_class = PageNumberPagination
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
+    def filter_queryset(self, queryset):
+        filt = {k: v for k, v in self.request.query_params.items()}
+        return queryset.filter(**filt)
+
     def list(self, request, *args, **kwargs):
 
         page_number = request.GET.get('page', 1)
@@ -68,23 +72,23 @@ class OrderListAPIView2(ListAPIView):
         serializer = self.get_serializer(page_obj.object_list, many=True, context={'request': request})
         return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=serializer.data))
 
-    def post(self, request, *args, **kwargs):
-        result = {}
-        dealer = request.data.get('dealer', request.user.id)
-        print(dealer)
-        quantity = request.data.getlist('products')
-        products = request.data.getlist('quantites')
-        serializer = self.get_serializer(data=request.data)
-        try:
-            order = SalesOrder.objects.create(dealer=Dealer.objects.get(id=dealer))
-            for product, quantity in zip(products, quantity):
-                line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity,
-                                                     order=order)
-                print(f"line created {line} for order {order}")
-            EmailHandler().sent_mail_order(order)
-        except Exception as e:
-            result['errors'] = str(e)
-        return Response(result, status=status.HTTP_200_OK)
+    # def post(self, request, *args, **kwargs):
+    #     result = {}
+    #     dealer = request.data.get('dealer', request.user.id)
+    #     print(dealer)
+    #     quantity = request.data.getlist('products')
+    #     products = request.data.getlist('quantites')
+    #     serializer = self.get_serializer(data=request.data)
+    #     try:
+    #         order = SalesOrder.objects.create(dealer=Dealer.objects.get(id=dealer))
+    #         for product, quantity in zip(products, quantity):
+    #             line = SalesOrderLine.objects.create(product=Product.objects.get(id=product), quantity=quantity,
+    #                                                  order=order)
+    #             print(f"line created {line} for order {order}")
+    #         EmailHandler().sent_mail_order(order)
+    #     except Exception as e:
+    #         result['errors'] = str(e)
+    #     return Response(result, status=status.HTTP_200_OK)
 
 
 class OrderListAPIView(CreateModelMixin, ListAPIView):
@@ -121,13 +125,12 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
     search_fields = ('order_id', 'invoice_id')
 
     def filter_queryset(self, queryset):
-        if self.request.user.user_role == 16:
-            dealer = self.request.query_params.get('dealer_id', self.request.user.id)
-            # print(queryset)
-            filt = {k: v for k, v in self.request.query_params.items() if k not in ('dealer_id', )}
-            # import pdb;pdb.set_trace()
-            # print(queryset.filter(**filt))
-            return queryset.filter(**filt)
+        #
+        #
+        # if self.request.user.user_role == 16:
+        #     filt = {k: v for k, v in self.request.query_params.items() if k not in ('dealer_id', )}
+        #
+        #     return queryset.filter(**filt)
         return queryset.filter(dealer=self.request.user).filter(**{k: v for k, v in self.request.GET.items() if k in self.filterset_fields})
 
     def list(self, request, *args, **kwargs):

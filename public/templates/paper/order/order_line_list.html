@@ -54,7 +54,7 @@
         <!--                <input type="button" onclick="confirm_submit(event)" class="btn btn-secondary btn-inline" value="Invoice Order">-->
         <!--            </form>-->
         <!--          </div>-->
-        {% elif order.is_invoice %}
+        {% elif order.is_invoice and not order.status == 'payment_done' %}
         <div class="float-right ">
             <form action="#" method="get">
                 {% csrf_token %}

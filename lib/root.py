@@ -44,6 +44,7 @@ def PUBLIC_APIS(r, f) -> list:
         ])),
         ('Excecutive API', OrderedDict([
             ("Dealers List", reverse('user:dealers-list', request=r, format=f)),
+            ("Order List Executive", reverse('order:api-order-list-executive', request=r, format=f)),
 
         ])),
         ('Settings & Configurations', OrderedDict([
