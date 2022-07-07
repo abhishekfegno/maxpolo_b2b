@@ -199,7 +199,7 @@ class TransactionCreateView(CreateView):
     model = Transaction
     form_class = TransactionCreateForm
     success_url = reverse_lazy('credit-list')
-    order_qs = SalesOrder.objects.all().filter(is_invoice=True, invoice_remaining_amount__gt=0).select_related('dealer').order_by('invoice_date')
+    order_qs = SalesOrder.objects.all().filter(is_invoice=True, invoice_remaining_amount__gt=0).exclude(invoice_status='payment_done').select_related('dealer').order_by('invoice_date')
 
     def get_context_data(self, **kwargs):
         # import pdb;pdb.set_trace()

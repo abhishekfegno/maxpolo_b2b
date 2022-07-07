@@ -99,8 +99,8 @@ def invoice_amount_update(sender, instance, created, **kwargs):
             instance.delete()
             print("deleted instance")
             raise AmountMissMatchException("Amount is Greater than balance amount !!")
-        if paid_amount == actual_inv_amount:  # if the actual amount is same as paid amount payment is completed
-            SalesOrder.objects.filter(pk=instance.order.pk).update(invoice_status='payment_done')
+        if paid_amount == actual_inv_amount:
+            status = 'payment_done'  # if the actual amount is same as paid amount payment is completed
         elif paid_amount <= remaining_amount:
             remaining_amount -= paid_amount
             print(f"remaining_amount:{remaining_amount},paid:{paid_amount}")
@@ -116,7 +116,9 @@ def invoice_amount_update(sender, instance, created, **kwargs):
             print("deleted instance")
             raise AmountMissMatchException("Amount is Greater than balance amount !!")
         # issue if the paid amount is bigger than balance amount it is deleted nt in first transaction
-
+        if paid_amount == actual_inv_amount:
+            remaining_amount = 0.0
+            status = 'payment_done'
         SalesOrder.objects.filter(pk=instance.order.pk).update(invoice_remaining_amount=remaining_amount,
                                                                invoice_status=status)
 

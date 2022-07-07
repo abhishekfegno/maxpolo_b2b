@@ -33,7 +33,7 @@ class TransactionCreateForm(forms.ModelForm):
     
     def save(self, commit=True):
         self.instance.order = self.order
-        self.instance.invoice_status = self.order
+        # self.instance.invoice_status = self.order
 
         self.instance = super().save(commit=commit)
         return self.instance
