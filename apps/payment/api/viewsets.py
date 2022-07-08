@@ -61,7 +61,7 @@ class TransactionListAPIView2(ListAPIView):
 
 
 class TransactionListAPIView(ListAPIView):
-    queryset = SalesOrder.objects.filter(is_invoice=True)
+    queryset = SalesOrder.objects.filter(is_invoice=True).select_related('dealer').prefetch_related('transaction_set').order_by('invoice_date')
     serializer_class = TransactionListSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_fields = []
@@ -74,22 +74,19 @@ class TransactionListAPIView(ListAPIView):
         filt = {k: v for k, v in self.request.query_params.items()}
         if self.request.user.user_role == 32:
             print(self.request.user.user_role)
-            qs = queryset.filter(dealer=self.request.user).exclude(transaction=None)
+            queryset = queryset.filter(dealer=self.request.user).exclude(transaction=None)
         else:
             # user is executive
-
             if 'dealer_id' and 'is_credit' in filt:
                 dealer_id = filt.get('dealer_id')
-                queryset.filter(invoice_remaining_amount__gte=0, dealer_id=dealer_id).select_related(
+                queryset.filter(invoice_status__in=['credit', 'payment_partial'], dealer_id=dealer_id).select_related(
                     'dealer').order_by('invoice_date')
         if 'is_credit' in filt:
-            queryset.filter(invoice_status__in=['credit', 'payment_partial']).select_related('dealer').order_by('invoice_date')
-            # import pdb;
-            # pdb.set_trace()
-        if 'is_dealer' in filt:
+            queryset = queryset.filter(invoice_status__in=['credit', 'payment_partial'])
+        if 'dealer_id' in filt:
             dealer_id = filt.get('dealer_id')
-            queryset.filter(dealer_id=dealer_id).select_related('dealer').order_by('invoice_date')
-
+            queryset = queryset.filter(dealer_id=dealer_id).select_related('dealer')
+        print(queryset.count())
         return queryset
 
     def list(self, request, *args, **kwargs):
