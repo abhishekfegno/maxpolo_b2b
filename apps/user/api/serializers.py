@@ -39,9 +39,15 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
 
 class DealerSerializer(serializers.ModelSerializer):
+    zone = serializers.SerializerMethodField()
+
+    def get_zone(self, instance):
+        return instance.zone and instance.zone.name
+
     class Meta:
         model = Dealer
-        fields = ('id', 'username', 'user_role', 'branch')
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'mobile', 'user_role', 'zone', 'company_cin',
+                  'address_street', 'address_city', 'address_state')
 
 
 class DealerDetailSerializer(serializers.ModelSerializer):

@@ -115,7 +115,7 @@ class LogoutAPIView(GenericAPIView):
 
 
 class DealerListView(ListAPIView):
-    queryset = Dealer.objects.all()
+    queryset = Dealer.objects.all().select_related('zone')
     serializer_class = DealerSerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_fields = ['username']
