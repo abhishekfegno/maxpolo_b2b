@@ -91,7 +91,7 @@ class LoginAPIView(GenericAPIView):
                     "executive": {
                         'name': user.executive.first_name,
                     } if user.executive else None,
-                    "zone": user.zone if user.zone else None,
+                    "zone": user.zone.name if user.zone else None,
                     "mobile": user.mobile,
                 }
             except Exception as e:
@@ -100,6 +100,7 @@ class LoginAPIView(GenericAPIView):
         else:
             out['errors'] = serializer.errors
             return Response(out, status=status.HTTP_400_BAD_REQUEST)
+        print(user.zone)
         return Response(out, status=status.HTTP_200_OK)
 
 

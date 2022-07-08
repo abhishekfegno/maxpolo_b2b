@@ -10,7 +10,7 @@ from apps.user.models import *
 class UserCustomAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email', 'user_role', 'branch', 'mobile')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email', 'user_role', 'branch', 'mobile', 'zone')}),
         (_('Permissions'), {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
