@@ -50,7 +50,7 @@ class DealerForm(UserCreationForm):
     class Meta:
         model = Dealer
         fields = (
-            'first_name', 'last_name', 'username',  "password1", "password2",  'branch',
+            'first_name', 'last_name', 'username',  "password1", "password2", 'zone',
             'mobile', 'email', 'executive', 'company_cin', 'address_street',
             'address_city', 'address_state', )
 

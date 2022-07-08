@@ -58,7 +58,7 @@ class LoginAPIView(GenericAPIView):
             "executive": {
                 'name': user.executive.first_name,
             } if user.executive else None,
-            "zone": None,
+            "zone": user.zone if user.zone else None,
             "mobile": user.mobile,
         }
         return Response(out)
