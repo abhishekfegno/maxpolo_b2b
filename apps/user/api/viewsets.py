@@ -61,6 +61,7 @@ class LoginAPIView(GenericAPIView):
             "zone": user.zone if user.zone else None,
             "mobile": user.mobile,
         }
+        # print(user.zone)
         return Response(out)
 
     def post(self, request, *args, **kwargs):
@@ -90,7 +91,7 @@ class LoginAPIView(GenericAPIView):
                     "executive": {
                         'name': user.executive.first_name,
                     } if user.executive else None,
-                    "zone": None,
+                    "zone": user.zone if user.zone else None,
                     "mobile": user.mobile,
                 }
             except Exception as e:

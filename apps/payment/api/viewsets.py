@@ -80,15 +80,16 @@ class TransactionListAPIView(ListAPIView):
 
             if 'dealer_id' and 'is_credit' in filt:
                 dealer_id = filt.get('dealer_id')
-                queryset.filter(is_invoice=True, invoice_remaining_amount__gt=0, dealer_id=dealer_id).select_related(
+                queryset.filter(invoice_remaining_amount__gte=0, dealer_id=dealer_id).select_related(
                     'dealer').order_by('invoice_date')
         if 'is_credit' in filt:
-            queryset.filter(is_invoice=True, invoice_remaining_amount__gt=0).select_related('dealer').order_by('invoice_date')
+            queryset.filter(invoice_status__in=['credit', 'payment_partial']).select_related('dealer').order_by('invoice_date')
+            # import pdb;
+            # pdb.set_trace()
         if 'is_dealer' in filt:
             dealer_id = filt.get('dealer_id')
             queryset.filter(dealer_id=dealer_id).select_related('dealer').order_by('invoice_date')
-        # import pdb;
-        # pdb.set_trace()
+
         return queryset
 
     def list(self, request, *args, **kwargs):
