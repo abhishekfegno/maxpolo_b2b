@@ -7,7 +7,7 @@ from rest_framework import status, permissions
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.generics import ListAPIView, GenericAPIView
+from rest_framework.generics import ListAPIView, GenericAPIView, RetrieveAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
@@ -20,7 +20,7 @@ from apps.catalogue.models import PDF
 from apps.order.api.serializers import UpcomingPaymentSerializer
 from apps.order.models import SalesOrder
 from apps.user.api.serializers import LoginSerializer, ProfileAPISerializer, ComplaintSerialzer, \
-    PasswordResetSerializer, AdvertisementSerializer, DealerSerializer
+    PasswordResetSerializer, AdvertisementSerializer, DealerSerializer, DealerDetailSerializer
 from apps.user.models import User, Complaint, Banners, Dealer
 from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
@@ -125,6 +125,19 @@ class DealerListView(ListAPIView):
 
     def get_queryset(self):
         return Dealer.objects.all().filter(executive=self.request.user)
+
+
+class DealerDetailView(RetrieveAPIView):
+    queryset = Dealer.objects.all()
+    serializer_class = DealerDetailSerializer
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filterset_fields = ['username']
+    ordering_fields = ['username']
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    permission_classes = (permissions.IsAuthenticated, )
+
+    # def get_queryset(self):
+    #     return Dealer.objects.all().filter(executive=self.request.user)
 
 
 class ProfileAPIView(ExeDealerMixin, GenericAPIView):

@@ -42,3 +42,10 @@ class DealerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dealer
         fields = ('id', 'username', 'user_role', 'branch')
+
+
+class DealerDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Dealer
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'mobile', 'user_role', 'zone', 'company_cin',
+                  'address_street', 'address_city', 'address_state')
