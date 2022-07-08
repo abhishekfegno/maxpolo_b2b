@@ -61,7 +61,7 @@ class TransactionListAPIView2(ListAPIView):
 
 
 class TransactionListAPIView(ListAPIView):
-    queryset = SalesOrder.objects.filter(is_invoice=True).select_related('dealer').prefetch_related('transaction_set').order_by('-invoice_date')
+    queryset = SalesOrder.objects.filter(is_invoice=True).exclude(transaction=None).select_related('dealer').prefetch_related('transaction_set').order_by('-invoice_date')
     serializer_class = TransactionListSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_fields = []
@@ -74,7 +74,7 @@ class TransactionListAPIView(ListAPIView):
         filt = {k: v for k, v in self.request.query_params.items()}
         if self.request.user.user_role == 32:
             print(self.request.user.user_role)
-            queryset = queryset.filter(dealer=self.request.user).exclude(transaction=None)
+            queryset = queryset.filter(dealer=self.request.user)
         else:
             # user is executive
             if 'dealer_id' and 'is_credit' in filt:
