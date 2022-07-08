@@ -85,7 +85,7 @@ class DealerUpdateForm(UserChangeForm):
         model = Dealer
         fields = (
             'first_name', 'last_name', 'username',
-            'branch', 'mobile', 'email', 'executive', 'company_cin', 'address_street', 'address_city',
+            'zone', 'mobile', 'email', 'executive', 'company_cin', 'address_street', 'address_city',
             'address_state', "password",
         )
 

@@ -87,8 +87,8 @@ class TransactionListAPIView(ListAPIView):
         if 'is_dealer' in filt:
             dealer_id = filt.get('dealer_id')
             queryset.filter(dealer_id=dealer_id).select_related('dealer').order_by('invoice_date')
-        import pdb;
-        pdb.set_trace()
+        # import pdb;
+        # pdb.set_trace()
         return queryset
 
     def list(self, request, *args, **kwargs):

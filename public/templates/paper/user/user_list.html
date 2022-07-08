@@ -23,9 +23,15 @@
                                 <div class="col-md-4">
                                     {{ form.last_name|as_crispy_field }}
                                 </div>
+                                {% if form.branch %}
+                                <div class="col-md-4">
+                                    {{ form.branch|as_crispy_field }}
+                                </div>
+                                {%else%}
                                 <div class="col-md-4">
                                     {{ form.zone|as_crispy_field }}
                                 </div>
+                                {%endif%}
                             </div>
                             <hr>
                         </div>
