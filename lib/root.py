@@ -30,6 +30,9 @@ def PUBLIC_APIS(r, f) -> list:
             ("Order Detail", reverse('order:api-order-detail', request=r, format=f, kwargs={'pk': 27})),
 
             ("Transactions API", reverse('payment:api-transaction-list', request=r, format=f)),
+            ("Credit API", reverse('payment:api-credit-list', request=r, format=f)),
+
+
             ("Excalation API", reverse('user:escalation_number', request=r, format=f, kwargs={'pk': 1})),
             ("Notification API", reverse('notification:api-notification-list', request=r, format=f)),
             ("Check-in Create API", reverse('executive-tracking-api:check-point-create-api', request=r, format=f)),

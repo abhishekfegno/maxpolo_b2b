@@ -7,16 +7,16 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from apps.order.models import SalesOrder
-from apps.payment.api.serializers import TransactionSerializer, TransactionListSerializer
+from apps.payment.api.serializers import CreditListSerializer, TransactionListSerializer
 from apps.payment.models import Transaction
 from lib.utils import list_api_formatter
 
 
-class TransactionListAPIView2(ListAPIView):
+class TransactionListAPIView(ListAPIView):
     """
     """
     queryset = Transaction.objects.all().select_related('order').order_by('created_at')
-    serializer_class = TransactionSerializer
+    serializer_class = TransactionListSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_fields = []
     search_fields = ()
@@ -37,8 +37,7 @@ class TransactionListAPIView2(ListAPIView):
         page_obj = paginator.get_page(page_number)
         serializer = self.get_serializer(page_obj.object_list, many=True, context={'request': request})
         results = {}
-        results['total_remaining_amount'] = SalesOrder.objects.filter(is_invoice=True,
-                                                                      invoice_status='payment_partial').aggregate(
+        results['total_remaining_amount'] = SalesOrder.objects.filter(is_invoice=True, invoice_status='payment_partial').aggregate(
             Sum('invoice_remaining_amount'))
         results['data'] = serializer.data
         return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=results))
@@ -60,9 +59,9 @@ class TransactionListAPIView2(ListAPIView):
     #     return Response(result, status=status.HTTP_200_OK)
 
 
-class TransactionListAPIView(ListAPIView):
+class CreditListAPIView(ListAPIView):
     queryset = SalesOrder.objects.filter(is_invoice=True).exclude(transaction=None).select_related('dealer').prefetch_related('transaction_set').order_by('-invoice_date')
-    serializer_class = TransactionListSerializer
+    serializer_class = CreditListSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_fields = []
     search_fields = ()
