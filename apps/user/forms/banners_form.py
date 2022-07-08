@@ -2,6 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm, UserChangeForm
 
+from apps.executivetracking.models import Zone
 from apps.user.models import Banners, Dealer, Executive, Role, User
 
 
@@ -119,3 +120,8 @@ class AdminUpdateForm(UserChangeForm):
         super(AdminUpdateForm, self).save(commit=commit)
 
 
+
+class ZoneForm(forms.ModelForm):
+    class Meta:
+        model = Zone
+        fields = '__all__'

@@ -70,15 +70,32 @@ class TransactionListAPIView(ListAPIView):
     pagination_class = PageNumberPagination
 
 
+    def filter_queryset(self, queryset):
+        filt = {k: v for k, v in self.request.query_params.items()}
+        if self.request.user.user_role == 32:
+            print(self.request.user.user_role)
+            qs = queryset.filter(dealer=self.request.user).exclude(transaction=None)
+        else:
+            # user is executive
+
+            if 'dealer_id' and 'is_credit' in filt:
+                dealer_id = filt.get('dealer_id')
+                queryset.filter(is_invoice=True, invoice_remaining_amount__gt=0, dealer_id=dealer_id).select_related(
+                    'dealer').order_by('invoice_date')
+        if 'is_credit' in filt:
+            queryset.filter(is_invoice=True, invoice_remaining_amount__gt=0).select_related('dealer').order_by('invoice_date')
+        if 'is_dealer' in filt:
+            dealer_id = filt.get('dealer_id')
+            queryset.filter(dealer_id=dealer_id).select_related('dealer').order_by('invoice_date')
+        import pdb;
+        pdb.set_trace()
+        return queryset
+
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page', 1)
         page_size = request.GET.get('page_size', 20)
         # import pdb;pdb.set_trace()
-        try:
-            queryset = self.filter_queryset(self.get_queryset().filter(dealer=request.user).exclude(transaction=None))
-        except Exception as e:
-            queryset = self.filter_queryset(self.get_queryset().exclude(transaction=None))
-            print(str(e))
+        queryset = self.filter_queryset(self.get_queryset())
         paginator = Paginator(queryset, page_size)
         try:
             page_number = paginator.validate_number(page_number)
@@ -88,6 +105,6 @@ class TransactionListAPIView(ListAPIView):
         serializer = self.get_serializer(page_obj.object_list, many=True, context={'request': request})
         results = {}
         results['total_remaining_amount'] = queryset.filter(invoice_status='payment_partial').aggregate(
-            Sum('invoice_remaining_amount'))
+            Sum('invoice_remaining_amount')) or 0
         results['data'] = serializer.data
         return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=results))

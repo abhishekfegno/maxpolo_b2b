@@ -48,6 +48,11 @@ urlpatterns = [
     path('user/<role:role>/<int:pk>/password/', UserPasswordView.as_view(), name='user-password'),
     path('user/<role:role>/<int:pk>/delete/', UserListView.as_view(), name='user-delete'),
 
+    path('zone/list/', ZoneView.as_view(), name='zone-list'),
+    path('zone/<int:pk>/update/', ZoneUpdateView.as_view(), name='zone-update'),
+    path('zone/<int:pk>/delete/', ZoneDeleteView.as_view(), name='zone-delete'),
+
+
     path('complaint/excel/export/', get_excel_report_complaint, name='get_excel_report_complaint')
 
 ]

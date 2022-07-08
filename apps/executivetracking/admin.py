@@ -7,3 +7,4 @@ from apps.executivetracking.models import *
 
 admin.site.register(CheckPoint)
 admin.site.register(CrashReport)
+admin.site.register(Zone)

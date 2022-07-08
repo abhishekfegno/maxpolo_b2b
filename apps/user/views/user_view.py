@@ -8,11 +8,12 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView, DeleteView, ListView, TemplateView
-from django.views.generic.edit import FormMixin, ModelFormMixin, ProcessFormView, FormView
+from django.views.generic.edit import FormMixin, ModelFormMixin, ProcessFormView, FormView, CreateView
 from rest_framework.authtoken.models import Token
 
-
-from apps.user.forms.banners_form import DealerUpdateForm, ExecutiveUpdateForm, AdminUpdateForm, UserCreationForm
+from apps.executivetracking.models import Zone
+from apps.user.forms.banners_form import DealerUpdateForm, ExecutiveUpdateForm, AdminUpdateForm, UserCreationForm, \
+    ZoneForm
 from apps.catalogue.models import Product, Brand
 from apps.order.models import SalesOrder
 from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm, AdminForm
@@ -193,3 +194,28 @@ def password_reset(request, token):
             errors = str(e)
 
     return render(request, 'registration/password_reset_confirm.html', context={'form': form, 'errors': errors})
+
+
+
+class ZoneView(CreateView, ListView):
+    queryset = Zone.objects.all()
+    template_name = 'paper/user/zone_list.html'
+    model = User
+    form_class = ZoneForm
+    success_url = '/zone/list/'
+
+
+class ZoneUpdateView(UpdateView):
+    queryset = Zone.objects.all()
+    template_name = 'paper/user/zone_list.html'
+    model = User
+    form_class = ZoneForm
+    success_url = '/zone/list/'
+
+
+class ZoneDeleteView(DeleteView):
+    queryset = Zone.objects.all()
+    template_name = 'paper/user/zone_list.html'
+    model = User
+    form_class = ZoneForm
+    success_url = '/zone/list/'

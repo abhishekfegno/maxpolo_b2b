@@ -1,0 +1,73 @@
+{% extends 'paper/layout.html' %}{% load crispy_forms_tags %}
+{% block page_title %} Advertisements {% endblock %}
+
+
+{% block content%}
+<div class='row'>
+    <div class='col-7'>
+        <div class='card'>
+            <div class='card-body'>
+                <h3>Zone List</h3>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead class="thead-dark">
+                        <tr class="table-header">
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                        </tr>
+
+                        </thead>
+                        <tbody>
+                        {% for object_item in object_list %}
+                        <tr class="{% if object.pk == object_item.pk %}selected-row{% endif %}">
+                            <!--                    <td scope="row"> </td>-->
+                            <td>
+                                <div class="">{{ forloop.counter }}</div>
+                            </td>
+                            <td>
+                                <div class=""><a href="{% url 'zone-update' pk=object_item.pk %}">{{ object_item.name }}</a></div>
+                            </td>
+
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="text-center text-muted" colspan="100%"> No advertisements left in the book. You can add it here                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class='col-5'>
+        <div class='card'>
+            <div class='card-body'>
+                {% if object.pk%}
+                <a class="pull-right btn btn-secondary" href="{% url 'zone-list' %}" > back to list</a>
+                <h3 class="heading-3 pt-3">Update "Zone"</h3>
+                <p class="text-muted"> Here you can update the Zone. </p>
+                {% else %}
+                <h3 class="heading-3 pt-3">Add Zone</h3>
+                <p class="text-muted"> Here you can add the Zone here. </p>
+                {% endif %}
+                <form enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    {% if object.pk %}
+                    <a class="delBrand btn btn-danger" href="javascript:void(0)"
+                                                 onclick="swalFunction(this, '{% url 'zone-delete' pk=object.pk %}')">Delete</a>
+                    {% endif %}
+                    <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>{% include 'paper/swal.html' %}
+
+{% endblock %}
