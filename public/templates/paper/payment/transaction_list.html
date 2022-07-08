@@ -33,7 +33,7 @@
                                 <div class="">{{ forloop.counter }}</div>
                                 {% endif %}                            </td>
                             <td>
-                                <div class=""><a href="">{{object_item.order.invoice_id | default:object_item.order.is_as_text }}</a></div>
+                                <div class=""><a href="">{{object_item.order.invoice_id | default:object_item.order.id_as_text }}</a></div>
                             </td>
                             <td>
                                 {% if object_item.order.dealer %}
