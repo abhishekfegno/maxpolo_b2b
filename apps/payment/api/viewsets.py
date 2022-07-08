@@ -61,7 +61,7 @@ class TransactionListAPIView2(ListAPIView):
 
 
 class TransactionListAPIView(ListAPIView):
-    queryset = SalesOrder.objects.filter(is_invoice=True).select_related('dealer').prefetch_related('transaction_set').order_by('invoice_date')
+    queryset = SalesOrder.objects.filter(is_invoice=True).select_related('dealer').prefetch_related('transaction_set').order_by('-invoice_date')
     serializer_class = TransactionListSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_fields = []
@@ -80,9 +80,9 @@ class TransactionListAPIView(ListAPIView):
             if 'dealer_id' and 'is_credit' in filt:
                 dealer_id = filt.get('dealer_id')
                 queryset.filter(invoice_status__in=['credit', 'payment_partial'], dealer_id=dealer_id).select_related(
-                    'dealer').order_by('invoice_date')
+                    'dealer').order_by('-invoice_date')
         if 'is_credit' in filt:
-            queryset = queryset.filter(invoice_status__in=['credit', 'payment_partial'])
+            queryset = queryset.filter(invoice_status__in=['credit', 'payment_partial']).order_by('invoice_date')
         if 'dealer_id' in filt:
             dealer_id = filt.get('dealer_id')
             queryset = queryset.filter(dealer_id=dealer_id).select_related('dealer')

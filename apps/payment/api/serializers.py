@@ -25,4 +25,5 @@ class TransactionListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SalesOrder
-        fields = ('id', 'invoice_id', 'invoice_amount', 'invoice_remaining_amount', 'invoice_status', 'transaction_set')
+        fields = ('id', 'invoice_id', 'invoice_amount', 'invoice_remaining_amount',
+                  'invoice_status', 'invoice_date', 'transaction_set')
