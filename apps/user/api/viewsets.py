@@ -7,7 +7,7 @@ from rest_framework import status, permissions
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.generics import ListAPIView, GenericAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, GenericAPIView, RetrieveAPIView, CreateAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
@@ -20,8 +20,9 @@ from apps.catalogue.models import PDF
 from apps.order.api.serializers import UpcomingPaymentSerializer
 from apps.order.models import SalesOrder
 from apps.user.api.serializers import LoginSerializer, ProfileAPISerializer, ComplaintSerialzer, \
-    PasswordResetSerializer, AdvertisementSerializer, DealerSerializer, DealerDetailSerializer
-from apps.user.models import User, Complaint, Banners, Dealer
+    PasswordResetSerializer, AdvertisementSerializer, DealerSerializer, DealerDetailSerializer, \
+    ExcalationNumberSerializer
+from apps.user.models import User, Complaint, Banners, Dealer, SiteConfiguration
 from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
 
@@ -284,3 +285,17 @@ class HomePageAPI(ExeDealerMixin, APIView):
             } if dealer else None
         }
         return Response(result)
+
+
+class ExcalationNumberView(RetrieveAPIView):
+    queryset = SiteConfiguration.objects.all()
+    serializer_class = ExcalationNumberSerializer
+    filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
+
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
+    # def put(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #     return Response()

@@ -12,4 +12,6 @@ urlpatterns = [
     path('password/reset/', PasswordResetView.as_view(), name='password-reset'),
     path('complaints/', ComplaintListView.as_view(), name='dealer-complaints'),
     path('homepage/', HomePageAPI.as_view(), name='home-page'),
+    path('excalation_number/list/<int:pk>/', ExcalationNumberView.as_view(), name='escalation_number'),
+
 ]

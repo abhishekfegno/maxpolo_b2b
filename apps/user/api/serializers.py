@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.user.models import User, Complaint, Banners, Dealer
+from apps.user.models import User, Complaint, Banners, Dealer, SiteConfiguration
 
 
 class LoginSerializer(serializers.Serializer):
@@ -60,3 +60,9 @@ class DealerDetailSerializer(serializers.ModelSerializer):
         model = Dealer
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'mobile', 'user_role', 'zone', 'company_cin',
                   'address_street', 'address_city', 'address_state')
+
+
+class ExcalationNumberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SiteConfiguration
+        fields = ('excalation_number',)
