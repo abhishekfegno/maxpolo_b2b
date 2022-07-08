@@ -135,7 +135,7 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
 
     def filter_queryset(self, queryset):
         filt = {k: v for k, v in self.request.query_params.items()}
-        qs = queryset.filter(dealer=self.request.user, **filt)
+        qs = queryset.filter(dealer=self.request.user)
         if 'is_quotation' in filt:
             qs = queryset.filter(is_quotation=True).order_by('-created_at')
         if 'is_cancelled' in filt:
