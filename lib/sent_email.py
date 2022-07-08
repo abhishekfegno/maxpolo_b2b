@@ -12,7 +12,7 @@ from lib.events import EventHandler
 
 class EmailHandler(EventHandler):
     api_key = os.environ.get('SENDINBLUE_API_KEY')
-    print(api_key)
+    # print(api_key)
     # Configure API key authorization: api-key
     configuration = sib_api_v3_sdk.Configuration()
     configuration.api_key['api-key'] = api_key
