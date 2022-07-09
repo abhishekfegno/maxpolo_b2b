@@ -227,7 +227,7 @@ class ComplaintListView(ExeDealerMixin, ListAPIView):
     pagination_class = PageNumberPagination
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     # permission_classes = (permissions.IsAuthenticated, )
-    parser_classes = (MultiPartParser, FileUploadParser)
+    # parser_classes = (MultiPartParser, FileUploadParser)
 
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page_number', 1)
