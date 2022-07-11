@@ -10,6 +10,7 @@ urlpatterns = [
     path('dealers/list/', DealerListView.as_view(), name='dealer-list'),
     path('dealers/list/<int:pk>/', DealerDetailView.as_view(), name='dealer-detail'),
     path('password/reset/', PasswordResetView.as_view(), name='password-reset'),
+    path('password/change/', PasswordChangeAPIView.as_view(), name='password-change'),
     path('complaints/', ComplaintListView.as_view(), name='dealer-complaints'),
     path('homepage/', HomePageAPI.as_view(), name='home-page'),
     path('branch/list/', BranchAPIView.as_view(), name='branch-list'),

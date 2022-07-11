@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from apps.executivetracking.models import Zone
 from apps.infrastructure.models import Branch
@@ -37,6 +38,20 @@ class PasswordResetSerializer(serializers.Serializer):
 
     class Meta:
         fields = ('username', 'email')
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=10)
+    confirm_password = serializers.CharField(max_length=50)
+
+    def validate(self, attrs):
+        if attrs.get('password') == attrs.get('confirm_password'):
+            return super().validate(attrs)
+        else:
+            ValidationError
+
+    class Meta:
+        fields = ('password', 'confirm_password')
 
 
 class ComplaintSerialzer(serializers.ModelSerializer):

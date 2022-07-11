@@ -20,6 +20,7 @@ def PUBLIC_APIS(r, f) -> list:
             ("User Logout", reverse('user:user-logout', request=r, format=f)),
             ("User Profile", reverse('user:user-profile', request=r, format=f)),
             ("Password Reset", reverse('user:password-reset', request=r, format=f)),
+            ("Password Change", reverse('user:password-change', request=r, format=f)),
             ("Dealer Complaint", reverse('user:dealer-complaints', request=r, format=f)),
             ("Home API", reverse('user:home-page', request=r, format=f)),
 

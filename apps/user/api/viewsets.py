@@ -23,7 +23,7 @@ from apps.order.api.serializers import UpcomingPaymentSerializer
 from apps.order.models import SalesOrder
 from apps.user.api.serializers import LoginSerializer, ProfileAPISerializer, ComplaintSerialzer, \
     PasswordResetSerializer, AdvertisementSerializer, DealerSerializer, DealerDetailSerializer, \
-    ExcalationNumberSerializer, ZoneSerializer, BranchSerializer
+    ExcalationNumberSerializer, ZoneSerializer, BranchSerializer, PasswordChangeSerializer
 from apps.user.models import User, Complaint, Banners, Dealer, SiteConfiguration
 from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
@@ -211,6 +211,27 @@ class PasswordResetView(GenericAPIView):
                 result["message"] = str(e)
             result["message"] = "Email sent"
         return Response(result)
+
+
+class PasswordChangeAPIView(GenericAPIView):
+    serializer_class = PasswordChangeSerializer
+
+    def post(self, request, *args, **kwargs):
+        result = {}
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            try:
+
+                user = self.request.user
+                user.set_password(serializer.data['confirm_password'])
+                act_status = status.HTTP_200_OK
+            except Exception as e:
+                result['errors'] = str(e)
+                act_status = status.HTTP_400_BAD_REQUEST
+        else:
+            result['errors'] = serializer.errors
+            act_status = status.HTTP_400_BAD_REQUEST
+        return Response(result, status=act_status)
 
 
 class ComplaintListView(ExeDealerMixin, ListAPIView):
