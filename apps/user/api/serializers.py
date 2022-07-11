@@ -18,10 +18,12 @@ class ProfileAPISerializer(serializers.ModelSerializer):
     zone = serializers.SerializerMethodField()
 
     def get_branch(self, instance):
-        return instance.branch.name or None
+        if instance.branch:
+            return instance.branch.name and instance.zone
 
     def get_zone(self, instance):
-        return instance.zone.name or None
+        if instance.zone:
+            return instance.zone.name and instance.zone
 
     class Meta:
         model = User
