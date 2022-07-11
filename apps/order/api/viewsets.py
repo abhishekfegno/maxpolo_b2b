@@ -1,4 +1,5 @@
 from django.core.paginator import Paginator, EmptyPage
+from django.db.models import Prefetch
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, permissions
 from rest_framework.authentication import BasicAuthentication
@@ -11,6 +12,7 @@ from rest_framework.response import Response
 from apps.catalogue.models import Product
 from apps.order.api.serializers import OrderSerializer, OrderDetailSerializer, OrderCreateSerializer
 from apps.order.models import SalesOrder, SalesOrderLine
+from apps.payment.models import Transaction
 from apps.user.models import Dealer
 from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
@@ -43,7 +45,7 @@ class OrderListAPIExecutiveView(ListAPIView):
         "dealer":3
     }
     """
-    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
+    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product', 'transaction_set').order_by('-created_at')
     serializer_class = OrderSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_fields = ['is_cancelled', 'is_confirmed', 'is_invoice', 'is_quotation']
@@ -54,15 +56,18 @@ class OrderListAPIExecutiveView(ListAPIView):
 
     def filter_queryset(self, queryset):
         filt = {k: v for k, v in self.request.query_params.items()}
+        # import pdb;pdb.set_trace()
         qs = queryset
+        if 'dealer_id' in filt:
+            qs = qs.filter(dealer_id=filt.get('dealer_id'))
         if 'is_quotation' in filt:
-            qs = queryset.filter(is_quotation=True).order_by('-created_at')
+            qs = qs.filter(is_quotation=True).order_by('-created_at')
         if 'is_cancelled' in filt:
-            qs = queryset.filter(is_cancelled=True).order_by('-created_at')
+            qs = qs.filter(is_cancelled=True).order_by('-created_at')
         if 'is_confirmed' in filt:
-            qs = queryset.filter(is_confirmed=True).order_by('-confirmed_date')
+            qs = qs.filter(is_confirmed=True).order_by('-confirmed_date')
         if 'is_invoice' in filt:
-            qs = queryset.filter(is_invoice=True).order_by('-invoice_date')
+            qs = qs.filter(is_invoice=True).order_by('-invoice_date')
         return qs
 
     def list(self, request, *args, **kwargs):
@@ -119,7 +124,8 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
     }
 
     """
-    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product', 'transaction_set').order_by('-created_at')
+    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product',
+                              Prefetch('transaction_set', queryset=Transaction.objects.all())).order_by('-created_at')
 
     def get_serializer_class(self, data=None):
         if self.request.method == 'POST':
@@ -137,13 +143,13 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
         filt = {k: v for k, v in self.request.query_params.items()}
         qs = queryset.filter(dealer=self.request.user)
         if 'is_quotation' in filt:
-            qs = queryset.filter(is_quotation=True).order_by('-created_at')
+            qs = qs.filter(is_quotation=True).order_by('-created_at')
         if 'is_cancelled' in filt:
-            qs = queryset.filter(is_cancelled=True).order_by('-created_at')
+            qs = qs.filter(is_cancelled=True).order_by('-created_at')
         if 'is_confirmed' in filt:
-            qs = queryset.filter(is_confirmed=True).order_by('-confirmed_date')
+            qs = qs.filter(is_confirmed=True).order_by('-confirmed_date')
         if 'is_invoice' in filt:
-            qs = queryset.filter(is_invoice=True).order_by('-invoice_date')
+            qs = qs.filter(is_invoice=True).order_by('-invoice_date')
         return qs
 
     def list(self, request, *args, **kwargs):

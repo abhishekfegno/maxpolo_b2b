@@ -109,6 +109,14 @@ class SalesOrder(models.Model):
             self.status = 'payment_partial'
         self.save()
 
+    @property
+    def last_transaction_date(self):
+        if self.is_invoice:
+            last_transaction = self.transaction_set.all().exclude(status='cancelled').last()
+            last_transaction_date = last_transaction and last_transaction.created_at
+
+            return last_transaction_date
+
     def save(self, **kwargs):
         if self.is_confirmed and self.is_cancelled:
             self.is_cancelled = False

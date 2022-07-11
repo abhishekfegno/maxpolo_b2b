@@ -50,10 +50,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def get_timeline(self, instance):
         if instance.dealer:
-            last_transaction_date = None
-            if instance.is_invoice:
-                last_transaction = instance.transaction_set.all().exclude(status='cancelled').order_by('-id').first()
-                last_transaction_date = last_transaction and last_transaction.created_at
             return {
                 "new": {
                     "status": True,
@@ -72,7 +68,7 @@ class OrderSerializer(serializers.ModelSerializer):
                 },
                 "completed": {
                     "status": instance.invoice_amount > 0 and instance.invoice_remaining_amount == 0,
-                    "date": last_transaction_date,
+                    "date": instance.last_transaction_date,
                     "label": "Paid",
                 },
                 "cancelled": {
@@ -83,7 +79,7 @@ class OrderSerializer(serializers.ModelSerializer):
             }
 
     def get_transaction(self, instance):
-        return instance.transaction_set.all().values('amount', 'amount_balance', 'status', 'created_at').order_by('-id')
+        return instance.transaction_set.all().values('amount', 'amount_balance', 'status', 'created_at')
 
     class Meta:
         model = SalesOrder
