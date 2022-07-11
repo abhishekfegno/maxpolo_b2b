@@ -75,6 +75,11 @@ class OrderSerializer(serializers.ModelSerializer):
                     "date": last_transaction_date,
                     "label": "Paid",
                 },
+                "cancelled": {
+                    "status": instance.is_cancelled,
+                    "date": None,
+                    "label": "Cancelled",
+                },
             }
 
     def get_transaction(self, instance):
@@ -116,6 +121,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
     line = OrderLineSerializer(many=True)
     dealer = serializers.SerializerMethodField()
     transactions = serializers.SerializerMethodField()
+    timeline = serializers.SerializerMethodField()
 
     def get_dealer(self, instance):
         if instance.dealer:
@@ -124,11 +130,45 @@ class OrderDetailSerializer(serializers.ModelSerializer):
                 "name": instance.dealer.get_full_name()
             }
 
+    def get_timeline(self, instance):
+        if instance.dealer:
+            last_transaction_date = None
+            if instance.is_invoice:
+                last_transaction = instance.transaction_set.all().exclude(status='cancelled').order_by('-id').first()
+                last_transaction_date = last_transaction and last_transaction.created_at
+            return {
+                "new": {
+                    "status": True,
+                    "date": instance.created_at,
+                    "label": "Placed",
+                },
+                "confirmed": {
+                    "status": instance.is_invoice or instance.is_confirmed,
+                    "date": instance.confirmed_date,
+                    "label": "Confirmed",
+                },
+                "invoiced": {
+                    "status": instance.is_invoice,
+                    "date": instance.invoice_date,
+                    "label": "Invoiced",
+                },
+                "completed": {
+                    "status": instance.invoice_amount > 0 and instance.invoice_remaining_amount == 0,
+                    "date": last_transaction_date,
+                    "label": "Paid",
+                },
+                "cancelled": {
+                    "status": instance.is_cancelled,
+                    "date": None,
+                    "label": "Cancelled",
+                },
+            }
+
     def get_transactions(self, instance):
-        return instance.transaction_set.all().values('amount', 'created_at')
+        return instance.transaction_set.all().values('amount', 'amount_balance', 'status', 'created_at').order_by('-id')
 
     class Meta:
         model = SalesOrder
         fields = ('id', 'order_id', 'invoice_id', 'invoice_status', 'invoice_date', 'invoice_amount',
                   'invoice_remaining_amount', 'confirmed_date', 'is_invoice', 'is_cancelled', 'is_confirmed',
-                  'is_quotation', 'dealer', 'created_at', 'dealer', 'line', 'transactions')
+                  'is_quotation', 'dealer', 'created_at', 'dealer', 'line', 'timeline', 'transactions')

@@ -21,7 +21,7 @@ class PageNumberPagination(CorePageNumberPagination):
 
 
 class OrderDetailAPIView(RetrieveAPIView):
-    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product')
+    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product', 'transaction_set')
     serializer_class = OrderDetailSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_fields = ['is_cancelled', 'is_confirmed', 'is_invoice', 'is_quotation']
@@ -119,7 +119,7 @@ class OrderListAPIView(CreateModelMixin, ListAPIView):
     }
 
     """
-    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product').order_by('-created_at')
+    queryset = SalesOrder.objects.all().select_related('dealer').prefetch_related('line', 'line__product', 'transaction_set').order_by('-created_at')
 
     def get_serializer_class(self, data=None):
         if self.request.method == 'POST':
