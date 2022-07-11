@@ -181,20 +181,19 @@ def password_reset(request, token):
         try:
             token = Token.objects.get(key=token)
             if is_token_expired(token):
-                return render(request, 'registration/password_reset_confirm.html', context={'errors': errors})
-            token = token_expire_handler(token)
+                token.delete()
+                token = Token.objects.create(user=token.user)
 
             user = User.objects.get(id=token.user.id)
             if form.is_valid():
                 user.set_password(form.data.get('confirm_password'))
                 user.save()
-                print(user.password)
+                # print(user.password)
                 return render(request, 'registration/password_reset_complete.html')
         except Exception as e:
             errors = str(e)
             print(str(e))
     return render(request, 'registration/password_reset_confirm.html', context={'form': form, 'errors': errors})
-
 
 
 class ZoneView(CreateView, ListView):

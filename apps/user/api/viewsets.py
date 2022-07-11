@@ -191,14 +191,14 @@ class PasswordResetView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             email = EmailHandler()
-            recipient = [{"email": serializer.data['email'], "name": serializer.data["username"]}]
             subject = {
                 "subject": "Password Reset",
                 "subheadline": "You have requested for a Password Reset"
             }
             try:
-                user = User.objects.get(username=serializer.data["username"])
+                user = User.objects.filter(username=serializer.data["username"], email=serializer.data['email']).first()
                 token, _ = Token.objects.get_or_create(user=user)
+                recipient = [{"email": user.email, "name": serializer.data["username"]}]
 
                 _url = reverse('password-reset-page', request=request, format=None, kwargs={"token": token.key})
                 # url = f"{reverse('password_reset-', request=request, format=None)}/{token.key}/"
