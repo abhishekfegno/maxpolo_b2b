@@ -20,7 +20,7 @@ class NotificationAPIView(ListAPIView):
         page_number = request.GET.get('page', 1)
         page_size = request.GET.get('page_size', 10)
 
-        queryset = self.filter_queryset(self.get_queryset().filter(user=self.request.user))
+        queryset = self.filter_queryset(self.get_queryset().filter(user_id=self.request.user.id))
 
         paginator = Paginator(queryset, page_size)
         try:
