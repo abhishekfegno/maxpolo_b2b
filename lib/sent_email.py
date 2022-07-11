@@ -88,8 +88,9 @@ class EmailHandler(EventHandler):
 
     def sent_email_now(self, recipient, message, subject):
         # print("KEY", self.api_key)
+        # here the recipient ust be list of dictionary
         receivers = [i for i in recipient]
-        # import pdb;pdb.set_trace()
+        import pdb;pdb.set_trace()
 
         api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(self.configuration))
         send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(

@@ -175,7 +175,7 @@ class UserDeleteView(DeleteView):
 
 def password_reset(request, token):
     errors = ""
-    form = ResetPasswordForm(request.POST)
+    form = ResetPasswordForm(request.POST or None)
 
     if request.method == 'POST':
         try:
@@ -192,7 +192,7 @@ def password_reset(request, token):
                 return render(request, 'registration/password_reset_complete.html')
         except Exception as e:
             errors = str(e)
-
+            print(str(e))
     return render(request, 'registration/password_reset_confirm.html', context={'form': form, 'errors': errors})
 
 

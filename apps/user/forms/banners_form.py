@@ -25,6 +25,7 @@ class ResetPasswordForm(forms.ModelForm):
     confirm_password = forms.CharField(widget=forms.PasswordInput)
 
     def clean(self):
+        # import pdb;pdb.set_trace()
         if self.cleaned_data['new_password'] != self.cleaned_data['confirm_password']:
             raise forms.ValidationError("The given passwords dont match !!")
         return self.cleaned_data

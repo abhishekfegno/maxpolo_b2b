@@ -191,7 +191,7 @@ class PasswordResetView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             email = EmailHandler()
-            recipient = {"email": serializer.data['email'], "name": serializer.data["username"]}
+            recipient = [{"email": serializer.data['email'], "name": serializer.data["username"]}]
             subject = {
                 "subject": "Password Reset",
                 "subheadline": "You have requested for a Password Reset"
@@ -204,7 +204,7 @@ class PasswordResetView(GenericAPIView):
                 # url = f"{reverse('password_reset-', request=request, format=None)}/{token.key}/"
                 message = f'You can reset you password by visiting this link {_url}'
                 email.sent_email_now(recipient, message, subject)
-                print(token)
+                # print(token)
             except Exception as e:
                 result["message"] = str(e)
             result["message"] = "Email sent"
