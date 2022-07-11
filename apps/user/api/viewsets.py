@@ -231,11 +231,9 @@ class ComplaintListView(ExeDealerMixin, ListAPIView):
 
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page_number', 1)
-        page_size = request.GET.get('page_size', 20)
-
-
-        serializer = self.get_serializer(self.get_queryset().filter(created_by_id=self.get_dealer_id()), many=True, context={'request': request})
+        page_size = request.GET.get('page_size', 10)
         queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset.filter(created_by=self.get_dealer_id()), many=True, context={'request': request})
         paginator = Paginator(queryset, page_size)
         try:
             page_number = paginator.validate_number(page_number)
