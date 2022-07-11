@@ -218,7 +218,7 @@ class ComplaintListView(ExeDealerMixin, ListAPIView):
             "description":"asdfasdfa"
         }
     """
-    queryset = Complaint.objects.select_related('created_by', 'order_id')
+    queryset = Complaint.objects.all().select_related('created_by', 'order_id')
     serializer_class = ComplaintSerialzer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_fields = ()
@@ -230,16 +230,16 @@ class ComplaintListView(ExeDealerMixin, ListAPIView):
     # parser_classes = (MultiPartParser, FileUploadParser)
 
     def list(self, request, *args, **kwargs):
-        page_number = request.GET.get('page_number', 1)
+        page_number = request.GET.get('page', 1)
         page_size = request.GET.get('page_size', 10)
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset.filter(created_by=self.get_dealer_id()), many=True, context={'request': request})
+        queryset = self.filter_queryset(self.get_queryset().filter(created_by=self.get_dealer_id()))
         paginator = Paginator(queryset, page_size)
         try:
             page_number = paginator.validate_number(page_number)
         except EmptyPage:
             page_number = paginator.num_pages
         page_obj = paginator.get_page(page_number)
+        serializer = self.get_serializer(page_obj.object_list, many=True, context={'request': request})
         return Response(list_api_formatter(request, paginator=paginator, page_obj=page_obj, results=serializer.data))
 
     @csrf_exempt

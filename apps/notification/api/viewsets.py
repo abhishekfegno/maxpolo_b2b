@@ -17,7 +17,7 @@ class NotificationAPIView(ListAPIView):
     search_fields = ('order_id', 'invoice_id')
 
     def list(self, request, *args, **kwargs):
-        page_number = request.GET.get('page_number', 1)
+        page_number = request.GET.get('page', 1)
         page_size = request.GET.get('page_size', 10)
 
         queryset = self.filter_queryset(self.get_queryset().filter(user=self.request.user))
