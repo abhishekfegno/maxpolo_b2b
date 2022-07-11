@@ -17,11 +17,13 @@ from rest_framework.views import APIView
 
 from apps.catalogue.api.serializers import ProductPDFSerializer, ProductPDFListSerializer
 from apps.catalogue.models import PDF
+from apps.executivetracking.models import Zone
+from apps.infrastructure.models import Branch
 from apps.order.api.serializers import UpcomingPaymentSerializer
 from apps.order.models import SalesOrder
 from apps.user.api.serializers import LoginSerializer, ProfileAPISerializer, ComplaintSerialzer, \
     PasswordResetSerializer, AdvertisementSerializer, DealerSerializer, DealerDetailSerializer, \
-    ExcalationNumberSerializer
+    ExcalationNumberSerializer, ZoneSerializer, BranchSerializer
 from apps.user.models import User, Complaint, Banners, Dealer, SiteConfiguration
 from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
@@ -297,3 +299,19 @@ class ExcalationNumberView(RetrieveAPIView):
     #     if serializer.is_valid():
     #         serializer.save()
     #     return Response()
+
+
+class BranchAPIView(ListAPIView):
+    queryset = Branch.objects.all()
+    serializer_class = BranchSerializer
+    filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
+
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
+
+class ZoneAPIView(ListAPIView):
+    queryset = Zone.objects.all()
+    serializer_class = ZoneSerializer
+    filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
+
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)

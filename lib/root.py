@@ -23,6 +23,8 @@ def PUBLIC_APIS(r, f) -> list:
             ("Dealer Complaint", reverse('user:dealer-complaints', request=r, format=f)),
             ("Home API", reverse('user:home-page', request=r, format=f)),
 
+            ("Zone List", reverse('user:zone-list', request=r, format=f)),
+            ("Branch List", reverse('user:branch-list', request=r, format=f)),
             ("Product List", reverse('catalogue:api-product-list', request=r, format=f)),
             ("Category List", reverse('catalogue:api-category-list', request=r, format=f)),
 

@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from apps.executivetracking.models import Zone
+from apps.infrastructure.models import Branch
 from apps.user.models import User, Complaint, Banners, Dealer, SiteConfiguration
 
 
@@ -12,6 +14,15 @@ class LoginSerializer(serializers.Serializer):
 
 
 class ProfileAPISerializer(serializers.ModelSerializer):
+    branch = serializers.SerializerMethodField()
+    zone = serializers.SerializerMethodField()
+
+    def get_branch(self, instance):
+        return instance.branch.name
+
+    def get_zone(self, instance):
+        return instance.zone.name
+
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email', 'mobile', 'branch', 'company_cin',
@@ -66,3 +77,15 @@ class ExcalationNumberSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteConfiguration
         fields = ('excalation_number',)
+
+
+class ZoneSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Zone
+        fields = '__all__'
+
+
+class BranchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Branch
+        fields = '__all__'
