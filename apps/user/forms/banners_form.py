@@ -1,6 +1,7 @@
 # New file created 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm, UserChangeForm
+from django.core.exceptions import ValidationError
 from django.forms import TextInput
 
 from apps.executivetracking.models import Zone
@@ -13,6 +14,12 @@ class UserCreationForm(BaseUserCreationForm):
         fields = ('first_name', 'last_name',
                   'branch', 'mobile', 'email', 'executive', 'company_cin', 'address_street',
                   'address_city', 'address_state', "password1", "password2", 'designation')
+
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("Email exists")
+        return self.cleaned_data
 
 
 class BannersForm(forms.ModelForm):

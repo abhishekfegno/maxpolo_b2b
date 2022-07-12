@@ -152,8 +152,9 @@ def create_order_ids(sender, instance, created, **kwargs):
         EmailHandler().event_for_orders(instance)
         NotificationEvent().event_for_orders(instance, message)
         SalesOrder.objects.filter(pk=instance.pk).update(is_confirmed=False,
-                                                         invoice_remaining_amount=instance.invoice_amount)
-    # if instance.invoice_amount:
-    #     print("credit status")
-    #     SalesOrder.objects.filter(pk=instance.pk).update(invoice_status='credit')
+                                                      invoice_remaining_amount=instance.invoice_amount)
+    if instance.is_cancelled:
+        if instance.is_confirmed or instance.is_invoice:
+            raise ValueError("Order cannot be cancelled")
+        SalesOrder.objects.filter(pk=instance.pk).update(is_cancelled=True)
     return instance
