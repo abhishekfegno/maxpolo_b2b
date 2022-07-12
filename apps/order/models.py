@@ -36,6 +36,7 @@ class SalesOrder(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     confirmed_date = models.DateTimeField(null=True, blank=True)
+    cancelled_date = models.DateTimeField(null=True, blank=True)
     invoice_date = models.DateTimeField(null=True, blank=True)
     __show_dealer_in_str__ = False
 

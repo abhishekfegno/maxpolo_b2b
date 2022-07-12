@@ -59,6 +59,7 @@ class User(AbstractUser):
     branch = models.ForeignKey('infrastructure.Branch', on_delete=models.SET_NULL, null=True, blank=True)
     executive = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='dealers')
 
+    designation = models.CharField(max_length=50, help_text='designation of executive', null=True, blank=False)
     company_cin = models.CharField(max_length=50, null=True, blank=False)
     address_street = models.CharField(max_length=50, null=True, blank=False)
     address_city = models.CharField(max_length=50, null=True, blank=False)
