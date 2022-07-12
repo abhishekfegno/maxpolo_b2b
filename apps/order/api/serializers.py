@@ -36,7 +36,7 @@ class OrderSerializer(serializers.ModelSerializer):
     line = OrderLineSerializer(many=True)
     dealer = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
-    transaction_set = TransactionSerializer(many=True)
+    transaction = serializers.SerializerMethodField()
 
     def get_status(self, instance):
         return instance.status
@@ -48,11 +48,14 @@ class OrderSerializer(serializers.ModelSerializer):
                 "name": instance.dealer.get_full_name()
             }
 
+    def get_transaction(self, instance):
+        return TransactionSerializer(many=True).data
+
     class Meta:
         model = SalesOrder
         fields = ('id', 'order_id', 'invoice_id', 'invoice_status', 'invoice_date', 'invoice_amount',
                   'invoice_remaining_amount', 'confirmed_date', 'is_invoice', 'is_cancelled', 'is_confirmed',
-                  'is_quotation', 'dealer', 'created_at', 'line', 'status', 'transaction_set')
+                  'is_quotation', 'dealer', 'created_at', 'line', 'status', 'transaction')
 
 
 class OrderLineCreateSerializer(serializers.ModelSerializer):
