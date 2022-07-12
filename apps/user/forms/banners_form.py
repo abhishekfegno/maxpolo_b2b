@@ -12,7 +12,7 @@ class UserCreationForm(BaseUserCreationForm):
         model = Dealer
         fields = ('first_name', 'last_name',
                   'branch', 'mobile', 'email', 'executive', 'company_cin', 'address_street',
-                  'address_city', 'address_state', "password1", "password2", )
+                  'address_city', 'address_state', "password1", "password2", 'designation')
 
 
 class BannersForm(forms.ModelForm):
@@ -72,7 +72,7 @@ class ExecutiveForm(UserCreationForm):
 
     class Meta:
         model = Executive
-        fields = ('first_name', 'last_name', 'username', "password1", "password2", 'branch', 'mobile', 'email')
+        fields = ('first_name', 'last_name', 'username', "password1", "password2", 'branch', 'mobile', 'email', 'designation')
 
     def save(self, commit=True):
         self.instance.user_role = Role.EXECUTIVE
@@ -104,7 +104,7 @@ class ExecutiveUpdateForm(UserChangeForm):
 
     class Meta:
         model = Executive
-        fields = ("password", 'username', 'first_name', 'last_name', 'branch', 'mobile', 'email')
+        fields = ("password", 'username', 'first_name', 'last_name', 'branch', 'mobile', 'email', 'designation')
 
     def save(self, commit=True):
         self.instance.user_role = Role.EXECUTIVE

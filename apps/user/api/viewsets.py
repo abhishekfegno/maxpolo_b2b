@@ -95,6 +95,7 @@ class LoginAPIView(GenericAPIView):
                         'name': user.executive.first_name,
                         'mobile': user.executive.mobile,
                         'email': user.executive.email,
+                        'designation': user.executive.designation,
                     } if user.executive else None,
                     "zone": user.zone.name if user.zone else None,
                     "mobile": user.mobile,
