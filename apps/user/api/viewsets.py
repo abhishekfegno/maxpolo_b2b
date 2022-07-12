@@ -93,6 +93,8 @@ class LoginAPIView(GenericAPIView):
                     "branch": user.branch and user.branch.name,
                     "executive": {
                         'name': user.executive.first_name,
+                        'mobile': user.executive.mobile,
+                        'email': user.executive.email,
                     } if user.executive else None,
                     "zone": user.zone.name if user.zone else None,
                     "mobile": user.mobile,
@@ -198,7 +200,7 @@ class PasswordResetView(GenericAPIView):
                 "subheadline": "You have requested for a Password Reset"
             }
             try:
-                user = User.objects.filter(username=serializer.data["username"], email=serializer.data['email']).first()
+                user = User.objects.filter(email=serializer.data['email']).first()
                 token, _ = Token.objects.get_or_create(user=user)
                 recipient = [{"email": user.email, "name": serializer.data["username"]}]
 

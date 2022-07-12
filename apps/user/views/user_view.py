@@ -176,9 +176,12 @@ class UserDeleteView(DeleteView):
 
 def password_reset(request, token):
     errors = ""
+    context = {}
     form = ResetPasswordForm(request.POST or None)
 
     if request.method == 'POST':
+
+
         try:
             token = Token.objects.get(key=token)
             if is_token_expired(token):
@@ -194,7 +197,10 @@ def password_reset(request, token):
         except Exception as e:
             errors = str(e)
             print(str(e))
-    return render(request, 'registration/password_reset_confirm.html', context={'form': form, 'errors': errors})
+    context['form'] = form
+    context['errors'] = errors
+    context['title'] = "Password reset Form"
+    return render(request, 'registration/password_reset_confirm_new.html', context=context)
 
 
 class ZoneView(CreateView, ListView):

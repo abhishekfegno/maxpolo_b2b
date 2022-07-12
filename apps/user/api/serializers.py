@@ -33,11 +33,10 @@ class ProfileAPISerializer(serializers.ModelSerializer):
 
 
 class PasswordResetSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=10)
     email = serializers.EmailField(max_length=50)
 
     class Meta:
-        fields = ('username', 'email')
+        fields = ('email', )
 
 
 class PasswordChangeSerializer(serializers.Serializer):
