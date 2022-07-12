@@ -52,6 +52,10 @@ urlpatterns = [
     path('zone/<int:pk>/update/', ZoneUpdateView.as_view(), name='zone-update'),
     path('zone/<int:pk>/delete/', ZoneDeleteView.as_view(), name='zone-delete'),
 
+    path('escalation/list/', EscalationNumberView.as_view(), name='escalation-list'),
+    # path('escalation/<int:pk>/delete/', EscalationNumberView.as_view(), name='zone-update'),
+
+
 
     path('complaint/excel/export/', get_excel_report_complaint, name='get_excel_report_complaint')
 

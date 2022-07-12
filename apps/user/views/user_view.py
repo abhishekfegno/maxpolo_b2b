@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.messages.views import SuccessMessageMixin
@@ -13,11 +14,11 @@ from rest_framework.authtoken.models import Token
 
 from apps.executivetracking.models import Zone
 from apps.user.forms.banners_form import DealerUpdateForm, ExecutiveUpdateForm, AdminUpdateForm, UserCreationForm, \
-    ZoneForm
+    ZoneForm, ExcalationNumberForm
 from apps.catalogue.models import Product, Brand
 from apps.order.models import SalesOrder
 from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm, AdminForm
-from apps.user.models import Banners, User, Dealer, Executive, Role, Complaint
+from apps.user.models import Banners, User, Dealer, Executive, Role, Complaint, SiteConfiguration
 from lib.token_handler import token_expire_handler, is_token_expired
 
 
@@ -218,3 +219,21 @@ class ZoneDeleteView(DeleteView):
     model = User
     form_class = ZoneForm
     success_url = '/zone/list/'
+
+
+class EscalationNumberView(CreateView, ListView):
+    queryset = SiteConfiguration.objects.all()
+    template_name = 'paper/user/escalation_list.html'
+    model = SiteConfiguration
+    form_class = ExcalationNumberForm
+    success_url = '/escalation/list/'
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        try:
+            if form.is_valid():
+                form.save()
+        except Exception as e:
+            print(str(e))
+            messages.add_message(request, messages.ERROR, str(e))
+        return redirect('escalation-list')

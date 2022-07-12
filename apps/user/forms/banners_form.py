@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm, UserChangeForm
 
 from apps.executivetracking.models import Zone
-from apps.user.models import Banners, Dealer, Executive, Role, User
+from apps.user.models import Banners, Dealer, Executive, Role, User, SiteConfiguration
 
 
 class UserCreationForm(BaseUserCreationForm):
@@ -126,3 +126,16 @@ class ZoneForm(forms.ModelForm):
     class Meta:
         model = Zone
         fields = '__all__'
+
+
+class ExcalationNumberForm(forms.ModelForm):
+    class Meta:
+        model = SiteConfiguration
+        fields = ('excalation_number',)
+
+    def clean(self):
+        if self.cleaned_data['excalation_number'].isalpha:
+            if len(self.cleaned_data['excalation_number']) > 10:
+                raise ValueError("Enter a valid contact number !")
+            raise ValueError("Invalid Input !")
+        return super().clean()
