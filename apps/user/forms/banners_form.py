@@ -135,7 +135,8 @@ class ExcalationNumberForm(forms.ModelForm):
 
     def clean(self):
         if self.cleaned_data['excalation_number'].isalpha:
-            if len(self.cleaned_data['excalation_number']) > 10:
-                raise ValueError("Enter a valid contact number !")
             raise ValueError("Invalid Input !")
+        if len(self.cleaned_data['excalation_number']) > 10:
+            raise ValueError("Enter a valid contact number !")
+
         return super().clean()
