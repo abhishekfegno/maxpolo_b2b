@@ -2,6 +2,7 @@ from django.db.models import Sum
 from rest_framework import serializers
 
 from apps.order.models import SalesOrder, SalesOrderLine
+from apps.payment.api.serializers import TransactionSerializer
 
 
 class UpcomingPaymentSerializer(serializers.ModelSerializer):
@@ -34,9 +35,8 @@ class OrderLineSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     line = OrderLineSerializer(many=True)
     dealer = serializers.SerializerMethodField()
-    # timeline = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
-    transaction = serializers.SerializerMethodField()
+    transaction_set = TransactionSerializer(many=True)
 
     def get_status(self, instance):
         return instance.status
@@ -48,44 +48,11 @@ class OrderSerializer(serializers.ModelSerializer):
                 "name": instance.dealer.get_full_name()
             }
 
-    # def get_timeline(self, instance):
-    #     if instance.dealer:
-    #         return {
-    #             "new": {
-    #                 "status": True,
-    #                 "date": instance.created_at,
-    #                 "label": "Placed",
-    #             },
-    #             "confirmed": {
-    #                 "status": instance.is_invoice or instance.is_confirmed,
-    #                 "date": instance.confirmed_date,
-    #                 "label": "Confirmed",
-    #             },
-    #             "invoiced": {
-    #                 "status": instance.is_invoice,
-    #                 "date": instance.invoice_date,
-    #                 "label": "Invoiced",
-    #             },
-    #             "completed": {
-    #                 "status": instance.invoice_amount > 0 and instance.invoice_remaining_amount == 0,
-    #                 "date": instance.last_transaction_date,
-    #                 "label": "Paid",
-    #             },
-    #             "cancelled": {
-    #                 "status": instance.is_cancelled,
-    #                 "date": None,
-    #                 "label": "Cancelled",
-    #             },
-    #         }
-
-    def get_transaction(self, instance):
-        return instance.transaction_set.all().values('amount', 'amount_balance', 'status', 'created_at')
-
     class Meta:
         model = SalesOrder
         fields = ('id', 'order_id', 'invoice_id', 'invoice_status', 'invoice_date', 'invoice_amount',
                   'invoice_remaining_amount', 'confirmed_date', 'is_invoice', 'is_cancelled', 'is_confirmed',
-                  'is_quotation', 'dealer', 'created_at', 'line', 'status', 'transaction')
+                  'is_quotation', 'dealer', 'created_at', 'line', 'status', 'transaction_set')
 
 
 class OrderLineCreateSerializer(serializers.ModelSerializer):
