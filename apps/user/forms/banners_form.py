@@ -1,6 +1,7 @@
 # New file created 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm, UserChangeForm
+from django.forms import TextInput
 
 from apps.executivetracking.models import Zone
 from apps.user.models import Banners, Dealer, Executive, Role, User, SiteConfiguration
@@ -129,14 +130,18 @@ class ZoneForm(forms.ModelForm):
 
 
 class ExcalationNumberForm(forms.ModelForm):
+    excalation_number = forms.CharField(widget=TextInput(attrs={'type': 'number'}))
+
     class Meta:
         model = SiteConfiguration
         fields = ('excalation_number',)
+    #
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['excalation_number'].widget.attrs['class'] = "number"
 
     def clean(self):
-        if self.cleaned_data['excalation_number'].isalpha:
-            raise ValueError("Invalid Input!Enter a valid contact number.")
+        # import pdb;pdb.set_trace()
         if len(self.cleaned_data['excalation_number']) > 10:
             raise ValueError("Enter a valid contact number !")
-
         return super().clean()
