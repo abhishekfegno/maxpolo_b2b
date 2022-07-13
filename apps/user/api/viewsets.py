@@ -6,6 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, permissions
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView, GenericAPIView, RetrieveAPIView, CreateAPIView
 from rest_framework.pagination import PageNumberPagination
@@ -34,6 +35,40 @@ class ExeDealerMixin(object):
         if 'dealer_id' in self.request.GET:
             return self.request.GET['dealer_id']
         return self.request.user.id
+
+
+class TokenLoginView(ObtainAuthToken):
+
+    def put(self, request, *args, **kwargs):
+        """
+            {
+            "user_id":4
+            "logout":True
+            }
+        """
+        logout = request.POST.get('logout')
+        if logout:
+            Token.objects.get(user_id=request.POST.get('user_id')).delete()
+            return Response({"message": "Logout Successfully"}, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        """
+          {
+            username:,
+            password:
+        }
+        """
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        # import pdb;pdb.set_trace()
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user_id': user.pk,
+            'email': user.email,
+        }, status=status.HTTP_202_ACCEPTED)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
