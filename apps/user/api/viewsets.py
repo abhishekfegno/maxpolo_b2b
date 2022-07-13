@@ -85,6 +85,8 @@ class LoginAPIView(GenericAPIView):
                     "id": user.id,
                     "role_id": user.user_role,
                     "role": user.user_role_name,
+                    "email": user.email,
+                    "mobile": user.mobile,
                     "company_name": user.get_full_name(),
                     "company_cin": user.company_cin,
                     "address_street": user.address_street,
@@ -98,7 +100,6 @@ class LoginAPIView(GenericAPIView):
                         'designation': user.executive.designation,
                     } if user.executive else None,
                     "zone": user.zone.name if user.zone else None,
-                    "mobile": user.mobile,
                 }
             except Exception as e:
                 out['errors'] = str(e)
