@@ -47,7 +47,7 @@ class PasswordChangeSerializer(serializers.Serializer):
         if attrs.get('password') == attrs.get('confirm_password'):
             return super().validate(attrs)
         else:
-            return super().validate(attrs)
+            raise ValidationError("Password doesn't match !!")
 
     class Meta:
         fields = ('password', 'confirm_password')
