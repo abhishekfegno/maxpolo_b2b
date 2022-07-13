@@ -216,7 +216,6 @@ class PasswordResetView(GenericAPIView):
         return Response(result)
 
 
-
 @method_decorator(csrf_exempt, name='dispatch')
 class PasswordChangeAPIView(GenericAPIView):
     serializer_class = PasswordChangeSerializer
@@ -226,7 +225,6 @@ class PasswordChangeAPIView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             try:
-
                 user = self.request.user
                 user.set_password(serializer.data['confirm_password'])
                 act_status = status.HTTP_200_OK
