@@ -216,6 +216,7 @@ class PasswordResetView(GenericAPIView):
         return Response(result)
 
 
+
 @method_decorator(csrf_exempt, name='dispatch')
 class PasswordChangeAPIView(GenericAPIView):
     serializer_class = PasswordChangeSerializer
