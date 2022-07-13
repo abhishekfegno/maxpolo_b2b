@@ -188,7 +188,7 @@ class ProfileAPIView(ExeDealerMixin, GenericAPIView):
             result['errors'] = serializer.errors
         return Response(result, status=status.HTTP_200_OK)
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class PasswordResetView(GenericAPIView):
     serializer_class = PasswordResetSerializer
 
@@ -216,6 +216,7 @@ class PasswordResetView(GenericAPIView):
         return Response(result)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class PasswordChangeAPIView(GenericAPIView):
     serializer_class = PasswordChangeSerializer
 
