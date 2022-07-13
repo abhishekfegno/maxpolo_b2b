@@ -191,6 +191,7 @@ class ProfileAPIView(ExeDealerMixin, GenericAPIView):
 @method_decorator(csrf_exempt, name='dispatch')
 class PasswordResetView(GenericAPIView):
     serializer_class = PasswordResetSerializer
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def post(self, request, *args, **kwargs):
         result = {}
@@ -219,6 +220,7 @@ class PasswordResetView(GenericAPIView):
 @method_decorator(csrf_exempt, name='dispatch')
 class PasswordChangeAPIView(GenericAPIView):
     serializer_class = PasswordChangeSerializer
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def post(self, request, *args, **kwargs):
         result = {}
