@@ -228,7 +228,9 @@ class PasswordChangeAPIView(GenericAPIView):
         if serializer.is_valid():
             try:
                 user = self.request.user
+                # import pdb;pdb.set_trace()
                 user.set_password(serializer.data['confirm_password'])
+                user.save()
                 act_status = status.HTTP_200_OK
             except Exception as e:
                 result['errors'] = str(e)
