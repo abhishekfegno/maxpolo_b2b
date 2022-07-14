@@ -214,7 +214,7 @@ class ProfileAPIView(ExeDealerMixin, GenericAPIView):
             result = {str(e)}
         return Response(result)
 
-    def patch(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         result = {}
         serializer = self.get_serializer(request.user, data=request.data)
         if serializer.is_valid():
