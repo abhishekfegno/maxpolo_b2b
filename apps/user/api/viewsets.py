@@ -214,7 +214,7 @@ class ProfileAPIView(ExeDealerMixin, GenericAPIView):
             result = {str(e)}
         return Response(result)
 
-    def post(self, request, *args, **kwargs):
+    def patch(self, request, *args, **kwargs):
         result = {}
         serializer = self.get_serializer(request.user, data=request.data)
         if serializer.is_valid():
@@ -222,6 +222,7 @@ class ProfileAPIView(ExeDealerMixin, GenericAPIView):
         else:
             result['errors'] = serializer.errors
         return Response(result, status=status.HTTP_200_OK)
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PasswordResetView(GenericAPIView):
