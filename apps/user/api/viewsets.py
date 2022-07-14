@@ -6,6 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, permissions
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView, GenericAPIView, RetrieveAPIView, CreateAPIView
 from rest_framework.pagination import PageNumberPagination
@@ -34,6 +35,40 @@ class ExeDealerMixin(object):
         if 'dealer_id' in self.request.GET:
             return self.request.GET['dealer_id']
         return self.request.user.id
+
+
+class TokenLoginView(ObtainAuthToken):
+
+    def put(self, request, *args, **kwargs):
+        """
+            {
+            "user_id":4
+            "logout":True
+            }
+        """
+        logout = request.POST.get('logout')
+        if logout:
+            Token.objects.get(user_id=request.POST.get('user_id')).delete()
+            return Response({"message": "Logout Successfully"}, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        """
+          {
+            username:,
+            password:
+        }
+        """
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        # import pdb;pdb.set_trace()
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user_id': user.pk,
+            'email': user.email,
+        }, status=status.HTTP_202_ACCEPTED)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -85,6 +120,8 @@ class LoginAPIView(GenericAPIView):
                     "id": user.id,
                     "role_id": user.user_role,
                     "role": user.user_role_name,
+                    "email": user.email,
+                    "mobile": user.mobile,
                     "company_name": user.get_full_name(),
                     "company_cin": user.company_cin,
                     "address_street": user.address_street,
@@ -93,9 +130,11 @@ class LoginAPIView(GenericAPIView):
                     "branch": user.branch and user.branch.name,
                     "executive": {
                         'name': user.executive.first_name,
+                        'mobile': user.executive.mobile,
+                        'email': user.executive.email,
+                        'designation': user.executive.designation,
                     } if user.executive else None,
                     "zone": user.zone.name if user.zone else None,
-                    "mobile": user.mobile,
                 }
             except Exception as e:
                 out['errors'] = str(e)
@@ -185,8 +224,10 @@ class ProfileAPIView(ExeDealerMixin, GenericAPIView):
         return Response(result, status=status.HTTP_200_OK)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class PasswordResetView(GenericAPIView):
     serializer_class = PasswordResetSerializer
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def post(self, request, *args, **kwargs):
         result = {}
@@ -198,32 +239,34 @@ class PasswordResetView(GenericAPIView):
                 "subheadline": "You have requested for a Password Reset"
             }
             try:
-                user = User.objects.filter(username=serializer.data["username"], email=serializer.data['email']).first()
+                user = User.objects.filter(email=serializer.data['email']).first()
                 token, _ = Token.objects.get_or_create(user=user)
-                recipient = [{"email": user.email, "name": serializer.data["username"]}]
-
+                print(f"Token created:{token}")
+                recipient = [{"email": user.email, "name": user.username}]
                 _url = reverse('password-reset-page', request=request, format=None, kwargs={"token": token.key})
-                # url = f"{reverse('password_reset-', request=request, format=None)}/{token.key}/"
                 message = f'You can reset you password by visiting this link {_url}'
                 email.sent_email_now(recipient, message, subject)
-                # print(token)
+                result["message"] = f"Email sent to {recipient}, Token created:{_},{token}"
+
             except Exception as e:
                 result["message"] = str(e)
-            result["message"] = "Email sent"
         return Response(result)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class PasswordChangeAPIView(GenericAPIView):
     serializer_class = PasswordChangeSerializer
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def post(self, request, *args, **kwargs):
         result = {}
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             try:
-
                 user = self.request.user
+                # import pdb;pdb.set_trace()
                 user.set_password(serializer.data['confirm_password'])
+                user.save()
                 act_status = status.HTTP_200_OK
             except Exception as e:
                 result['errors'] = str(e)

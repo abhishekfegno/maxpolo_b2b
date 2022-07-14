@@ -1,9 +1,11 @@
 # New file created 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm, UserChangeForm
+from django.core.exceptions import ValidationError
+from django.forms import TextInput
 
 from apps.executivetracking.models import Zone
-from apps.user.models import Banners, Dealer, Executive, Role, User
+from apps.user.models import Banners, Dealer, Executive, Role, User, SiteConfiguration
 
 
 class UserCreationForm(BaseUserCreationForm):
@@ -11,7 +13,13 @@ class UserCreationForm(BaseUserCreationForm):
         model = Dealer
         fields = ('first_name', 'last_name',
                   'branch', 'mobile', 'email', 'executive', 'company_cin', 'address_street',
-                  'address_city', 'address_state', "password1", "password2", )
+                  'address_city', 'address_state', "password1", "password2", 'designation')
+
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("Email exists")
+        return self.cleaned_data
 
 
 class BannersForm(forms.ModelForm):
@@ -71,7 +79,7 @@ class ExecutiveForm(UserCreationForm):
 
     class Meta:
         model = Executive
-        fields = ('first_name', 'last_name', 'username', "password1", "password2", 'branch', 'mobile', 'email')
+        fields = ('first_name', 'last_name', 'username', "password1", "password2", 'branch', 'mobile', 'email', 'designation')
 
     def save(self, commit=True):
         self.instance.user_role = Role.EXECUTIVE
@@ -103,7 +111,7 @@ class ExecutiveUpdateForm(UserChangeForm):
 
     class Meta:
         model = Executive
-        fields = ("password", 'username', 'first_name', 'last_name', 'branch', 'mobile', 'email')
+        fields = ("password", 'username', 'first_name', 'last_name', 'branch', 'mobile', 'email', 'designation')
 
     def save(self, commit=True):
         self.instance.user_role = Role.EXECUTIVE
@@ -126,3 +134,21 @@ class ZoneForm(forms.ModelForm):
     class Meta:
         model = Zone
         fields = '__all__'
+
+
+class ExcalationNumberForm(forms.ModelForm):
+    excalation_number = forms.CharField(widget=TextInput(attrs={'type': 'number'}))
+
+    class Meta:
+        model = SiteConfiguration
+        fields = ('excalation_number',)
+    #
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['excalation_number'].widget.attrs['class'] = "number"
+
+    def clean(self):
+        # import pdb;pdb.set_trace()
+        if len(self.cleaned_data['excalation_number']) > 10:
+            raise ValueError("Enter a valid contact number !")
+        return super().clean()

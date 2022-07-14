@@ -1,27 +1,28 @@
 from datetime import datetime
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db.models import Sum, F, Count, Value
+from django.db.models import Sum, F, Value
 from django.db.models.functions import Concat
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.utils.translation import gettext_lazy as _
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView, DeleteView, ListView, TemplateView
-from django.views.generic.edit import FormMixin, ModelFormMixin, ProcessFormView, FormView, CreateView
+from django.views.generic.edit import ProcessFormView, ModelFormMixin, CreateView
 from rest_framework.authtoken.models import Token
 
 from apps.executivetracking.models import Zone
+from apps.payment.models import Transaction
 from apps.user.forms.banners_form import DealerUpdateForm, ExecutiveUpdateForm, AdminUpdateForm, UserCreationForm, \
-    ZoneForm
-from apps.catalogue.models import Product, Brand, Category, PDF
-from apps.order.models import SalesOrder, SalesOrderLine
+    ZoneForm, ExcalationNumberForm
+from apps.catalogue.models import Category, PDF
+from apps.order.models import SalesOrderLine
+from apps.catalogue.models import Product, Brand
+from apps.order.models import SalesOrder
 from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm, AdminForm
-from apps.user.models import Banners, User, Dealer, Executive, Role, Complaint
+from apps.user.models import Banners, User, Dealer, Executive, Role, Complaint, SiteConfiguration
 from lib.token_handler import token_expire_handler, is_token_expired
 
 
@@ -35,6 +36,10 @@ class IndexView(TemplateView):
         salesorder = SalesOrder.objects.filter(is_confirmed=True).select_related('dealer')
         invoice = SalesOrder.objects.filter(is_invoice=True).select_related('dealer')
         orders = {}
+        claims = {}
+        claims['new'] = Complaint.objects.filter(status='new').select_related('created_by', 'order_id').count()
+        claims['resolved'] = Complaint.objects.filter(status='resolved').select_related('created_by', 'order_id').count()
+        claims['rejected'] = Complaint.objects.filter(status='rejected').select_related('created_by', 'order_id').count()
         orders['orders'] = quotation.count()
         orders['saleorder'] = salesorder.count()
         orders['invoice'] = invoice.count()
@@ -77,7 +82,6 @@ class IndexView(TemplateView):
         context['complaints'] = Complaint.objects.all().select_related('order_id').filter(status__in=['under processing', 'new']).order_by('-created_by')[:10]
         context['complaints_count'] = Complaint.objects.all().select_related('order_id').filter(status__in=['under processing', 'new']).count()
 
-        context['pie_data'] = orders
 
         # oldest unpaid invoices
         context['unpaid_dealers'] = SalesOrder.objects.all().annotate(name=Concat(F('dealer__first_name'), Value(' '), F('dealer__last_name'))).values('name').filter(invoice_remaining_amount__lte=F('invoice_amount')).annotate(total=Sum('invoice_amount')).order_by('-total')[:10]
@@ -95,7 +99,9 @@ class IndexView(TemplateView):
         context['executive_list'] = SalesOrder.objects.all().annotate(name=Concat(F('dealer__executive__first_name'), Value(' '), F('dealer__executive__last_name'))).values('name').annotate(total=Sum('invoice_amount')).order_by('-total')[:10]
         context['executive_list'].maxval = max(context['executive_list'], key=lambda a: a['total'])
 
-        print(orders)
+        context['pie_data'] = orders
+        context['payments'] = Transaction.objects.select_related('order').filter(status='payment_done')
+        context['line_data'] = claims
         return self.render_to_response(context)
 
 
@@ -122,7 +128,7 @@ class UserDetailView(UpdateView):
 class UserListView(ModelFormMixin, SuccessMessageMixin, ListView, ProcessFormView):
     queryset = User.objects.all()
     template_name = 'paper/user/user_list.html'
-    home_label = _("User list")
+    home_label = "User list"
     model = User
     form_class = DealerForm
     extra_context = {
@@ -226,9 +232,12 @@ class UserDeleteView(DeleteView):
 
 def password_reset(request, token):
     errors = ""
+    context = {}
     form = ResetPasswordForm(request.POST or None)
 
     if request.method == 'POST':
+
+
         try:
             token = Token.objects.get(key=token)
             if is_token_expired(token):
@@ -244,7 +253,10 @@ def password_reset(request, token):
         except Exception as e:
             errors = str(e)
             print(str(e))
-    return render(request, 'registration/password_reset_confirm.html', context={'form': form, 'errors': errors})
+    context['form'] = form
+    context['errors'] = errors
+    context['title'] = "Password reset Form"
+    return render(request, 'registration/password_reset_confirm_new.html', context=context)
 
 
 class ZoneView(CreateView, ListView):
@@ -269,3 +281,21 @@ class ZoneDeleteView(DeleteView):
     model = User
     form_class = ZoneForm
     success_url = '/zone/list/'
+
+
+class EscalationNumberView(CreateView, ListView):
+    queryset = SiteConfiguration.objects.all()
+    template_name = 'paper/user/escalation_list.html'
+    model = SiteConfiguration
+    form_class = ExcalationNumberForm
+    success_url = '/escalation/list/'
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        try:
+            if form.is_valid():
+                form.save()
+        except Exception as e:
+            print(str(e))
+            messages.add_message(request, messages.ERROR, str(e))
+        return redirect('escalation-list')

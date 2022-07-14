@@ -47,8 +47,11 @@
                                 <div class="col-md-4">
                                     {{ form.email|as_crispy_field }}
                                 </div>
+                                {% if form.designation %}
                                 <div class="col-md-4">
+                                    {{ form.designation|as_crispy_field }}
                                 </div>
+                                {% endif %}
                             </div>
                             <hr>
                         </div>

@@ -1,0 +1,74 @@
+{% extends 'paper/layout.html' %}{% load crispy_forms_tags %}
+{% block page_title %} Escalation Number {% endblock %}
+
+
+{% block content%}
+<div class='row'>
+    <div class='col-7'>
+        <div class='card'>
+            <div class='card-body'>
+                <h3>Escalation Number</h3>
+                <p class="text-muted">Note:There is only one Excalation Number available adding multiple excalation number tends to update the existing. </p>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead class="thead-dark">
+                        <tr class="table-header">
+                            <th scope="col">ID</th>
+                            <th scope="col">Number</th>
+                        </tr>
+
+                        </thead>
+                        <tbody>
+                        {% for object_item in object_list %}
+                        <tr class="{% if object.pk == object_item.pk %}selected-row{% endif %}">
+                            <!--                    <td scope="row"> </td>-->
+                            <td>
+                                <div class="">{{ forloop.counter }}</div>
+                            </td>
+                            <td>
+                                <div class="">{{ object_item.excalation_number }}</div>
+                            </td>
+
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="text-center text-muted" colspan="100%"> No advertisements left in the book. You can add it here                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class='col-5'>
+        <div class='card'>
+            <div class='card-body'>
+                {% if object.pk%}
+                <a class="pull-right btn btn-secondary" href="{% url 'zone-list' %}" > back to list</a>
+                <h3 class="heading-3 pt-3">Update "Escalation Number"</h3>
+                <p class="text-muted"> Here you can update the Escalation Number. </p>
+                {% else %}
+                <h3 class="heading-3 pt-3">Add Escalation Number</h3>
+                <p class="text-muted"> Here you can add the Escalation Number here. </p>
+                {% endif %}
+                <form enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    {% if object.pk %}
+                    <a class="delBrand btn btn-danger" href="javascript:void(0)"
+                                                 onclick="swalFunction(this, '{% url 'zone-delete' pk=object.pk %}')">Delete</a>
+                    {% endif %}
+                    <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>{% include 'paper/swal.html' %}
+
+{% endblock %}

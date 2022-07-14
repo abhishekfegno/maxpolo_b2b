@@ -4,6 +4,7 @@ from apps.user.api.viewsets import *
 
 app_name = 'user'
 urlpatterns = [
+    path('token/login/', TokenLoginView.as_view(), name='user-token-login'),
     path('login/', LoginAPIView.as_view(), name='user-login'),
     path('logout/', LogoutAPIView.as_view(), name='user-logout'),
     path('profile/', ProfileAPIView.as_view(), name='user-profile'),

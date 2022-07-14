@@ -1,6 +1,10 @@
-{% extends 'paper/layout.html'  %}{% load static crispy_forms_tags humanize %}{% block title %} Dashboard | Max Polo {% endblock %}{% block breadcrumb %}{% block breadcrumbs %}{% endblock %}
+{% extends 'paper/layout.html'  %}
+{% load static crispy_forms_tags humanize %}
+{% block title %} Dashboard | Max Polo {% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block breadcrumb %}{% endblock %}
 
-{% endblock %}{% block content %}
+{% block content %}
 <style>
     .chart {  position: relative;} .column-bars {  display: grid;  grid-template-columns: repeat(10, 1fr);  grid-template-rows: 420px;}
     cbars {  border: 1px solid rgba(187, 184, 184, 0.38);  border-left: none;} cbars:first-child {  border: 1px solid rgba(187, 184, 184, 0.38);}
@@ -74,7 +78,7 @@
             <div class="card-body">
                 <p class="card-category">Invoices</p>
                 <hr>
-               <div class="pull-right"> <h3 class=" card-title d-inline">{{ invoice.count }}</h3> <span class="card-category text-small">Nos.</span></div>
+                <div class="pull-right"> <h3 class=" card-title d-inline">{{ invoice.count }}</h3> <span class="card-category text-small">Nos.</span></div>
             </div>
         </div>
     </div>
@@ -178,10 +182,6 @@
                     {% endfor %}
                     </tbody>
                 </table>
-
-            </div>
-            <div class="card-footer">
-
             </div>
         </div>
     </div>
@@ -209,6 +209,45 @@
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="sr-only">Next</span>
                     </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5 ">
+        <div class="card ">
+            <div class="card-header ">
+                <h5 class="card-title">Orders</h5>
+            </div>
+            <div class="card-body ">
+                <canvas id="PieChart" width="400" height="200"></canvas>
+            </div>
+            <div class="card-footer">
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-7 ">
+        <div class="card ">
+            <div class="card-header ">
+                <h5 class="card-title">Claims</h5>
+                <!--                <p class="card-category">Last Campaign Performance</p>-->
+            </div>
+            <div class="card-body ">
+                <canvas id="LineChart" width="400" height="200"></canvas>
+
+                <!--            <canvas id="chartEmail"></canvas>-->
+            </div>
+            <div class="card-footer ">
+                <div class="legend">
+                    <!--                <i class="fa fa-circle text-primary"></i> Opened-->
+                    <!--                <i class="fa fa-circle text-warning"></i> Read-->
+                    <!--                <i class="fa fa-circle text-danger"></i> Deleted-->
+                    <!--                <i class="fa fa-circle text-gray"></i> Unopened-->
+                </div>
+                <hr>
+                <div class="stats">
+                    <!--                    <i class="fa fa-calendar"></i> Number of emails sent-->
                 </div>
             </div>
         </div>
@@ -244,10 +283,7 @@
         {% include 'paper/utils/minitable.html' with mt_title="Most Sales Making Executive" mt_description="In terms of Volume of Sales" mt_object_list=executive_list %}
     </div>
 </div>
-
-{%block scripts%}
 <script>
-
     (function(){
     var config = {
       type: 'pie',
@@ -268,11 +304,34 @@
       }
     };
     window.onload = function() {
-      var ctx = document.getElementById('myChart').getContext('2d');
+      var ctx = document.getElementById('PieChart').getContext('2d');
       window.myPie = new Chart(ctx, config);
     };
     })()
 
-</script>{%endblock scripts%}
+</script>
+<script class="type/script">
+
+    var config_line = {
+      type: 'bar',
+      data: {
+        datasets: [{
+          data: [{% for key,value in line_data.items %}'{{ value }}',{% endfor %}],
+          backgroundColor: [
+                            'rgba(120, 120, 255, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(255, 80, 132, 1)',
+          ],
+        }],
+        labels: [{% for key,value in line_data.items %}'{{ key }}',{% endfor %}],
+      },
+      options: {
+        responsive: true
+      }
+    };
+      var ctx_line = document.getElementById('LineChart').getContext('2d');
+      window.myLine = new Chart(ctx_line, config_line);
+
+</script>
 
 {% endblock %}

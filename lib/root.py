@@ -17,6 +17,7 @@ def PUBLIC_APIS(r, f) -> list:
         #
         ("Dealer APIs", OrderedDict([
             ("User Login", reverse('user:user-login', request=r, format=f)),
+            ("User Login/Token", reverse('user:user-token-login', request=r, format=f)),
             ("User Logout", reverse('user:user-logout', request=r, format=f)),
             ("User Profile", reverse('user:user-profile', request=r, format=f)),
             ("Password Reset", reverse('user:password-reset', request=r, format=f)),

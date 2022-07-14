@@ -6,6 +6,10 @@ from apps.payment.models import Transaction
 
 class TransactionListSerializer(serializers.ModelSerializer):
     order = serializers.SerializerMethodField()
+    id = serializers.SerializerMethodField()
+
+    def get_id(self, instance):
+        return instance.order.id
 
     def get_order(self, instance):
         if instance.order:

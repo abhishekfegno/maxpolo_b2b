@@ -59,11 +59,17 @@
                                 <div class="col-md-4">
                                     {{ form.email|as_crispy_field }}
                                 </div>
+                                {% if form.executive %}
                                 <div class="col-md-4">
-                                    {% if form.executive %}
                                     {{ form.executive|as_crispy_field }}
-                                    {% endif %}
                                 </div>
+                                {% endif %}
+
+                                {% if form.designation %}
+                                <div class="col-md-4">
+                                    {{ form.designation|as_crispy_field }}
+                                </div>
+                                {% endif %}
                             </div>
                             <hr>
                         </div>

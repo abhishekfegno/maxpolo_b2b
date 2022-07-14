@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.gis',
 
     'django.contrib.sites',
     'django.contrib.flatpages',
@@ -133,8 +134,9 @@ REST_FRAMEWORK = {
     ],
 
     # "DEFAULT_PERMISSION_CLASSES": [
-    #     'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
     # ],
+
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
         'django_filters.rest_framework.OrderingFilter',
@@ -212,7 +214,13 @@ LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'login'
 LOGOUT_URL = 'login'
 
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "abhishekfegno@gmail.com"
+EMAIL_HOST_PASSWORD = "abhishek@fegno123"
+
 EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 
 STATIC_URL = '/assets/'
