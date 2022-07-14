@@ -48,8 +48,8 @@
                     </div>
                     <div class="col-7 col-md-8">
                         <div class="numbers">
-                            <p class="card-category">Orders</p>
-                            <p class="card-title">{{ orders.count }}<p>
+                            <p class="card-category">Payments</p>
+                            <p class="card-title">{{ payments.count }}<p>
                         </div>
                     </div>
                 </div>
@@ -115,36 +115,15 @@
             </div>
         </div>
     </div>
-</div>
-<!--<div class="col-md-3">-->
-<!--    <div class="card ">-->
-<!--        <div class="card-header ">-->
-<!--            <h5 class="card-title">Orders</h5>-->
-<!--            <p class="card-category">Total number</p>-->
-<!--        </div>-->
-<!--        <div class="card-body ">-->
-<!--            <canvas class="ct-chart ct-perfect-fourth" height="300" id="chartDonut3" width="456"></canvas>-->
-<!--        </div>-->
-<!--        <div class="card-footer ">-->
-<!--            <div class="legend">-->
-<!--                <i class="fa fa-circle text-danger"></i> Completed-->
-<!--            </div>-->
-<!--            <hr>-->
-<!--            <div class="stats">-->
-<!--                &lt;!&ndash;                <i class="fa fa-clock-o"></i> Updated 3 minutes ago&ndash;&gt;-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
 
-<div class="col-md-6">
+<div class="col-md-5 ">
     <div class="card ">
         <div class="card-header ">
             <h5 class="card-title">Orders</h5>
             <!--                <p class="card-category">Last Campaign Performance</p>-->
         </div>
         <div class="card-body ">
-            <canvas id="myChart" width="400" height="100"></canvas>
+            <canvas id="PieChart" width="400" height="200"></canvas>
 
 <!--            <canvas id="chartEmail"></canvas>-->
         </div>
@@ -162,49 +141,38 @@
         </div>
     </div>
 </div>
+<div class="col-md-7 ">
+    <div class="card ">
+        <div class="card-header ">
+            <h5 class="card-title">Claims</h5>
+            <!--                <p class="card-category">Last Campaign Performance</p>-->
+        </div>
+        <div class="card-body ">
+            <canvas id="LineChart" width="400" height="200"></canvas>
+
+<!--            <canvas id="chartEmail"></canvas>-->
+        </div>
+        <div class="card-footer ">
+            <div class="legend">
+<!--                <i class="fa fa-circle text-primary"></i> Opened-->
+<!--                <i class="fa fa-circle text-warning"></i> Read-->
+<!--                <i class="fa fa-circle text-danger"></i> Deleted-->
+<!--                <i class="fa fa-circle text-gray"></i> Unopened-->
+            </div>
+            <hr>
+            <div class="stats">
+                <!--                    <i class="fa fa-calendar"></i> Number of emails sent-->
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
 
 {%block scripts%}
-<!--<script>-->
-<!--// jquery function-->
-<!--$(document).ready(function(){-->
-<!--        var ctx = document.getElementById('myChart').getContext('2d');-->
-<!--        var myChart = new Chart(ctx, {-->
-<!--            type: 'pie',-->
-<!--            data: {-->
-<!--                labels: [{%for data in orders %}'{{data}}',{%endfor%}] //loop through queryset,-->
-<!--                datasets: [{-->
-<!--                    data: [{%for data in invoice %}{{data}},{%endfor%}],-->
-<!--                    backgroundColor: [-->
-<!--                        'rgba(255, 99, 132, 0.2)',-->
-<!--                        'rgba(54, 162, 235, 0.2)',-->
-<!--                        'rgba(255, 206, 86, 0.2)',-->
-<!--                        'rgba(75, 192, 192, 0.2)',-->
-<!--                        'rgba(153, 102, 255, 0.2)',-->
-<!--                        'rgba(255, 159, 64, 0.2)'-->
-<!--                    ],-->
-<!--                    borderColor: [-->
-<!--                        'rgba(255, 99, 132, 1)',-->
-<!--                        'rgba(54, 162, 235, 1)',-->
-<!--                        'rgba(255, 206, 86, 1)',-->
-<!--                        'rgba(75, 192, 192, 1)',-->
-<!--                        'rgba(153, 102, 255, 1)',-->
-<!--                        'rgba(255, 159, 64, 1)'-->
-<!--                    ],-->
-<!--                    borderWidth: 1-->
-<!--                }]-->
-<!--            },-->
-<!--            options: {-->
-<!--                scales: {-->
-<!--                    y: {-->
-<!--                        beginAtZero: true-->
-<!--                    }-->
-<!--                }-->
-<!--            }-->
-<!--});-->
-<!--    });-->
-<!--</script>-->
  <script>
 
+ <!------Pie chart------>
     var config = {
       type: 'pie',
       data: {
@@ -228,12 +196,45 @@
       }
     };
 
+<!------Line chart------>
     window.onload = function() {
-      var ctx = document.getElementById('myChart').getContext('2d');
+      var ctx = document.getElementById('PieChart').getContext('2d');
       window.myPie = new Chart(ctx, config);
+      var ctx_line = document.getElementById('LineChart').getContext('2d');
+      window.myLine = new Chart(ctx_line, config_line);
     };
 
   </script>
+<script class="type/script">
+
+    var config_line = {
+      type: 'bar',
+      data: {
+        datasets: [{
+          data: [{% for key,value in line_data.items %}'{{ value }}',{% endfor %}],
+          backgroundColor: [
+<!--                            'rgba(255, 206, 86, 0.2)',-->
+                            'rgba(255, 99, 132, 0.2)',
+<!--                            'rgba(54, 162, 235, 0.2)',-->
+
+                            'rgba(75, 192, 192, 0.2)',
+<!--                            'rgba(153, 102, 255, 0.2)',-->
+                            'rgba(255, 159, 64, 0.2)'
+          ],
+
+
+        }],
+        labels: [{% for key,value in line_data.items %}'{{ key }}',{% endfor %}],
+      },
+      options: {
+        responsive: true
+      }
+    };
+
+
+
+
+</script>
 {%endblock scripts%}
 
 {% endblock %}

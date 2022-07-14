@@ -13,6 +13,7 @@ from django.views.generic.edit import FormMixin, ModelFormMixin, ProcessFormView
 from rest_framework.authtoken.models import Token
 
 from apps.executivetracking.models import Zone
+from apps.payment.models import Transaction
 from apps.user.forms.banners_form import DealerUpdateForm, ExecutiveUpdateForm, AdminUpdateForm, UserCreationForm, \
     ZoneForm, ExcalationNumberForm
 from apps.catalogue.models import Product, Brand
@@ -32,6 +33,10 @@ class IndexView(TemplateView):
         salesorder = SalesOrder.objects.filter(is_confirmed=True).select_related('dealer')
         invoice = SalesOrder.objects.filter(is_invoice=True).select_related('dealer')
         orders = {}
+        claims = {}
+        claims['new'] = Complaint.objects.filter(status='new').select_related('created_by', 'order_id').count()
+        claims['resolved'] = Complaint.objects.filter(status='resolved').select_related('created_by', 'order_id').count()
+        claims['rejected'] = Complaint.objects.filter(status='rejected').select_related('created_by', 'order_id').count()
         orders['orders'] = quotation.count()
         orders['saleorder'] = salesorder.count()
         orders['invoice'] = invoice.count()
@@ -43,9 +48,11 @@ class IndexView(TemplateView):
         context['advertisements'] = Banners.objects.all()
         context['products'] = Product.objects.all().select_related('brand', 'category')
         context['brands'] = Brand.objects.all()
-        context['complaints'] = Complaint.objects.all().select_related('created_by', 'order_id')
+        context['payments'] = Transaction.objects.select_related('order').filter(status='payment_done')
+
         context['pie_data'] = orders
-        print(orders)
+        context['line_data'] = claims
+        print(context['payments'])
         return self.render_to_response(context)
 
 

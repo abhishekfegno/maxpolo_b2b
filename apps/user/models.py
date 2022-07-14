@@ -114,7 +114,7 @@ class Executive(User):
 class Complaint(models.Model):
     STATUS = (
         ('new', 'New'),
-        ('under processing', 'Under Processing'),
+        ('under_processing', 'Under Processing'),
         ('resolved', 'Resolved'),
         ('rejected', 'Rejected'),
     )
