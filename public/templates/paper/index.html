@@ -143,14 +143,56 @@
         <div class="card ">
             <div class="card-header ">
                 <h5 class="card-title">Orders</h5>
-                <p class="card-category">Details of Last 90 days</p>
+                <p class="card-description">Details of Last 90 days</p>
             </div>
             <div class="card-body ">
-                <canvas id="myChart" width="120" height="100"></canvas>
+                <canvas id="PieChart" width="400" height="200"></canvas>
+            </div>
+            <div class="card-footer">
             </div>
         </div>
     </div>
     <div class="col-md-5">
+        <div class="card ">
+            <div class="card-header ">
+                <h5 class="card-title">Claims</h5>
+            </div>
+            <div class="card-body ">
+                <canvas id="LineChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Running Adt. Banners </h4>
+                <p class="card-category">Manage them in the "Advertisements" Tab</p>
+            </div>
+            <div class="card-body bg-dark">
+                <!--     Image Banners      -->
+                <div id="carouselExampleControls" class="carousel slide carousel-dark" data-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for advt in advertisements %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img class="d-block w-100" src="{{ advt.photo.url }}" alt="{{ advt.title }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+
         <div class="card">
             <div class="card-header">
                 <div>
@@ -185,76 +227,18 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+<!--    <div class="col-md-4">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title">Running Adt. Banners </h4>
-                <p class="card-category">Manage them in the "Advertisements" Tab</p>
+                <h3>Most Purchased Products</h3>
+                <p>In terms of Volume of sales</p>
             </div>
-            <div class="card-body bg-dark">
-                <!--     Image Banners      -->
-                <div id="carouselExampleControls" class="carousel slide carousel-dark" data-ride="carousel">
-                    <div class="carousel-inner">
-                        {% for advt in advertisements %}
-                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                            <img class="d-block w-100" src="{{ advt.photo.url }}" alt="{{ advt.title }}">
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </div>
+            <div class="card-body">
+                <canvas id="MostPurchasedProductsChartJSONView" width="500" height="400"></canvas>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-5 ">
-        <div class="card ">
-            <div class="card-header ">
-                <h5 class="card-title">Orders</h5>
-            </div>
-            <div class="card-body ">
-                <canvas id="PieChart" width="400" height="200"></canvas>
-            </div>
-            <div class="card-footer">
-
-            </div>
-        </div>
-    </div>
-    <div class="col-md-7 ">
-        <div class="card ">
-            <div class="card-header ">
-                <h5 class="card-title">Claims</h5>
-                <!--                <p class="card-category">Last Campaign Performance</p>-->
-            </div>
-            <div class="card-body ">
-                <canvas id="LineChart" width="400" height="200"></canvas>
-
-                <!--            <canvas id="chartEmail"></canvas>-->
-            </div>
-            <div class="card-footer ">
-                <div class="legend">
-                    <!--                <i class="fa fa-circle text-primary"></i> Opened-->
-                    <!--                <i class="fa fa-circle text-warning"></i> Read-->
-                    <!--                <i class="fa fa-circle text-danger"></i> Deleted-->
-                    <!--                <i class="fa fa-circle text-gray"></i> Unopened-->
-                </div>
-                <hr>
-                <div class="stats">
-                    <!--                    <i class="fa fa-calendar"></i> Number of emails sent-->
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
+    </div>-->
     <div class="col-md-4">
         {% include 'paper/utils/minitable.html' with mt_title="Most Purchased Products" mt_description="In terms of Volume of sales" mt_object_list=products %}
     </div>
@@ -333,5 +317,12 @@
       window.myLine = new Chart(ctx_line, config_line);
 
 </script>
-
+<!--
+<script type="text/javascript">
+    var parse_json = function(r) { return r.json()}
+    fetch('{% url "ProductPurchasedProductBarChart" %}').then(parse_json).then(function(data) {
+        new Chart($("#MostPurchasedProductsChartJSONView").get(0).getContext("2d"), {type: 'line', data:data });
+    })
+</script>
+-->
 {% endblock %}

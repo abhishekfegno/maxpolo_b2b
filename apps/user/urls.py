@@ -1,11 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
-from django.urls import path, register_converter
+from django.urls import path, register_converter, include
 from django.urls.converters import SlugConverter
 
 from .models import Role
 from .views.banners_view import *
 from .views.complaint_view import *
+from .views.index_view import MostPurchasedProductsChartJSONView, MostPurchasedProductsChartJSONView2, \
+    ProductPurchasedProductBarChart
 from .views.user_view import *
 
 
@@ -57,6 +59,12 @@ urlpatterns = [
 
 
 
-    path('complaint/excel/export/', get_excel_report_complaint, name='get_excel_report_complaint')
+    path('complaint/excel/export/', get_excel_report_complaint, name='get_excel_report_complaint'),
+
+    path('api/charts/', include([
+        path('MostPurchasedProductsChartJSONView', MostPurchasedProductsChartJSONView.as_view(), name="MostPurchasedProductsChartJSONView"),
+        path('MostPurchasedProductsChartJSONView2', MostPurchasedProductsChartJSONView2.as_view(), name="MostPurchasedProductsChartJSONView2"),
+        path('ProductPurchasedProductBarChart', ProductPurchasedProductBarChart.as_view(), name="ProductPurchasedProductBarChart"),
+    ]))
 
 ]
