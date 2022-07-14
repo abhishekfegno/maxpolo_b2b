@@ -1,224 +1,264 @@
-{% extends 'paper/layout.html'  %}{% load static crispy_forms_tags humanize %}
-
-{% block title %} Dashboard | Max Polo {% endblock %}{% block breadcrumb %}
-
-{% block breadcrumbs %}{% endblock %}
+{% extends 'paper/layout.html'  %}{% load static crispy_forms_tags humanize %}{% block title %} Dashboard | Max Polo {% endblock %}{% block breadcrumb %}{% block breadcrumbs %}{% endblock %}
 
 {% endblock %}{% block content %}
-<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />-->
-<!-- jQuery -->
-<!--<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<style>
+    .chart {  position: relative;} .column-bars {  display: grid;  grid-template-columns: repeat(10, 1fr);  grid-template-rows: 420px;}
+    cbars {  border: 1px solid rgba(187, 184, 184, 0.38);  border-left: none;} cbars:first-child {  border: 1px solid rgba(187, 184, 184, 0.38);}
+    .row-bars {  position: absolute;  top: 0;  left: 0;  width: 300px;}
+    rbars { display: block;  height: 20px;  margin-top: 20px;  max-width: 300px;  padding: 0px 10px; color:#fff ; }
+    .row-bars div { width:100%; background:#eee; height:20px; border-radius:10px; left:10px;}
+    .row-bars div:nth-child(1) rbars {  background-color: rgb(123, 218, 218);}
+    .row-bars div:nth-child(2) rbars {  background-color: rgb(151, 151, 237);}
+    .row-bars div:nth-child(3) rbars {  background-color: rgb(206, 166, 226);}
+    .row-bars div:nth-child(4) rbars {  background-color: rgb(98, 202, 98)}
+    .row-bars div:nth-child(5) rbars {  background-color: rgb(238, 182, 77);}
+    .row-bars div:nth-child(6) rbars {  background-color: rgb(123, 218, 218);}
+    .row-bars div:nth-child(7) rbars {  background-color: rgb(206, 166, 226);}
+    .row-bars div:nth-child(8) rbars {  background-color: rgb(151, 151, 237);}
+    .row-bars div:nth-child(9) rbars {  background-color: rgb(238, 182, 77);}
+    .row-bars div:nth-child(10) rbars {  background-color: rgb(98, 202, 98);}
+    .row-bars div:after { content:attr(data-percent); color: #000; position:absolute; right:10px;  }
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
 <div class="row">
-    <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats">
-            <div class="card-body ">
-                <div class="row">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center icon-warning">
-                            <i class="nc-icon nc-globe text-warning"></i>
-                        </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers">
-                            <p class="card-category">Products</p>
-                            <p class="card-title">{{ products.count }}<p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer ">
+    <div class="col-md-2 ">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-category">Products</p>
                 <hr>
-                <div class="stats">
-                    <i class="fa fa-refresh"></i>
-                    Update Now
-                </div>
+                <div class="pull-right"><h3 class=" card-title d-inline">{{ products.count }}</h3> <span class="card-category text-small">Nos.</span></div>
             </div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats">
-            <div class="card-body ">
-                <div class="row">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center icon-warning">
-                            <i class="nc-icon nc-money-coins text-success"></i>
-                        </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers">
-                            <p class="card-category">Orders</p>
-                            <p class="card-title">{{ orders.count }}<p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer ">
+    <div class="col-md-2 ">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-category">Brands</p>
                 <hr>
-                <div class="stats">
-                    <i class="fa fa-calendar-o"></i>
-                    Last day
-                </div>
+                <div class="pull-right"><h3 class=" card-title d-inline">{{ brand_count }}</h3> <span class="card-category text-small">Nos.</span></div>
             </div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats">
-            <div class="card-body ">
-                <div class="row">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center icon-warning">
-                            <i class="nc-icon nc-vector text-danger"></i>
-                        </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers">
-                            <p class="card-category">Sales Order</p>
-                            <p class="card-title">{{ salesorders.count }}<p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer ">
+    <div class="col-md-2 ">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-category">Categories</p>
                 <hr>
-                <div class="stats">
-                    <i class="fa fa-clock-o"></i>
-                    In the last hour
-                </div>
+                <div class="pull-right"><h3 class=" card-title d-inline">{{ category_count }}</h3> <span class="card-category text-small">Nos.</span></div>
             </div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats">
+    <div class="col-md-2 ">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-category">Unconfirmed Orders</p>
+                <hr>
+                <div class="pull-right"><h3 class=" card-title d-inline">{{ orders.count }}</h3> <span class="card-category text-small">Nos.</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 ">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-category">Confirmed Sales Order</p>
+                <hr>
+                <div class="pull-right"><h3 class="card-title d-inline">{{ salesorders.count }}</h3> <span class="card-category text-small">Nos.</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 ">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-category">Invoices</p>
+                <hr>
+               <div class="pull-right"> <h3 class=" card-title d-inline">{{ invoice.count }}</h3> <span class="card-category text-small">Nos.</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 ">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-category">Active Complaints</p>
+                <hr>
+                <div class="pull-right"><h3 class=" card-title d-inline">{{ complaints_count }}</h3> <span class="card-category text-small">Nos.</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 ">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-category"> Executives Count</p>
+                <hr>
+                <div class="pull-right"><h3 class=" card-title d-inline">{{ executives }}</h3> <span class="card-category text-small">Nos.</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 ">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-category"> Dealers Count </p>
+                <hr>
+                <div class="pull-right"><h3 class=" card-title d-inline">{{ dealers_count }}</h3> <span class="card-category text-small">Nos.</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 ">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-category"> PDF Catalogues </p>
+                <hr>
+                <div class="pull-right"><h3 class=" card-title d-inline">{{ pdf_catalogues }}</h3> <span class="card-category text-small">Nos.</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 ">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-category"> Net Credit Amount </p>
+                <hr>
+                <div class="pull-right"><h3 class=" card-title d-inline">₹ {{ net_credit|intcomma|floatformat:"2" }}</h3> <span class="card-category text-small">Lakhs.</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 ">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-category"> Revenue This Month </p>
+                <hr>
+                <div class="pull-right"><h3 class=" card-title d-inline">₹ {{ revenue_this_month|intcomma|floatformat:"2" }}</h3> <span class="card-category text-small">Lakhs.</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card ">
+            <div class="card-header ">
+                <h5 class="card-title">Orders</h5>
+                <p class="card-category">Details of Last 90 days</p>
+            </div>
             <div class="card-body ">
-                <div class="row">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center icon-warning">
-                            <i class="nc-icon nc-favourite-28 text-primary"></i>
-                        </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers">
-                            <p class="card-category">Invoice</p>
-                            <p class="card-title">{{ invoice.count }}<p>
-                        </div>
-                    </div>
+                <canvas id="myChart" width="120" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h3 class="card-title">Unresolved Complaints</h3>
+                    <p class="card-description text-muted">Most recent complaints which are new to the system,
+                        unresolved!</p>
                 </div>
             </div>
-            <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                    <i class="fa fa-refresh"></i>
-                    Update now
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Ticket ID</th>
+                        <th>Dealer</th>
+                        <th>Complaint</th>
+                        <th>Raised on</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for complaint in complaints %}
+                    <tr>
+                        <td>{{ complaint.ticket_id }}</td>
+                        <td>{{ complaint.created_by.get_full_name }}</td>
+                        <td>{{ complaint.title }}</td>
+                        <td>{{ complaint.created_at|naturaltime }}</td>
+                        <td>{{ complaint.status }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="card-footer">
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Running Adt. Banners </h4>
+                <p class="card-category">Manage them in the "Advertisements" Tab</p>
+            </div>
+            <div class="card-body bg-dark">
+                <!--     Image Banners      -->
+                <div id="carouselExampleControls" class="carousel slide carousel-dark" data-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for advt in advertisements %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img class="d-block w-100" src="{{ advt.photo.url }}" alt="{{ advt.title }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!--<div class="col-md-3">-->
-<!--    <div class="card ">-->
-<!--        <div class="card-header ">-->
-<!--            <h5 class="card-title">Orders</h5>-->
-<!--            <p class="card-category">Total number</p>-->
-<!--        </div>-->
-<!--        <div class="card-body ">-->
-<!--            <canvas class="ct-chart ct-perfect-fourth" height="300" id="chartDonut3" width="456"></canvas>-->
-<!--        </div>-->
-<!--        <div class="card-footer ">-->
-<!--            <div class="legend">-->
-<!--                <i class="fa fa-circle text-danger"></i> Completed-->
-<!--            </div>-->
-<!--            <hr>-->
-<!--            <div class="stats">-->
-<!--                &lt;!&ndash;                <i class="fa fa-clock-o"></i> Updated 3 minutes ago&ndash;&gt;-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
 
-<div class="col-md-6">
-    <div class="card ">
-        <div class="card-header ">
-            <h5 class="card-title">Orders</h5>
-            <!--                <p class="card-category">Last Campaign Performance</p>-->
-        </div>
-        <div class="card-body ">
-            <canvas id="myChart" width="400" height="100"></canvas>
-
-<!--            <canvas id="chartEmail"></canvas>-->
-        </div>
-        <div class="card-footer ">
-            <div class="legend">
-<!--                <i class="fa fa-circle text-primary"></i> Opened-->
-<!--                <i class="fa fa-circle text-warning"></i> Read-->
-<!--                <i class="fa fa-circle text-danger"></i> Deleted-->
-<!--                <i class="fa fa-circle text-gray"></i> Unopened-->
-            </div>
-            <hr>
-            <div class="stats">
-                <!--                    <i class="fa fa-calendar"></i> Number of emails sent-->
-            </div>
-        </div>
+<div class="row">
+    <div class="col-md-4">
+        {% include 'paper/utils/minitable.html' with mt_title="Most Purchased Products" mt_description="In terms of Volume of sales" mt_object_list=products %}
+    </div>
+    <div class="col-md-4">
+        {% include 'paper/utils/minitable.html' with mt_title="Most Purchased Brands" mt_description="In terms of Volume of sales" mt_object_list=brands %}
+    </div>
+    <div class="col-md-4">
+        {% include 'paper/utils/minitable.html' with mt_title="Most Purchased Categories" mt_description="In terms of Volume of sales" mt_object_list=categories %}
+    </div>
+    <div class="col-md-4">
+        {% include 'paper/utils/minitable.html' with mt_title="Most Purchased Dealer" mt_description="In terms of Volume of sales" mt_object_list=dealers %}
+    </div>
+    <div class="col-md-4">
+        {% include 'paper/utils/minitable.html' with mt_title="Most Spent Dealer" mt_description="In terms of Inflow" mt_object_list=amt_dealers %}
+    </div>
+    <div class="col-md-4">
+        {% include 'paper/utils/minitable.html' with mt_title="Oldest Unpaid Invoices" mt_description="In terms of Credit History" mt_object_list=unpaid_dealers %}
+    </div>
+    <div class="col-md-4">
+        {% include 'paper/utils/minitable.html' with mt_title="Least Moving Products" mt_description="In terms of Inventory Stock" mt_object_list=least_moving_products %}
+    </div>
+    <div class="col-md-4">
+        {% include 'paper/utils/minitable.html' with mt_title="Most Moving Products" mt_description="In terms of Inventory Stock" mt_object_list=most_moving_products %}
+    </div>
+    <div class="col-md-4">
+        {% include 'paper/utils/minitable.html' with mt_title="Most Sales Making Executive" mt_description="In terms of Volume of Sales" mt_object_list=executive_list %}
     </div>
 </div>
 
 {%block scripts%}
-<!--<script>-->
-<!--// jquery function-->
-<!--$(document).ready(function(){-->
-<!--        var ctx = document.getElementById('myChart').getContext('2d');-->
-<!--        var myChart = new Chart(ctx, {-->
-<!--            type: 'pie',-->
-<!--            data: {-->
-<!--                labels: [{%for data in orders %}'{{data}}',{%endfor%}] //loop through queryset,-->
-<!--                datasets: [{-->
-<!--                    data: [{%for data in invoice %}{{data}},{%endfor%}],-->
-<!--                    backgroundColor: [-->
-<!--                        'rgba(255, 99, 132, 0.2)',-->
-<!--                        'rgba(54, 162, 235, 0.2)',-->
-<!--                        'rgba(255, 206, 86, 0.2)',-->
-<!--                        'rgba(75, 192, 192, 0.2)',-->
-<!--                        'rgba(153, 102, 255, 0.2)',-->
-<!--                        'rgba(255, 159, 64, 0.2)'-->
-<!--                    ],-->
-<!--                    borderColor: [-->
-<!--                        'rgba(255, 99, 132, 1)',-->
-<!--                        'rgba(54, 162, 235, 1)',-->
-<!--                        'rgba(255, 206, 86, 1)',-->
-<!--                        'rgba(75, 192, 192, 1)',-->
-<!--                        'rgba(153, 102, 255, 1)',-->
-<!--                        'rgba(255, 159, 64, 1)'-->
-<!--                    ],-->
-<!--                    borderWidth: 1-->
-<!--                }]-->
-<!--            },-->
-<!--            options: {-->
-<!--                scales: {-->
-<!--                    y: {-->
-<!--                        beginAtZero: true-->
-<!--                    }-->
-<!--                }-->
-<!--            }-->
-<!--});-->
-<!--    });-->
-<!--</script>-->
- <script>
+<script>
 
+    (function(){
     var config = {
       type: 'pie',
       data: {
         datasets: [{
           data: [{% for key,value in pie_data.items %}'{{ value }}',{% endfor %}],
           backgroundColor: [
-<!--                            'rgba(255, 99, 132, 0.2)',-->
-                            'rgba(54, 162, 235, 0.2)',
-<!--                            'rgba(255, 206, 86, 0.2)',-->
-                            'rgba(75, 192, 192, 0.2)',
-<!--                            'rgba(153, 102, 255, 0.2)',-->
-                            'rgba(255, 159, 64, 0.2)'
+            'rgba(54, 162, 235, 0.8)',
+            'rgba(75, 192, 192, 0.8)',
+            'rgba(255, 159, 64, 0.8)'
           ],
-
           label: 'Population'
         }],
         labels: [{% for key,value in pie_data.items %}'{{ key }}',{% endfor %}],
@@ -227,13 +267,12 @@
         responsive: true
       }
     };
-
     window.onload = function() {
       var ctx = document.getElementById('myChart').getContext('2d');
       window.myPie = new Chart(ctx, config);
     };
+    })()
 
-  </script>
-{%endblock scripts%}
+</script>{%endblock scripts%}
 
 {% endblock %}

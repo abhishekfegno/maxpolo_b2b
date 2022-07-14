@@ -64,6 +64,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'import_export',
     'rest_framework_gis',
+    'chartjs',
+
 
 ]
 

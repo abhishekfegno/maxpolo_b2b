@@ -184,7 +184,6 @@ def sent_email_complaint(sender, created, instance, **kwargs):
         NotificationEvent().event_for_complaints(instance)
 
 
-
 @receiver(post_save, sender=Banners)
 def sent_email_banners(sender, created, instance, **kwargs):
     recipients = [i for i in Dealer.objects.all().values('email', 'first_name')]

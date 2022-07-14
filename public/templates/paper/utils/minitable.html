@@ -1,0 +1,55 @@
+<div class="card border" >
+    <div class="card-header">
+        <div>
+        <h3 class="card-title">{{ mt_title }}</h3>
+        <p class="card-description text-muted">{{ mt_description }}</p>
+        </div>
+    </div>
+    {% if not hide_chart %}
+    <div class="card-body">
+        <div class="chart">
+            <div class="column-bars">
+                <cbars>&nbsp;</cbars>
+                <cbars>&nbsp;</cbars>
+                <cbars>&nbsp;</cbars>
+                <cbars>&nbsp;</cbars>
+                <cbars>&nbsp;</cbars>
+                <cbars>&nbsp;</cbars>
+                <cbars>&nbsp;</cbars>
+                <cbars>&nbsp;</cbars>
+                <cbars>&nbsp;</cbars>
+                <cbars>&nbsp;</cbars>
+            </div>
+            <div class="row-bars w-100">
+                {% for item in mt_object_list %}
+                <div style="">
+                    <span style="position:absolute;left:10px;font-size:13px "> {{ item.name }}</span>
+                    <span style="position:absolute;right:10px" > {% widthratio item.total mt_object_list.maxval.total 100 %} %  </span>
+                    <rbars style="width:{% widthratio item.total mt_object_list.maxval.total 100 %}%" data-percent=""> </rbars>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="card-footer">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Value</th>
+                <th class="text-muted" >(%)</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for item in mt_object_list %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.total }}</td>
+                <td class="text-muted">{% widthratio item.total mt_object_list.maxval.total 100 %}%</td>
+            </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

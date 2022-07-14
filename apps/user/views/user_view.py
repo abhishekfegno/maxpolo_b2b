@@ -1,7 +1,11 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Sum, F, Count, Value
+from django.db.models.functions import Concat
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -14,8 +18,8 @@ from rest_framework.authtoken.models import Token
 from apps.executivetracking.models import Zone
 from apps.user.forms.banners_form import DealerUpdateForm, ExecutiveUpdateForm, AdminUpdateForm, UserCreationForm, \
     ZoneForm
-from apps.catalogue.models import Product, Brand
-from apps.order.models import SalesOrder
+from apps.catalogue.models import Product, Brand, Category, PDF
+from apps.order.models import SalesOrder, SalesOrderLine
 from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm, AdminForm
 from apps.user.models import Banners, User, Dealer, Executive, Role, Complaint
 from lib.token_handler import token_expire_handler, is_token_expired
@@ -39,11 +43,58 @@ class IndexView(TemplateView):
         context['salesorders'] = salesorder
         context['invoice'] = invoice
 
+        context['brand_count'] = Brand.objects.all().count()
+        context['category_count'] = Category.objects.all().count()
+        context['executives'] = User.objects.filter(user_role=Role.EXECUTIVE).count()
+        context['dealers_count'] = User.objects.filter(user_role=Role.DEALER).count()
+        context['pdf_catalogues'] = PDF.objects.all().count()
+        context['net_credit'] = SalesOrder.objects.all().aggregate(total=Sum("invoice_remaining_amount"))['total']/100_000
+        today = datetime.now().date()
+        context['revenue_this_month'] = SalesOrder.objects.filter(created_at__year=today.year, created_at__month=today.month).aggregate(total=Sum(F("invoice_remaining_amount")))['total']/100_000
+
         context['advertisements'] = Banners.objects.all()
-        context['products'] = Product.objects.all().select_related('brand', 'category')
-        context['brands'] = Brand.objects.all()
-        context['complaints'] = Complaint.objects.all().select_related('created_by', 'order_id')
+
+        # most purchased products
+        context['products'] = SalesOrderLine.objects.all().annotate(name=F('product__name')).values('name').annotate(total=Sum('quantity')).order_by('-total')[:10]
+        context['products'].maxval = max(context['products'], key=lambda a : a['total'])
+
+        # most purchased brands
+        context['brands'] = SalesOrderLine.objects.all().annotate(name=F('product__brand__name')).values('name').annotate(total=Sum('quantity')).order_by('-total')[:10]
+        context['brands'].maxval = max(context['brands'], key=lambda a :a['total'])
+
+        # most purchased categories
+        context['categories'] = SalesOrderLine.objects.all().annotate(name=F('product__category__name')).values('name').annotate(total=Sum('quantity')).order_by('-total')[:10]
+        context['categories'].maxval = max(context['categories'], key=lambda a :a['total'])
+
+        # most purchased dealer quantity
+        context['dealers'] = SalesOrder.objects.all().annotate(name=Concat(F('dealer__first_name'), Value(' '), F('dealer__last_name'))).values('name').annotate(total=Sum('line__quantity')).order_by('-total')[:10]
+        context['dealers'].maxval = max(context['dealers'], key=lambda a :a['total'])
+
+        # most purchased dealer amount
+        context['amt_dealers'] = SalesOrder.objects.all().annotate(name=Concat(F('dealer__first_name'), Value(' '), F('dealer__last_name'))).values('name').annotate(total=Sum('invoice_amount')).order_by('-total')[:10]
+        context['amt_dealers'].maxval = max(context['amt_dealers'], key=lambda a :a['total'])
+
+        context['complaints'] = Complaint.objects.all().select_related('order_id').filter(status__in=['under processing', 'new']).order_by('-created_by')[:10]
+        context['complaints_count'] = Complaint.objects.all().select_related('order_id').filter(status__in=['under processing', 'new']).count()
+
         context['pie_data'] = orders
+
+        # oldest unpaid invoices
+        context['unpaid_dealers'] = SalesOrder.objects.all().annotate(name=Concat(F('dealer__first_name'), Value(' '), F('dealer__last_name'))).values('name').filter(invoice_remaining_amount__lte=F('invoice_amount')).annotate(total=Sum('invoice_amount')).order_by('-total')[:10]
+        context['unpaid_dealers'].maxval = max(context['unpaid_dealers'], key=lambda a :a['total'])
+
+        # least moving products
+        context['least_moving_products'] = SalesOrderLine.objects.all().annotate(name=F('product__name')).values('name').annotate(total=Sum('quantity')).order_by('total')[:10]
+        context['least_moving_products'].maxval = max(context['least_moving_products'], key=lambda a :a['total'])
+
+        # least moving products
+        context['most_moving_products'] = SalesOrderLine.objects.all().annotate(name=F('product__name')).values('name').annotate(total=Sum('quantity')).order_by('-total')[:10]
+        context['most_moving_products'].maxval = max(context['most_moving_products'], key=lambda a :a['total'])
+
+        # most purchased executive volume
+        context['executive_list'] = SalesOrder.objects.all().annotate(name=Concat(F('dealer__executive__first_name'), Value(' '), F('dealer__executive__last_name'))).values('name').annotate(total=Sum('invoice_amount')).order_by('-total')[:10]
+        context['executive_list'].maxval = max(context['executive_list'], key=lambda a: a['total'])
+
         print(orders)
         return self.render_to_response(context)
 
