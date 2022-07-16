@@ -101,7 +101,7 @@ class EmailHandler(EventHandler):
             to=receivers,
             sender={"name": "Fegno Technologies", "email": "abhishekfegno@gmail.com"},
             template_id=3,
-            params={"name": '', "subheadline": subject.get("subheadline"), "message": message},
+            params={"name": 'Customer', "subheadline": subject.get("subheadline"), "message": message},
             # used to render inside email template
             headers={
                 "X-Mailin-custom": "custom_header_1:custom_value_1|custom_header_2:custom_value_2|custom_header_3:custom_value_3",
