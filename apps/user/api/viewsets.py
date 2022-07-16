@@ -22,9 +22,7 @@ from apps.executivetracking.models import Zone
 from apps.infrastructure.models import Branch
 from apps.order.api.serializers import UpcomingPaymentSerializer
 from apps.order.models import SalesOrder
-from apps.user.api.serializers import LoginSerializer, ProfileAPISerializer, ComplaintSerialzer, \
-    PasswordResetSerializer, AdvertisementSerializer, DealerSerializer, DealerDetailSerializer, \
-    ExcalationNumberSerializer, ZoneSerializer, BranchSerializer, PasswordChangeSerializer
+from apps.user.api.serializers import *
 from apps.user.models import User, Complaint, Banners, Dealer, SiteConfiguration
 from lib.sent_email import EmailHandler
 from lib.utils import list_api_formatter, CsrfExemptSessionAuthentication
