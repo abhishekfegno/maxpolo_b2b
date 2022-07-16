@@ -181,6 +181,7 @@ class DealerListView(ListAPIView):
         data = {}
         serializer = self.get_serializer(self.get_queryset(), many=True, context={'request': request})
         data['results'] = serializer.data
+        print(serializer.data)
         return Response(data)
 
 

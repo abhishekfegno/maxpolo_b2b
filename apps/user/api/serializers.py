@@ -67,7 +67,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
 class DealerSerializer(serializers.ModelSerializer):
     zone = serializers.SerializerMethodField()
-    username = serializers.SerializerMethodField()
+    # username = serializers.SerializerMethodField()
 
     def get_zone(self, instance):
         return instance.zone and instance.zone.name
@@ -76,6 +76,7 @@ class DealerSerializer(serializers.ModelSerializer):
         model = Dealer
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'mobile', 'user_role', 'zone', 'company_cin',
                   'address_street', 'address_city', 'address_state')
+
 
 class DealerDetailSerializer(serializers.ModelSerializer):
     zone = serializers.SerializerMethodField()
