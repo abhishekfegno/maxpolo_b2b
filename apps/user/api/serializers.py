@@ -77,7 +77,6 @@ class DealerSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'mobile', 'user_role', 'zone', 'company_cin',
                   'address_street', 'address_city', 'address_state')
 
-nce = SalesOrder.objects.create(dealer=validated_data[
 class DealerDetailSerializer(serializers.ModelSerializer):
     zone = serializers.SerializerMethodField()
 
