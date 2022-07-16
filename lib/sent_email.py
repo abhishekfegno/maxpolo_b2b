@@ -25,12 +25,13 @@ class EmailHandler(EventHandler):
 
     def event_for_pdfs(self, recipients, instance):
         from apps.user.models import User
-        admin = User.objects.get(is_superuser=True)
+        admins = User.objects.filter(is_superuser=True)
         url = ""
         from apps.user.models import Dealer
 
         recipient = [i for i in Dealer.objects.all().values('email', 'first_name')]
-        recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
+        for admin in admins:
+            recipient.append({'email': 'admin@gmail.com', 'first_name': 'admin'})
         message = f"New products have been arrived.Please visit {url}"
         subject = {
             "subject": "New Product",
@@ -41,9 +42,10 @@ class EmailHandler(EventHandler):
 
     def event_for_banners(self, recipients, instance):
         from apps.user.models import User
-        admin = User.objects.get(is_superuser=True)
+        admins = User.objects.filter(is_superuser=True)
         url = ""
-        recipients.append({'email': admin.email, 'first_name': admin.first_name})
+        for admin in admins:
+            recipients.append({'email': admin.email, 'first_name': admin.first_name})
 
         message = f"New Advertisement have been arrived.Please visit {url}"
         subject = {
@@ -55,12 +57,13 @@ class EmailHandler(EventHandler):
 
     def event_for_complaints(self, instance):
         from apps.user.models import User
-        admin = User.objects.get(is_superuser=True)
+        admins = User.objects.filter(is_superuser=True)
         recipient = []
         if instance.created_by is None:
             return
         recipient.append({'email': instance.created_by.email, 'first_name': instance.created_by.first_name})
-        recipient.append({'email': admin.email, 'first_name': admin.first_name})
+        for admin in admins:
+            recipient.append({'email': admin.email, 'first_name': admin.first_name})
         print(instance.created_by.email)
         message = f"New Claim have been arrived."
         subject = {
@@ -72,11 +75,12 @@ class EmailHandler(EventHandler):
 
     def event_for_orders(self, instance):
         from apps.user.models import User
-        admin = User.objects.get(is_superuser=True)
+        admins = User.objects.filter(is_superuser=True)
 
         recipient = []
         recipient.append({'email': instance.dealer.email, 'first_name': instance.dealer.first_name})
-        recipient.append({'email': admin.email, 'first_name': admin.first_name})
+        for admin in admins:
+            recipient.append({'email': admin.email, 'first_name': admin.first_name})
 
         message = f"New Order have been Created."
         subject = {

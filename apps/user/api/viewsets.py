@@ -178,7 +178,7 @@ class DealerListView(ListAPIView):
         # try:
         #     page_number = paginator.validate_number(page_number)
         # except EmptyPage:
-        #     page_number = paginator.num_pages
+        #     page_number = paginator.num_pagesapps.user.api.urls
         # page_obj = paginator.get_page(page_number)
         data = {}
         serializer = self.get_serializer(self.get_queryset(), many=True, context={'request': request})
