@@ -146,7 +146,7 @@ class DistrictUpdateView(ModelSelectorMixin, UpdateView):
 
 
 def get_fieldforce_excel(request):
-    name = 'fieldforce'
+    name = f'fieldforce_{datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
     queryset = CheckPoint.objects.all()
     dataset = CheckPointReport().export(queryset)
     response = HttpResponse(dataset.xlsx, content_type='application/vnd.ms-excel')
