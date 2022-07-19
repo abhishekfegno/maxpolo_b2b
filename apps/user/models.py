@@ -140,9 +140,13 @@ class Complaint(models.Model):
 
 
 class Banners(models.Model):
+    CHOICE = (
+        ('dealer', 'dealer'),
+        ('executive', 'executive'),
+    )
     title = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50)
-    user = models.ForeignKey('user.User', on_delete=models.SET_NULL, null=True, blank=False)
+    user_type = models.CharField(default='dealer', choices=CHOICE, max_length=20)
     photo = models.ImageField(upload_to='banners/', default='default/banner.jpg', null=True, blank=True)
     is_public = models.BooleanField(default=True)
 

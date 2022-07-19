@@ -3,6 +3,7 @@ from django.urls import path, include
 from apps.executivetracking.views import *
 
 urlpatterns = [
+    path('field-force/excel/download/', get_fieldforce_excel, name="get_fieldforce_excel"),
     path('field-force/', FieldForceSelect.as_view(), name="field-force-tracking"),
     path('field-force/<int:pk>/', FieldForceTracking.as_view(), name="field-force-tracking-detail"),
     path('leads/', LeadListView.as_view(), name="leads-list"),

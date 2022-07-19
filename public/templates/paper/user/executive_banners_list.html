@@ -35,7 +35,7 @@
                                 <div class=""><img src="{{ object_item.photo_url }}" style="width:100px;height:100px"></div>
                             </td>
                             <td>
-                                <div class=""><a class="btn btn-primary" href="{% url 'banners-update' pk=object_item.pk %}">Edit</a>
+                                <div class=""><a class="btn btn-primary" href="{% url 'executive-banners-update' pk=object_item.pk %}">Edit</a>
                                 </div>
                             </td>
                             <td>
@@ -54,7 +54,7 @@
                 </div>
 
             </div>
-                        {% include 'paper/pagination.html' %}
+                                    {% include 'paper/pagination.html' %}
 
         </div>
 
@@ -63,7 +63,7 @@
         <div class='card'>
             <div class='card-body'>
                 {% if object.pk%}
-                <a class="pull-right btn btn-secondary" href="{% url 'banners-list' %}" >back to list</a>
+                <a class="pull-right btn btn-secondary" href="{% url 'executive-banners-list' %}" >back to list</a>
                 <h3 class="heading-3 pt-3">Update "advertisements"</h3>
                 <p class="text-muted"> Here you can update the advertisement. </p>
                 {% else %}
@@ -76,7 +76,7 @@
                     {{ form | crispy }}
                     {% if object.pk %}
                     <a class="delBrand btn btn-danger" href="javascript:void(0)"
-                                                 onclick="swalFunction(this, '{% url 'banners-delete' pk=object.pk %}')">Delete</a>
+                                                 onclick="swalFunction(this, '{% url 'executive-banners-delete' pk=object.pk %}')">Delete</a>
                     {% endif %}
                     <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
                 </form>

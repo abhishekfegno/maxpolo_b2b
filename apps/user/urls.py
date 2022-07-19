@@ -44,6 +44,9 @@ urlpatterns = [
     path('banners/list/', BannersListView.as_view(), name='banners-list'),
     path('banners/<int:pk>/update/', BannersDetailView.as_view(), name='banners-update'),
     path('banners/<int:pk>/delete/', BannersDeleteView.as_view(), name='banners-delete'),
+    path('banners/executive/list/', ExecutiveBannersListView.as_view(), name='executive-banners-list'),
+    path('banners/executive/<int:pk>/update/', ExecutiveBannersDetailView.as_view(), name='executive-banners-update'),
+    path('banners/executive/<int:pk>/delete/', ExecutiveBannersDeleteView.as_view(), name='executive-banners-delete'),
 
     path('user/list/excel/<role:role>/', get_users_xl_list, name='get_users_xl_list'),
     path('user/list/<role:role>/', UserListView.as_view(), name='user-list'),

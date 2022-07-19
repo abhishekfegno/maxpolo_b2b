@@ -1,6 +1,8 @@
 from import_export import resources, fields
 from import_export.widgets import ForeignKeyWidget
 
+from apps import executivetracking
+from apps.executivetracking.models import CheckPoint
 from apps.order.models import SalesOrder
 from apps.payment.models import Transaction
 from apps.user.models import Complaint, Dealer, Executive
@@ -60,3 +62,9 @@ class ExecutiveReport(resources.ModelResource):
     class Meta:
         model = Executive
         export_order = ('first_name', 'mobile', 'email', 'company_cin', 'executive__first_name')
+
+
+class CheckPointReport(resources.ModelResource):
+    class Meta:
+        model = CheckPoint
+        export_order = ('store', 'check_in_at', 'description', 'location_text')

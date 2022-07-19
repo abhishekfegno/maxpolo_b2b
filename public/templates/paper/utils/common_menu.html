@@ -128,7 +128,7 @@
                 </ul>
             </div>
         </li>
-        <li class="li ">
+        <li class="li">
             <a aria-controls="navbar-user-roles" aria-expanded="true" class="collapsed show" data-toggle="collapse"
                href="#navbar-user-roles">
                 <i class="ni ni-archive-2"></i>
@@ -173,15 +173,31 @@
             <a aria-controls="navbar-configuration" aria-expanded="true" class="collapsed" data-toggle="collapse"
                href="#navbar-configuration">
                 <i class="ni ni-archive-2"></i>
+                <p> Advertisements <b class="caret"></b></p>
+            </a>
+            <div class="collapse show" id="navbar-advertisement" style="">
+                <ul class="nav">
+                    <li>
+                        <a href="{% url 'banners-list'%}">
+                            <i aria-hidden="true" class="fa fa-book"></i><span>Dealer </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'executive-banners-list' %}">
+                            <i aria-hidden="true" class="fa fa-book"></i><span>Executive </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="li ">
+            <a aria-controls="navbar-configuration" aria-expanded="true" class="collapsed" data-toggle="collapse"
+               href="#navbar-configuration">
+                <i class="ni ni-archive-2"></i>
                 <p> Configurations <b class="caret"></b></p>
             </a>
             <div class="collapse show" id="navbar-configuration" style="">
                 <ul class="nav">
-                    <li>
-                        <a href="{% url 'banners-list' %}">
-                            <i aria-hidden="true" class="fa fa-book"></i><span>Advertisements</span>
-                        </a>
-                    </li>
                     <li>
                         <a href="{% url 'zone-list' %}">
                             <i aria-hidden="true" class="fa fa-book"></i><span>Zone</span>

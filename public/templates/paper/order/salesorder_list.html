@@ -5,8 +5,7 @@
             <div class='card-body'>
                 <div>
                     {% if order_type %}
-                    <a class="btn btn-primary" href="{% url 'get_excel_report_order' slug=order_type %}"
-                       style="float:right;">Download Excel</a>
+                    <a class="btn btn-primary float-right" href="{% url 'get_excel_report_order' slug=order_type %}">Download Excel</a>
                     {% endif %}
                     <h3>Confirmed List</h3>
                 </div>

@@ -22,7 +22,13 @@ class UserCreationForm(BaseUserCreationForm):
         return self.cleaned_data
 
 
-class BannersForm(forms.ModelForm):
+class DealerBannersForm(forms.ModelForm):
+    class Meta:
+        model = Banners
+        fields = ('title', 'photo')
+
+
+class ExecutiveBannersForm(forms.ModelForm):
     class Meta:
         model = Banners
         fields = ('title', 'photo')

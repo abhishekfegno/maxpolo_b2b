@@ -21,6 +21,8 @@
                             <th scope="col">ID</th>
                             <th scope="col">Invoice ID</th>
                             <th scope="col">Dealer</th>
+                            <th scope="col">Invoice Amount</th>
+                            <th scope="col">Executive</th>
                             <th scope="col">Invoice Date</th>
                             <th scope="col"></th>
                         </tr>
@@ -41,6 +43,12 @@
                             </td>
                             <td>
                                 <div class="">{{ item.dealer.get_full_name|default:"unknown"  }}</div>
+                            </td>
+                            <td>
+                                <div class="">{{ item.invoice_amount }}</div>
+                            </td>
+                            <td>
+                                <div class="">{{ item.executive }}</div>
                             </td>
                             <td>
                                 <div class="">{{ item.invoice_date | date:" D d M Y" }}</div>

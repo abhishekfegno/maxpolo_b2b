@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.http import HttpResponse
 from django.utils import datetime_safe
 from django.views.generic import DetailView, ListView, UpdateView, CreateView
 
@@ -9,6 +10,7 @@ from apps.executivetracking.models import CheckPoint, Zone
 from apps.user.models import Executive, Role, User
 # Create your views here.
 from apps.viewset import ModelSelectorMixin
+from lib.importexport import CheckPointReport
 
 
 class FieldForceSelect(
@@ -141,3 +143,12 @@ class DistrictUpdateView(ModelSelectorMixin, UpdateView):
     app_name = ''
     access_to = Role.BRANCH_MANAGER
     fields = ("name",)
+
+
+def get_fieldforce_excel(request):
+    name = 'fieldforce'
+    queryset = CheckPoint.objects.all()
+    dataset = CheckPointReport().export(queryset)
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = f'attachment; filename="{name}.xls"'
+    return response
