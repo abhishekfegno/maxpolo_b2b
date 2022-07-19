@@ -130,16 +130,16 @@ def invoice_detail_edit(request, order_id):
 
 def get_excel_report_order(request, slug):
     queryset = SalesOrder.objects.filter(is_quotation=True)
-    name = f'quotation{datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
+    name = f'quotation{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
     if slug.lower() == 'salesorder':
         queryset = SalesOrder.objects.filter(is_confirmed=True)
-        name = f'{slug}_{datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
+        name = f'{slug}_{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
     if slug.lower() == 'invoice':
         queryset = SalesOrder.objects.filter(is_invoice=True)
-        name = f'{slug}_{datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
+        name = f'{slug}_{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
     if slug.lower() == 'credit':
         queryset = SalesOrder.objects.filter(is_invoice=True, invoice_remaining_amount__gt=0)
-        name = f'{slug}_{datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
+        name = f'{slug}_{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
     try:
         queryset = queryset.filter(**request.GET)
     except Exception as e:
