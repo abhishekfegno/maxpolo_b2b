@@ -13,11 +13,11 @@
                         <thead class="thead-dark">
                         <tr class="table-header">
                             <th scope="col">ID</th>
-                            <th scope="col">InvoiceID</th>
+                            <th scope="col">Invoice ID</th>
                             <th scope="col">Name</th>
                             <th scope="col">Ordered_on</th>
                             <th scope="col">Paid</th>
-                            <th scope="col">Balance</th>
+                            <th scope="col">Pending Amount</th>
                             <th scope="col">status</th>
                             <th scope="col">Actions</th>
                         </tr>
@@ -52,7 +52,11 @@
                                 <div class="">₹{{ object_item.amount_balance }}</div>
                             </td>
                             <td>
-                                <div class=""><span class="badge badge-pill badge-info">{{object_item.status}}</span></div>
+                                {% if object_item.status == 'cancelled'%}
+                                <div class=""><span class="badge badge-pill badge-danger">{{object_item.status}}</span></div>
+                                {% else %}
+                                <div class=""><span class="badge badge-pill badge-success">{{object_item.status}}</span></div>
+                                {% endif %}
                             </td>
                             <td>
                                 {% if not object_item.status == 'cancelled' %}

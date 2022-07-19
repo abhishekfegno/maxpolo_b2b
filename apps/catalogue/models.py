@@ -59,6 +59,7 @@ class Product(models.Model):
     product_code = models.CharField(max_length=50)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name

@@ -3,7 +3,7 @@ from import_export.widgets import ForeignKeyWidget
 
 from apps.order.models import SalesOrder
 from apps.payment.models import Transaction
-from apps.user.models import Complaint, Dealer
+from apps.user.models import Complaint, Dealer, Executive
 
 
 class OrderReport(resources.ModelResource):
@@ -48,3 +48,15 @@ class ComplaintReport(resources.ModelResource):
 class PaymentReport(resources.ModelResource):
     class Meta:
         model = Transaction
+
+
+class DealerReport(resources.ModelResource):
+    class Meta:
+        model = Dealer
+        export_order = ('first_name', 'mobile', 'email', 'company_cin', 'executive__first_name')
+
+
+class ExecutiveReport(resources.ModelResource):
+    class Meta:
+        model = Executive
+        export_order = ('first_name', 'mobile', 'email', 'company_cin', 'executive__first_name')

@@ -11,18 +11,18 @@ class ProductPDFListSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    brand = serializers.SerializerMethodField()
+    series = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
 
     def get_category(self, instance):
         return instance.category.name
 
-    def get_brand(self, instance):
+    def get_series(self, instance):
         return instance.brand.name
 
     class Meta:
         model = Product
-        fields = ('id', 'name', 'product_code', 'brand', 'category')
+        fields = ('id', 'name', 'product_code', 'series', 'category')
 
 
 class ProductPDFSerializer(serializers.ModelSerializer):

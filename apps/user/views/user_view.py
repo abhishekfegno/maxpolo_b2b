@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Sum, F, Value
 from django.db.models.functions import Concat
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -23,6 +24,7 @@ from apps.catalogue.models import Product, Brand
 from apps.order.models import SalesOrder
 from apps.user.forms.banners_form import ResetPasswordForm, DealerForm, ExecutiveForm, AdminForm
 from apps.user.models import Banners, User, Dealer, Executive, Role, Complaint, SiteConfiguration
+from lib.importexport import DealerReport, ExecutiveReport
 from lib.token_handler import token_expire_handler, is_token_expired
 
 
@@ -68,16 +70,16 @@ class IndexView(TemplateView):
         context['brands'].maxval = max(context['brands'], key=lambda a :a['total'])
 
         # most purchased categories
-        context['categories'] = SalesOrderLine.objects.all().annotate(name=F('product__category__name')).values('name').annotate(total=Sum('quantity')).order_by('-total')[:10]
-        context['categories'].maxval = max(context['categories'], key=lambda a :a['total'])
+        # context['categories'] = SalesOrderLine.objects.all().annotate(name=F('product__category__name')).values('name').annotate(total=Sum('quantity')).order_by('-total')[:10]
+        # context['categories'].maxval = max(context['categories'], key=lambda a :a['total'])
 
         # most purchased dealer quantity
         context['dealers'] = SalesOrder.objects.all().annotate(name=Concat(F('dealer__first_name'), Value(' '), F('dealer__last_name'))).values('name').annotate(total=Sum('line__quantity')).order_by('-total')[:10]
-        context['dealers'].maxval = max(context['dealers'], key=lambda a :a['total'])
+        # context['dealers'].maxval = max(context['dealers'], key=lambda a :a['total'])
 
         # most purchased dealer amount
         context['amt_dealers'] = SalesOrder.objects.all().annotate(name=Concat(F('dealer__first_name'), Value(' '), F('dealer__last_name'))).values('name').annotate(total=Sum('invoice_amount')).order_by('-total')[:10]
-        context['amt_dealers'].maxval = max(context['amt_dealers'], key=lambda a :a['total'])
+        # context['amt_dealers'].maxval = max(context['amt_dealers'], key=lambda a :a['total'])
 
         context['complaints'] = Complaint.objects.all().select_related('order_id').filter(status__in=['under processing', 'new']).order_by('-created_by')[:10]
         context['complaints_count'] = Complaint.objects.all().select_related('order_id').filter(status__in=['under processing', 'new']).count()
@@ -122,6 +124,23 @@ class UserDetailView(UpdateView):
             print(form.errors)
         role = form.instance.user_role
         return redirect('user-list', role=role)
+
+
+
+
+def get_users_xl_list(request, role):
+    name = 'users'
+    if role == 32:
+        name = 'dealers'
+        queryset = Dealer.object.all()
+        dataset = DealerReport().export(queryset)
+    elif role == 16:
+        name = 'executive'
+        queryset = Executive.object.all()
+        dataset = ExecutiveReport().export(queryset)
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = f'attachment; filename="{name}.xls"'
+    return response
 
 
 @method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')

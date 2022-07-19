@@ -60,7 +60,7 @@ class TransactionListAPIView(ListAPIView):
 
 
 class CreditListAPIView(ListAPIView):
-    queryset = SalesOrder.objects.filter(is_invoice=True).exclude(transaction=None).select_related('dealer').prefetch_related('transaction_set').order_by('-invoice_date')
+    queryset = SalesOrder.objects.filter(is_invoice=True).select_related('dealer').prefetch_related('transaction_set').order_by('-invoice_date')
     serializer_class = CreditListSerializer
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_fields = []

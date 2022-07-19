@@ -111,6 +111,7 @@
                 <a class="pull-right btn btn-sm btn-info" href="{% url 'user-list' role=view.kwargs.role %}"> Back to list </a>
                 {% endif %}
                 <h3>{{ role }} List</h3>
+                <a class="pull-right btn btn-sm btn-info" style="float:right;" href="{% url 'get_users_xl_list' role=view.kwargs.role %}">Excel Download</a>
                 <p class="text-muted">
                     You can view the list of {{ role|lower }}s here.. </p>
                 <div class="table-responsive">

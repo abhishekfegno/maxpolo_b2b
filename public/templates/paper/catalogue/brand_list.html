@@ -4,7 +4,7 @@
     <div class='col-7'>
         <div class='card'>
             <div class='card-body'>
-                <h3>Brand List</h3>
+                <h3>Series List</h3>
 
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
@@ -54,11 +54,11 @@
             <div class='card-body'>
                 {% if object.pk %}
                 <a class="pull-right btn btn-secondary" href="{% url 'brand-list' %}" > back to list</a>
-                <h3 class="heading-3 pt-3">Update Brand</h3>
-                <p class="text-muted"> Here you can update the brand. </p>
+                <h3 class="heading-3 pt-3">Update Series</h3>
+                <p class="text-muted"> Here you can update the series. </p>
                 {% else %}
-                <h3 class="heading-3 pt-3">Add Brand </h3>
-                <p class="text-muted"> Here you can add your Brands. </p>
+                <h3 class="heading-3 pt-3">Add Series </h3>
+                <p class="text-muted"> Here you can add your series. </p>
                 {% endif %}
                 <form method="POST">
                     {% csrf_token %}

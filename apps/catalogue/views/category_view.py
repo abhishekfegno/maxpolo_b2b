@@ -62,9 +62,12 @@ class CategoryDeleteView(DeleteView):
     model = Category
     success_url = '/catalogue/category/list/'
 
-    def get(self, request, *args, **kwargs):
-        # import pdb;pdb.set_trace()
-        print(self.get_object().delete())
+    def post(self, request, *args, **kwargs):
+
+        if self.get_object().get_children().exists() or self.get_object().product_set.all().exists():
+            messages.add_message(request, messages.ERROR, "Cannot delete category !")
+        else:
+            self.get_object().delete()
         return redirect('category-list')
 
 

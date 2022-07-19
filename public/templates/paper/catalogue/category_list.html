@@ -6,7 +6,7 @@
 .wtree li span:focus+ul li span,.wtree li span:hover+ul li span{background:#eee;color:#000;border:1px solid #aaa}
 .wtree li span:focus+ul li:after,.wtree li span:focus+ul li:before,.wtree li span:hover+ul li:after,.wtree li span:hover+ul li:before{border-color:#aaa}
 .wtree .editing,.wtree:hover .editing  { background-color: #666 }
-a[href]{color: #00f}.wtree .editing a[href] {color: #fff}.wtree .editing:hover a[href] {color: #000}
+<!--a[href]{color: #00f}.wtree .editing a[href] {color: #fff}.wtree .editing:hover a[href] {color: #000}-->
 
 
 </style>
@@ -71,6 +71,10 @@ a[href]{color: #00f}.wtree .editing a[href] {color: #fff}.wtree .editing:hover a
                 <form method="POST">
                     {% csrf_token %}
                     {{ form | crispy }}
+                    {% if object.pk %}
+                    <b class="btn btn-sm btn-danger" href="javascript:void(0)"
+                                                 onclick="swalFunction(this, '{% url 'category-delete' pk=object.pk %}')">Delete</b>
+                    {% endif %}
                     <button class='btn btn-sm btn-success' style="float:right;" type='submit'> Save</button>
                 </form>
             </div>

@@ -33,7 +33,7 @@
                             <th scope="col">Image</th>
                             <th scope="col">Name</th>
                             <th scope="col">Code</th>
-                            <th scope="col">Brand</th>
+                            <th scope="col">Series</th>
                             <th scope="col">Category</th>
                             <th scope="col">Actions</th>
                         </tr>
@@ -103,7 +103,25 @@
                 {% endif %}
                 <form enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
-                    {{ form | crispy }}
+                    <div class="col-md-12">
+                        {{ form.name | as_crispy_field }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form.image | as_crispy_field }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form.product_code | as_crispy_field }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form.category | as_crispy_field }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form.brand | as_crispy_field }}
+                    </div>
+                        <div class="col-md-4">
+                            <label for="is-active">{{form.is_active.label}}</label>
+                            <input id="is-active" type="checkbox" value={{form.is_active.value}} name="{{form.is_active.name}}"/>
+                        </div>
                     {% if object.pk %}
                             <a class="delBrand btn btn-danger  btn-sm" href="javascript:void(0)"
                                onclick="swalFunction(this, '{% url 'product-delete' pk=object.pk %}')">Delete</a>
