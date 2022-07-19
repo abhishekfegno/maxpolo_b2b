@@ -129,13 +129,13 @@ class UserDetailView(UpdateView):
 
 
 def get_users_xl_list(request, role):
-    name = f'users{datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
+    name = f'users{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
     if role == 32:
-        name = f'dealers_{datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
+        name = f'dealers_{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
         queryset = Dealer.object.all()
         dataset = DealerReport().export(queryset)
     elif role == 16:
-        name = f'executive_{datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
+        name = f'executive_{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
         queryset = Executive.object.all()
         dataset = ExecutiveReport().export(queryset)
     response = HttpResponse(dataset.xlsx, content_type='application/vnd.ms-excel')
