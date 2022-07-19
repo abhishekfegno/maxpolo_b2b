@@ -140,6 +140,9 @@ def get_excel_report_order(request, slug):
     if slug.lower() == 'credit':
         queryset = SalesOrder.objects.filter(is_invoice=True, invoice_remaining_amount__gt=0)
         name = f'{slug}_{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
+    if slug.lower() == 'cancelled':
+        queryset = SalesOrder.objects.filter(is_cancelled=True)
+        name = f'{slug}_{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}'
     try:
         queryset = queryset.filter(**request.GET)
     except Exception as e:
