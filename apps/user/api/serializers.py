@@ -15,7 +15,7 @@ class LoginSerializer(serializers.Serializer):
 
 
 class LogoutSerializer(serializers.Serializer):
-    logout = serializers.BooleanField()
+    logout = serializers.BooleanField(default=True)
 
     class Meta:
         fields = ('logout', )

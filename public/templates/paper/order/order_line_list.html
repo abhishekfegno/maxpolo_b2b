@@ -82,7 +82,7 @@
                         {% if order.is_cancelled %}
                         <li class="li complete">
                             <div class="timestamp">
-                                <span class="date">{{ order.created_at|date|default:"-" }}<span>
+                                <span class="date">{{ order.cancelled_date|date|default:"-" }}<span>
                             </div>
                             <div class="status">
                                 <p> Order Cancelled </p>
@@ -245,7 +245,6 @@
                                     </form>
                                     <form action="{% url 'quotation-update' pk=order.id %}" method="post">
                                         {% csrf_token %}
-                                        <input type="hidden" hidden name="is_confirmed" value=false class="form-control">
                                         <input type="hidden" hidden name="is_quotation" value=false class="form-control">
                                         <input type="hidden" hidden name="is_cancelled" value=true class="form-control">
                                         <input type="hidden" hidden name="cancelled_date" value="{% now 'm/d/Y' %}" class="form-control" >

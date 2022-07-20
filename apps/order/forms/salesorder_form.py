@@ -66,12 +66,13 @@ class QuotationUpdateForm(forms.ModelForm):
     invoice_remaining_amount = forms.FloatField(required=False)
     confirmed_date = forms.DateField(required=False)
     invoice_date = forms.DateField(required=False)
+    cancelled_date = forms.DateField(required=False)
 
     class Meta:
         model = SalesOrder
         fields = ('is_confirmed', 'is_cancelled', 'is_quotation', 'is_invoice', 'invoice_id',
                   'invoice_status', 'invoice_amount', 'invoice_remaining_amount',
-                  'confirmed_date', 'invoice_date', 'invoice_pdf')
+                  'confirmed_date', 'invoice_date', 'invoice_pdf', 'cancelled_date')
 
 
 class SalesOrderUpdateForm(forms.ModelForm):
