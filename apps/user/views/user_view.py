@@ -70,16 +70,16 @@ class IndexView(TemplateView):
         context['brands'].maxval = max(context['brands'], key=lambda a :a['total'])
 
         # most purchased categories
-        # context['categories'] = SalesOrderLine.objects.all().annotate(name=F('product__category__name')).values('name').annotate(total=Sum('quantity')).order_by('-total')[:10]
-        # context['categories'].maxval = max(context['categories'], key=lambda a :a['total'])
+        context['categories'] = SalesOrderLine.objects.all().annotate(name=F('product__category__name')).values('name').annotate(total=Sum('quantity')).order_by('-total')[:10]
+        context['categories'].maxval = max(context['categories'], key=lambda a :a['total'])
 
         # most purchased dealer quantity
         context['dealers'] = SalesOrder.objects.all().annotate(name=Concat(F('dealer__first_name'), Value(' '), F('dealer__last_name'))).values('name').annotate(total=Sum('line__quantity')).order_by('-total')[:10]
-        # context['dealers'].maxval = max(context['dealers'], key=lambda a :a['total'])
+        context['dealers'].maxval = max(context['dealers'], key=lambda a :a['total'])
 
         # most purchased dealer amount
         context['amt_dealers'] = SalesOrder.objects.all().annotate(name=Concat(F('dealer__first_name'), Value(' '), F('dealer__last_name'))).values('name').annotate(total=Sum('invoice_amount')).order_by('-total')[:10]
-        # context['amt_dealers'].maxval = max(context['amt_dealers'], key=lambda a :a['total'])
+        context['amt_dealers'].maxval = max(context['amt_dealers'], key=lambda a :a['total'])
 
         context['complaints'] = Complaint.objects.all().select_related('order_id').filter(status__in=['under processing', 'new']).order_by('-created_by')[:10]
         context['complaints_count'] = Complaint.objects.all().select_related('order_id').filter(status__in=['under processing', 'new']).count()
