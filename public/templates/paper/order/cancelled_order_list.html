@@ -19,7 +19,7 @@
                         <tr class="">
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Ordered_on</th>
+                            <th scope="col">Cancelled_on</th>
                             <th scope="col">Created by</th>
                         </tr>
 
@@ -38,7 +38,7 @@
                                 <div class=""><a href="{% url 'get_orderline' order_id=object.id %}">{{ object.id_as_text }}</a></div>
                             </td>
                             <td>
-                                <div class="">{{ object.created_at |date:"D d M Y " }}</div>
+                                <div class="">{{ object.cancelled_date |date:"D d M Y " }}</div>
                             </td>
                             <td>
                                 <div class="">{{ object.dealer }}</div>

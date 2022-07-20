@@ -14,6 +14,13 @@ class LoginSerializer(serializers.Serializer):
         fields = ('username', 'password')
 
 
+class LogoutSerializer(serializers.Serializer):
+    logout = serializers.BooleanField()
+
+    class Meta:
+        fields = ('logout', )
+
+
 class ProfileAPISerializer(serializers.ModelSerializer):
     branch = serializers.SerializerMethodField()
     zone = serializers.SerializerMethodField()

@@ -317,6 +317,12 @@ class QuotationDetailView(UpdateView):
             invoice_id = request.POST.get('invoice_id')
             invoice_amount = request.POST.get('invoice_amount', 1)
             invoice_pdf = request.POST.get('invoice_pdf', 1)
+            cancelled_date = request.POST.get('cancelled_date')
+            if cancelled_date:
+                ord = self.get_object()
+                ord.cancelled_date = cancelled_date
+                ord.save()
+            # import pdb;pdb.set_trace()
             if int(invoice_amount) <= 0:
                 raise AmountMissMatchException("Invoice Amount Invalid  !!!")
             if invoice_id and SalesOrder.objects.filter(invoice_id=invoice_id).exists():

@@ -148,10 +148,20 @@ class LoginAPIView(GenericAPIView):
 class LogoutAPIView(GenericAPIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     permission_classes = (permissions.AllowAny, )
+    serializer_class = LogoutSerializer
 
-    def get(self, request, *args, **kwargs):
-        logout(request)
-        return Response(status=status.HTTP_200_OK)
+    # def get(self, request, *args, **kwargs):
+    #     logout(request)
+    #     return Response(status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            logout(request)
+            current_status = status.HTTP_200_OK
+        else:
+            current_status = status.HTTP_400_BAD_REQUEST
+        return Response(status=current_status)
 
 
 class DealerListView(ListAPIView):
