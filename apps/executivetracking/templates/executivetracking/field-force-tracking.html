@@ -64,9 +64,9 @@
                     <div class="contacts-list">
                         <div class="contacts-list__search">
                             <div class="contacts-list__input-wrapper">
-                                <input oninput="filter_executives(this)" placeholder="Search" type="text">
-                                <span class="contacts-list__search-icon">
-                              <i class="fa fa-search"></i>
+<!--                                <input oninput="filter_executives(this)" placeholder="Search" type="text">-->
+                                <span class=""><h3>Executive list</h3>
+<!--                              <i class="fa fa-search"></i>-->
                             </span>
                             </div>
                         </div>
@@ -91,10 +91,10 @@
                                             <div class="contact  {% if executive.id == object.id %}active{% endif %}">
                                                 <div class="contact__avatar">
                                                     {% if executive.profile_url %}
-                                                    <img alt="{{ executive.first_name }}"
+                                                    <img alt="{{ executive.get_full_name}}"
                                                          src="{{ MEDIA_URL }}{{ executive.profile_url }}">
                                                     {% else %}
-                                                    <img alt="{{ executive.get_fullname }}"
+                                                    <img alt="{{ executive.get_full_name }}"
                                                          src="{{ settings.STATIC_URL }}{{ settings.PLACEHOLDER_PROFILE_DEFAULT_IMAGE }}">
                                                     {% endif %}
                                                 </div>
@@ -123,19 +123,19 @@
                                     <div class="contact large ">
                                         <div class="contact__avatar">
                                             {% if object.profile_url %}
-                                            <img alt="{{ object.get_fullname }} Profile Picture "
+                                            <img alt="{{ object.get_full_name }} Profile Picture "
                                                  src="{{ MEDIA_URL }}{{ object.profile_url }}">
                                             {% else %}
-                                            <img alt="{{ object.get_fullname }}"
+                                            <img alt="{{ object.get_full_name }}"
                                                  src="{{ settings.STATIC_URL }}{{ settings.PLACEHOLDER_PROFILE_DEFAULT_IMAGE }}">
                                             {% endif %}
                                         </div>
                                         <div class="contact__info">
                                             <div class="contact__name text-truncate">
-                                                {{ object.first_name }}
+                                                {{ object.get_full_name }}
                                             </div>
                                             <div class="contact__location text-truncate">
-                                                {{ executive.branch.name }} <span class="text-muted">| ID:</span> {{   executive.get_fullname|default:"-" }}
+                                                {{ executive.branch.name }} branch<span class="text-muted">| Mobile:</span> {{   executive.mobile|default:"-" }}
                                             </div>
                                         </div>
                                     </div>
@@ -167,14 +167,14 @@
                                             </div>
                                         </div>
                                         {% else %}
-                                        <div class="no-results hidden">
+                                        <div class="no-results ">
                                             <div class="row m-0 text-center py-5">
                                                 <div class="col-12">
-                                                    <h3 class="no-results__title">No Results found</h3>
+                                                    <h3 class="no-results__title">No information available to show.</h3>
                                                 </div>
                                                 <div class="col-12">
                                                     <p class="no-results__content">
-                                                        No information available to show. </p>
+                                                         </p>
                                                 </div>
                                             </div>
                                         </div>
