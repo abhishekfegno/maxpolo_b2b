@@ -16,6 +16,14 @@ class NotificationAPIView(ListAPIView):
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     search_fields = ('order_id', 'invoice_id')
 
+    def filter_queryset(self, queryset):
+        qs = queryset
+        dealer = self.kwargs.get('dealer_id')
+        if dealer:
+            qs = queryset.filter(user=dealer)
+        return qs
+
+
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page', 1)
         page_size = request.GET.get('page_size', 10)
