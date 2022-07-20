@@ -6,10 +6,11 @@ from rest_framework.response import Response
 
 from apps.notification.api.serializers import NotificationSerializer
 from apps.notification.models import Notification
+from apps.user.api.viewsets import ExeDealerMixin
 from lib.utils import list_api_formatter
 
 
-class NotificationAPIView(ListAPIView):
+class NotificationAPIView(ExeDealerMixin, ListAPIView):
     queryset = Notification.objects.select_related('user')
     serializer_class = NotificationSerializer
     filterset_fields = ['user']
@@ -17,10 +18,11 @@ class NotificationAPIView(ListAPIView):
     search_fields = ('order_id', 'invoice_id')
 
     def filter_queryset(self, queryset):
-        qs = queryset
-        dealer = self.kwargs.get('dealer_id')
-        if dealer:
-            qs = queryset.filter(user=dealer)
+        # dealer = self.kwargs.get('dealer_id')
+        # if dealer:
+        #     qs = queryset.filter(user_id=dealer)
+        # else:
+        qs = queryset.filter(user_id=self.get_dealer_id())
         return qs
 
 
@@ -28,7 +30,7 @@ class NotificationAPIView(ListAPIView):
         page_number = request.GET.get('page', 1)
         page_size = request.GET.get('page_size', 10)
 
-        queryset = self.filter_queryset(self.get_queryset().filter(user_id=self.request.user.id))
+        queryset = self.filter_queryset(self.get_queryset())
 
         paginator = Paginator(queryset, page_size)
         try:
