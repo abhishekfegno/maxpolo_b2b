@@ -100,11 +100,11 @@
                                                 </div>
                                                 <div class="contact__info">
                                                     <div class="contact__name text-truncate  {% if executive.id == object.id %}font-weight-500 text-primary{% endif %}">
-                                                        {{ executive.get_fullname }}
+                                                        {{ executive.get_full_name }}
                                                     </div>
                                                     <div class="contact__location text-truncate text-sm {% if executive.id == object.id %}active{% endif %}">
-                                                        {{ executive.branch.name }} <span
-                                                            class="text-muted">| ID:</span> {{            executive.get_fullname |default:"-" }}
+                                                        {{ executive.branch.name }} branch <span
+                                                            class="text-muted">| mobile:</span> {{ executive.mobile |default:"-" }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -154,6 +154,7 @@
                                                 {{ selected_date_obj|date:"dS F Y, D" }}
                                             </strong>
                                         </div>
+                                        {% if checkin_set %}
                                         <div class="col-12">
                                             <div class="t-activity">
                                                 <div class="t-activity__contents">
@@ -165,6 +166,20 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        {% else %}
+                                        <div class="no-results hidden">
+                                            <div class="row m-0 text-center py-5">
+                                                <div class="col-12">
+                                                    <h3 class="no-results__title">No Results found</h3>
+                                                </div>
+                                                <div class="col-12">
+                                                    <p class="no-results__content">
+                                                        No information available to show. </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

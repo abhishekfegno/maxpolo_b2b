@@ -11,7 +11,7 @@
             <div class="col-md-6">
                 <div class="row  pr-3">
                     <div class="col-12">
-                        <h2 class="mt-2">{{ point.store.name }} <span class="text-primary">{% if not point.check_out_at %}( Currently Here ){% endif  %}</span>
+                        <h2 class="mt-2">{{ point.store.get_full_name }} <span class="text-primary">{% if not point.check_out_at %}( Currently Here ){% endif  %}</span>
                         </h2>
                     </div>
                     {% if point %}
