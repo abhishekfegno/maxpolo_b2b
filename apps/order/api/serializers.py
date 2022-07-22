@@ -77,7 +77,7 @@ class OrderSerializer(serializers.ModelSerializer):
                 },
                 "cancelled": {
                     "status": instance.is_cancelled,
-                    "date": None,
+                    "date": instance.cancelled_date or None,
                     "label": "Cancelled",
                 },
             }
@@ -159,7 +159,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
                 },
                 "cancelled": {
                     "status": instance.is_cancelled,
-                    "date": instance.cancelled_date,
+                    "date": instance.cancelled_date or None,
                     "label": "Cancelled",
                 },
             }
