@@ -49,6 +49,9 @@ class ProductAPIView(ListAPIView):
 
     def filter_queryset(self, queryset):
         # return queryset.filter(**{k: v for k, v in self.request.query_params.items() if k in self.filterset_fields})
+        # import pdb;pdb.set_trace()
+        if self.request.GET.get('category'):
+            queryset = queryset.filter(category__slug=self.request.GET.get('category', ''))
         if self.request.GET.get('q'):
             queryset = queryset.filter(name__icontains=self.request.GET.get('q', ''))
         return queryset
