@@ -49,7 +49,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = '__all__'
+        fields = ('amount', 'amount_balance', 'status', 'created_at')
 
 
 class CreditListSerializer(serializers.ModelSerializer):

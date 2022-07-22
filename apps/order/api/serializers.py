@@ -7,6 +7,11 @@ from lib.utils import get_local_time
 
 
 class UpcomingPaymentSerializer(serializers.ModelSerializer):
+    invoice_date = serializers.SerializerMethodField()
+
+    def get_invoice_date(self, instance):
+        return get_local_time(instance.invoice_date)
+
     class Meta:
         model = SalesOrder
         fields = ('id', 'invoice_id', 'invoice_date')
@@ -135,6 +140,13 @@ class OrderDetailSerializer(serializers.ModelSerializer):
     dealer = serializers.SerializerMethodField()
     transactions = serializers.SerializerMethodField()
     timeline = serializers.SerializerMethodField()
+    created_at = serializers.SerializerMethodField()
+    invoice_date = serializers.SerializerMethodField()
+    confirmed_date = serializers.SerializerMethodField()
+    cancelled_date = serializers.SerializerMethodField()
+
+    def get_created_at(self, instance):
+        return get_local_time(instance.created_at)
 
     def get_dealer(self, instance):
         if instance.dealer:
@@ -178,10 +190,23 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             }
 
     def get_transactions(self, instance):
-        return instance.transaction_set.all().values('amount', 'amount_balance', 'status', 'created_at').order_by('-id')
+        return TransactionSerializer(many=True).data
+
+    def get_created_at(self, instance):
+        return get_local_time(instance.created_at)
+
+    def get_invoice_date(self, instance):
+        return get_local_time(instance.invoice_date)
+
+    def get_confirmed_date(self, instance):
+        return get_local_time(instance.confirmed_date)
+
+    def get_cancelled_date(self, instance):
+        return get_local_time(instance.cancelled_date)
+
 
     class Meta:
         model = SalesOrder
         fields = ('id', 'order_id', 'invoice_id', 'invoice_status', 'invoice_date', 'invoice_amount',
-                  'invoice_remaining_amount', 'confirmed_date', 'is_invoice', 'is_cancelled', 'is_confirmed',
+                  'invoice_remaining_amount', 'confirmed_date', 'cancelled_date', 'is_invoice', 'is_cancelled', 'is_confirmed',
                   'is_quotation', 'dealer', 'created_at', 'dealer', 'line', 'timeline', 'transactions')
