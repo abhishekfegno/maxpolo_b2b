@@ -47,9 +47,11 @@ class ProductAPIView(ListAPIView):
     # ordering_fields = ('product_code', 'name')
     pagination_class = PageNumberPagination
 
-    # def filter_queryset(self, queryset):
-    #     # import pdb;pdb.set_trace()
-    #     return queryset.filter(**{k: v for k, v in self.request.query_params.items() if k in self.filterset_fields})
+    def filter_queryset(self, queryset):
+        # return queryset.filter(**{k: v for k, v in self.request.query_params.items() if k in self.filterset_fields})
+        if self.request.GET.get('q'):
+            queryset = queryset.filter(name__icontains=self.request.GET.get('q', ''))
+        return queryset
 
     def list(self, request, *args, **kwargs):
         page_number = request.GET.get('page', 1)
