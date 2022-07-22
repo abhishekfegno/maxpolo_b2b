@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from apps.order.models import SalesOrder, SalesOrderLine
 from apps.payment.api.serializers import TransactionSerializer
+from lib.utils import get_local_time
 
 
 class UpcomingPaymentSerializer(serializers.ModelSerializer):
@@ -38,6 +39,9 @@ class OrderSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     transaction = serializers.SerializerMethodField()
     timeline = serializers.SerializerMethodField()
+    invoice_date = serializers.SerializerMethodField()
+    confirmed_date = serializers.SerializerMethodField()
+    created_at = serializers.SerializerMethodField()
 
     def get_status(self, instance):
         return instance.status
@@ -57,33 +61,42 @@ class OrderSerializer(serializers.ModelSerializer):
             return {
                 "new": {
                     "status": True,
-                    "date": instance.created_at,
+                    "date": get_local_time(instance.created_at),
                     "label": "Placed",
                 },
                 "confirmed": {
                     "status": instance.is_invoice or instance.is_confirmed,
-                    "date": instance.confirmed_date,
+                    "date": get_local_time(instance.confirmed_date),
                     "label": "Confirmed",
                 },
                 "invoiced": {
                     "status": instance.is_invoice,
-                    "date": instance.invoice_date,
+                    "date": get_local_time(instance.invoice_date),
                     "label": "Invoiced",
                 },
                 "completed": {
                     "status": instance.invoice_amount > 0 and instance.invoice_remaining_amount == 0,
-                    "date": last_transaction_date,
+                    "date": get_local_time(last_transaction_date),
                     "label": "Paid",
                 },
                 "cancelled": {
                     "status": instance.is_cancelled,
-                    "date": instance.cancelled_date or None,
+                    "date": get_local_time(instance.cancelled_date) or None,
                     "label": "Cancelled",
                 },
             }
 
     def get_transaction(self, instance):
         return TransactionSerializer(many=True).data
+
+    def get_created_at(self, instance):
+        return get_local_time(instance.created_at)
+
+    def get_invoice_date(self, instance):
+        return get_local_time(instance.invoice_date)
+
+    def get_confirmed_date(self, instance):
+        return get_local_time(instance.confirmed_date)
 
     class Meta:
         model = SalesOrder
@@ -139,27 +152,27 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             return {
                 "new": {
                     "status": True,
-                    "date": instance.created_at,
+                    "date": get_local_time(instance.created_at),
                     "label": "Placed",
                 },
                 "confirmed": {
                     "status": instance.is_invoice or instance.is_confirmed,
-                    "date": instance.confirmed_date,
+                    "date": get_local_time(instance.confirmed_date),
                     "label": "Confirmed",
                 },
                 "invoiced": {
                     "status": instance.is_invoice,
-                    "date": instance.invoice_date,
+                    "date": get_local_time(instance.invoice_date),
                     "label": "Invoiced",
                 },
                 "completed": {
                     "status": instance.invoice_amount > 0 and instance.invoice_remaining_amount == 0,
-                    "date": last_transaction_date,
+                    "date": get_local_time(last_transaction_date),
                     "label": "Paid",
                 },
                 "cancelled": {
                     "status": instance.is_cancelled,
-                    "date": instance.cancelled_date or None,
+                    "date": get_local_time(instance.cancelled_date) or None,
                     "label": "Cancelled",
                 },
             }

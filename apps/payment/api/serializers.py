@@ -2,11 +2,16 @@ from rest_framework import serializers
 
 from apps.order.models import SalesOrder
 from apps.payment.models import Transaction
+from lib.utils import get_local_time
 
 
 class TransactionListSerializer(serializers.ModelSerializer):
     order = serializers.SerializerMethodField()
     id = serializers.SerializerMethodField()
+    created_at = serializers.SerializerMethodField()
+
+    def get_created_at(self, instance):
+        return get_local_time(instance.created_at)
 
     def get_id(self, instance):
         return instance.order.id
@@ -28,7 +33,11 @@ class TransactionListSerializer(serializers.ModelSerializer):
 
 
 class TransactionSerializer(serializers.ModelSerializer):
-    # order = serializers.SerializerMethodField()
+    created_at = serializers.SerializerMethodField()
+
+
+    def get_created_at(self, instance):
+        return get_local_time(instance.created_at)
 
     # def get_order(self, instance):
     #     return {
@@ -45,6 +54,10 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 class CreditListSerializer(serializers.ModelSerializer):
     transaction_set = TransactionSerializer(many=True)
+    invoice_date = serializers.SerializerMethodField()
+
+    def get_invoice_date(self, instance):
+        return get_local_time(instance.invoice_date)
 
     class Meta:
         model = SalesOrder

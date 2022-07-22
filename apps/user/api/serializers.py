@@ -4,6 +4,7 @@ from rest_framework.exceptions import ValidationError
 from apps.executivetracking.models import Zone
 from apps.infrastructure.models import Branch
 from apps.user.models import User, Complaint, Banners, Dealer, SiteConfiguration
+from lib.utils import get_local_time
 
 
 class LoginSerializer(serializers.Serializer):
@@ -61,6 +62,11 @@ class PasswordChangeSerializer(serializers.Serializer):
 
 
 class ComplaintSerialzer(serializers.ModelSerializer):
+    created_at = serializers.SerializerMethodField()
+
+    def get_created_at(self, instance):
+        return get_local_time(instance.created_at)
+
     class Meta:
         model = Complaint
         fields = ('id', 'title', 'photo', 'ticket_id', 'description', 'status',  'is_public', 'created_at', 'created_by', 'order_id')
@@ -74,7 +80,10 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
 class DealerSerializer(serializers.ModelSerializer):
     zone = serializers.SerializerMethodField()
-    # username = serializers.SerializerMethodField()
+    created_at = serializers.SerializerMethodField()
+
+    def get_created_at(self, instance):
+        return get_local_time(instance.created_at)
 
     def get_zone(self, instance):
         return instance.zone and instance.zone.name

@@ -74,3 +74,11 @@ def list_api_formatter(request, paginator, page_obj, results=None, **kwargs):
         ('results', results),
         *kwargs.items()
     ])
+
+
+def get_local_time(date):
+    from django.utils.timezone import localtime
+    # import pdb;pdb.set_trace()
+    if date:
+        return date.strftime("%d-%b-%Y %H:%M %p")
+    return None
