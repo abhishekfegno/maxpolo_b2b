@@ -20,6 +20,7 @@ from apps.executivetracking.models import CheckPoint, CrashReport
 #     if user.is_authenticated and user.user_role == user.EXECUTIVE:
 #         kwargs.update({'executive': user.account})
 #     return super(LeadSerializer, self).save(**kwargs)
+from lib.utils import get_local_time
 
 
 class CrashReportSerializer(serializers.ModelSerializer):
@@ -32,6 +33,16 @@ class CheckPointSerializer(serializers.ModelSerializer):
     # location = GeometryField()
     # store = LeadSerializer()
     check_in_type = serializers.SerializerMethodField()
+    check_in_at = serializers.SerializerMethodField()
+    check_out_at = serializers.SerializerMethodField()
+
+
+    def get_check_in_at(self, instance):
+        return get_local_time(instance.check_in_at)
+
+
+    def get_check_out_at(self, instance):
+        return get_local_time(instance.check_out_at)
 
     def get_check_in_type(self, instance):
         return 'check-point'
